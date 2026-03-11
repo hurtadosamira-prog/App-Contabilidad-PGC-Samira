@@ -1,1 +1,0 @@
-# App-Contabilidad-PGC-Samira

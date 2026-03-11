@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContaMaster ✨ Entrenamiento 360º</title>
+    <style>
+        :root {
+            --fucsia: #D47088;
+            --rosa-palo: #FFF0F5;
+            --rojo-exit: #FF4D4D;
+            --verde-ok: #2E7D32;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: #FFFFFF; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+
+        /* --- MENÚ --- */
+        #menu-principal { display: block; text-align: center; }
+        .tri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; margin-top: 20px; }
+        .trimestre-card { background: #fff; border: 2px solid #eee; border-radius: 25px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .tri-titulo { color: var(--fucsia); font-weight: bold; margin-bottom: 15px; display: block; font-size: 1.1em; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; }
+        
+        .grid-botones { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        .btn-juego { background: white; border: 1px solid #ddd; border-radius: 15px; padding: 10px 2px; cursor: pointer; transition: 0.3s; }
+        .btn-juego:hover { background: var(--rosa-palo); transform: scale(1.05); border-color: var(--fucsia); }
+        .btn-juego span { display: block; font-size: 1.6em; }
+        .btn-juego small { font-size: 0.7em; color: #888; display: block; margin-top: 4px; }
+
+        /* --- PANTALLA JUEGO --- */
+        #pantalla-juego { display: none; background: white; padding: 30px; border-radius: 30px; border: 4px solid var(--fucsia); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        .header-juego { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-salir { background: var(--rojo-exit); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        
+        .supuesto-box { background: var(--rosa-palo); padding: 25px; border-radius: 20px; margin-bottom: 25px; font-size: 1.3em; font-weight: bold; position: relative; min-height: 80px; display: flex; align-items: center; }
+        .btn-bombilla { position: absolute; top: 10px; right: 10px; font-size: 1.8em; cursor: pointer; background: none; border: none; }
+
+        /* --- INTERFAZ ASIENTO --- */
+        .asiento-row { display: grid; grid-template-columns: 120px 1fr 180px; gap: 15px; margin-bottom: 15px; align-items: center; }
+        input { padding: 18px; border: 2px solid #ddd; border-radius: 15px; font-size: 16px; text-align: center; }
+        input:focus { border-color: var(--fucsia); outline: none; background: #fffafa; }
+        .nombre-cta { background: #f0f0f0; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 20px; }
+
+        .btn-validar { background: var(--fucsia); color: white; width: 100%; padding: 22px; border-radius: 20px; font-size: 1.4em; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        #mensaje { margin-top: 20px; padding: 15px; border-radius: 15px; text-align: center; display: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="menu-principal">
+        <h1 style="color: var(--fucsia); font-size: 2.8em; margin-bottom: 10px;">🌸 CONTAMASTER ACADEMY</h1>
+        <p style="color: #666; margin-bottom: 30px;">Entrena cada área de la contabilidad de forma diferente</p>
+        
+        <div class="tri-grid" id="render-menu"></div>
+    </div>
+
+    <div id="pantalla-juego">
+        <div class="header-juego">
+            <button class="btn-salir" onclick="volverMenu()">✖️ SALIR</button>
+            <div id="modo-titulo" style="font-weight:bold; color:var(--fucsia); font-size:1.2em; text-transform:uppercase;"></div>
+            <div id="reloj" style="font-weight:bold; font-size:1.8em;">00:00</div>
+        </div>
+        
+        <div class="supuesto-box">
+            <button class="btn-bombilla" onclick="mostrarPista()">💡</button>
+            <div id="enunciado"></div>
+        </div>
+        
+        <div id="interfaz-contable">
+            <div class="asiento-row">
+                <input type="number" id="c-debe" placeholder="Código" onkeydown="handleEnter(event, 'debe')">
+                <input type="text" id="n-debe" class="nombre-cta" readonly placeholder="Cuenta...">
+                <input type="number" id="i-debe" placeholder="Importe Debe">
+            </div>
+            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:10px;">A</div>
+            <div class="asiento-row">
+                <input type="number" id="c-haber" placeholder="Código" onkeydown="handleEnter(event, 'haber')">
+                <input type="text" id="n-haber" class="nombre-cta" readonly placeholder="Cuenta...">
+                <input type="number" id="i-haber" placeholder="Importe Haber">
+            </div>
+            <button class="btn-validar" onclick="verificar()">🚀 ENVIAR RESPUESTA</button>
+        </div>
+
+        <div id="mensaje"></div>
+    </div>
+</div>
+
+<script>
+    const PGC = { 100:"Capital Social", 129:"Rtdo. del Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Informáticos", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Soportado", 477:"IVA Repercutido", 570:"Caja", 572:"Bancos", 600:"Compras Mercad.", 628:"Suministros", 640:"Sueldos", 700:"Ventas Mercad." };
+
+    const MODOS = [
+        {i:"🧠", n:"Identificación", d:"Te doy el nombre, tú pones el código PGC."},
+        {i:"👁️", n:"Memoria Visual", d:"Mira el asiento 5 segundos, luego replícalo."},
+        {i:"⏲️", n:"Velocidad", d:"Asiento rápido: ¡tienes 15 segundos!"},
+        {i:"🧮", n:"Cálculo IVA", d:"Calcula la base o el IVA mentalmente."},
+        {i:"🔍", n:"Búsqueda de Errores", d:"¿Qué está mal en este asiento?"},
+        {i:"🧱", n:"Estructura", d:"Ordena: ¿Activo, Pasivo o Neto?"},
+        {i:"⚖️", n:"Balance", d:"Cuadra el asiento: falta un importe."},
+        {i:"🔄", n:"Inversión", d:"Haz el asiento contrario (anulación)."},
+        {i:"📅", n:"Cierre", d:"Asientos exclusivos de fin de año."},
+        {i:"📢", n:"Dictado", d:"Lee el enunciado y traduce a números."},
+        {i:"🏆", n:"Examen Final", d:"Mezcla de todos los anteriores."}
+    ];
+
+    let db = [];
+    for(let t=1; t<=4; t++) {
+        for(let j=0; j<11; j++) {
+            db.push({
+                modo: MODOS[j],
+                tri: t + "º TRIMESTRE",
+                q: `[${MODOS[j].n}] Operación: Compra de ${50*(j+1)}€ + IVA por banco.`,
+                pista: "Usa 600, 472 y 572.",
+                cd: 600, ch: 572, id: 50*(j+1), ih: (50*(j+1))*1.21
+            });
+        }
+    }
+
+    let actual = null;
+    let timer;
+    let seg = 0;
+
+    function renderMenu() {
+        const menu = document.getElementById('render-menu');
+        for(let t=0; t<4; t++) {
+            let html = `<div class="trimestre-card"><span class="tri-titulo">${t+1}º TRIMESTRE</span><div class="grid-botones">`;
+            for(let j=0; j<11; j++) {
+                html += `<button class="btn-juego" onclick="iniciar(${(t*11)+j})">
+                            <span>${MODOS[j].i}</span>
+                            <small>${MODOS[j].n}</small>
+                         </button>`;
+            }
+            html += `</div></div>`;
+            menu.innerHTML += html;
+        }
+    }
+
+    function handleEnter(e, tipo) {
+        if (e.key === 'Enter') {
+            const cod = e.target.value;
+            if (PGC[cod]) {
+                document.getElementById('n-' + tipo).value = PGC[cod];
+                document.getElementById('i-' + tipo).focus();
+            }
+        }
+    }
+
+    function iniciar(idx) {
+        actual = db[idx];
+        document.getElementById('menu-principal').style.display = 'none';
+        document.getElementById('pantalla-juego').style.display = 'block';
+        document.getElementById('modo-titulo').innerText = actual.modo.n;
+        document.getElementById('enunciado').innerText = actual.q;
+        document.getElementById('mensaje').style.display = 'none';
+        limpiar();
+        resetReloj();
+    }
+
+    function volverMenu() {
+        clearInterval(timer);
+        document.getElementById('menu-principal').style.display = 'block';
+        document.getElementById('pantalla-juego').style.display = 'none';
+    }
+
+    function mostrarPista() { alert("💡 PISTA: " + actual.pista); }
+
+    function resetReloj() {
+        seg = 0; clearInterval(timer);
+        timer = setInterval(() => {
+            seg++;
+            let m = Math.floor(seg/60), s = seg%60;
+            document.getElementById('reloj').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }, 1000);
+    }
+
+    function verificar() {
+        const cd = parseInt(document.getElementById('c-debe').value);
+        const ch = parseInt(document.getElementById('c-haber').value);
+        const id = parseFloat(document.getElementById('i-debe').value);
+        const ih = parseFloat(document.getElementById('i-haber').value);
+        const m = document.getElementById('mensaje');
+
+        if(cd === actual.cd && ch === actual.ch && id === actual.id && ih === actual.ih) {
+            m.innerText = "⭐ ¡LOGRADO! Habilidad reforzada.";
+            m.style.background = "#E8F5E9"; m.style.color = var(--verde-ok);
+        } else {
+            m.innerText = "❌ ERROR: Sigue practicando esta área.";
+            m.style.background = "#FFEBEE"; m.style.color = "#C62828";
+        }
+        m.style.display = "block";
+    }
+
+    function limpiar() {
+        document.querySelectorAll('input').forEach(i => i.value = "");
+        document.getElementById('n-debe').value = "";
+        document.getElementById('n-haber').value = "";
+    }
+
+    renderMenu();
+</script>
+</body>
+</html>
