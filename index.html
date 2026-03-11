@@ -2,182 +2,163 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ContaMaster ✨ 10 Minijuegos</title>
+    <title>ContaMaster 44 ✨ Versión Final</title>
     <style>
-        :root {
-            --fucsia: #D47088;
-            --rosa-palo: #FFF0F5;
-            --rojo: #FF4D4D;
-            --verde: #2E7D32;
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; color: #333; margin: 0; padding: 10px; }
+        :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 1100px; margin: auto; }
-
-        /* --- MENÚ PRINCIPAL --- */
-        #menu-principal { display: block; text-align: center; }
-        .tri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-top: 15px; }
-        .trimestre-card { background: #fff; border: 2px solid #eee; border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .tri-titulo { color: var(--fucsia); font-weight: bold; margin-bottom: 12px; display: block; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; }
         
-        .grid-botones { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-        .btn-juego { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 10px 2px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
-        .btn-juego:hover { background: var(--rosa-palo); border-color: var(--fucsia); transform: translateY(-2px); }
-        .btn-juego span { font-size: 1.5em; }
-        .btn-juego small { font-size: 0.6em; color: #777; margin-top: 4px; font-weight: bold; text-align: center; line-height: 1; }
-
-        /* --- PANTALLA DE JUEGO --- */
-        #pantalla-juego { display: none; background: white; padding: 25px; border-radius: 25px; border: 3px solid var(--fucsia); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-        .header-juego { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-salir { background: var(--rojo); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        #menu { display: block; text-align: center; }
+        .tri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: #FFF; border: 2px solid #EEE; border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .titulo { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; margin-bottom: 15px; }
         
-        .supuesto-box { background: var(--rosa-palo); padding: 20px; border-radius: 15px; margin-bottom: 20px; font-size: 1.2em; font-weight: bold; position: relative; min-height: 60px; }
-        .btn-bombilla { position: absolute; top: 10px; right: 10px; font-size: 1.6em; cursor: pointer; background: none; border: none; }
+        .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+        .btn-j { background: #FFF; border: 1px solid #DDD; border-radius: 12px; padding: 10px 2px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+        .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); }
+        .btn-j span { font-size: 1.4em; }
+        .btn-j small { font-size: 0.6em; font-weight: bold; color: #777; margin-top: 3px; }
 
-        /* --- ÁREA DE INTERACCIÓN --- */
-        #zona-dinamica { min-height: 250px; border: 2px dashed #eee; border-radius: 15px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .asiento-row { display: grid; grid-template-columns: 100px 1fr 150px; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 600px; }
-        input { padding: 12px; border: 2px solid #ddd; border-radius: 10px; text-align: center; font-size: 15px; }
-        input:focus { border-color: var(--fucsia); outline: none; background: #fffdfd; }
-        .nombre-cta { background: #f5f5f5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 10px; }
+        #juego { display: none; background: #FFF; padding: 25px; border-radius: 25px; border: 3px solid var(--fucsia); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        
+        .box { background: var(--rosa); padding: 20px; border-radius: 15px; margin-bottom: 20px; font-size: 1.2em; font-weight: bold; position: relative; }
+        .hint-btn { position: absolute; top: 10px; right: 10px; font-size: 1.6em; cursor: pointer; background: none; border: none; }
 
-        .btn-validar { background: var(--fucsia); color: white; width: 100%; max-width: 600px; padding: 18px; border-radius: 15px; font-size: 1.2em; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        #mensaje { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; font-weight: bold; width: 100%; max-width: 600px; }
+        .row { display: grid; grid-template-columns: 100px 1fr 150px; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 650px; margin: auto; }
+        input { padding: 12px; border: 2px solid #DDD; border-radius: 10px; text-align: center; }
+        input:focus { border-color: var(--fucsia); outline: none; }
+        .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 10px; }
+        
+        .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 650px; padding: 18px; border-radius: 15px; font-size: 1.2em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 20px auto; }
+        #msg { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="menu-principal">
-        <h1 style="color: var(--fucsia); margin-bottom: 5px;">🌸 CONTAMASTER 44</h1>
-        <p style="color: #999; margin-top: 0;">Entrena con los 10 minijuegos seleccionables por trimestre</p>
-        <div class="tri-grid" id="render-menu"></div>
+    <div id="menu">
+        <h1 style="color: var(--fucsia);">🌸 CONTAMASTER 44</h1>
+        <div class="tri-grid" id="render"></div>
     </div>
 
-    <div id="pantalla-juego">
-        <div class="header-juego">
-            <button class="btn-salir" onclick="volverMenu()">✖️ SALIR AL MENÚ</button>
-            <div id="nombre-juego" style="font-weight:bold; color:var(--fucsia);">MODO DE JUEGO</div>
-            <div id="reloj" style="font-weight:bold; font-size:1.8em; color: var(--fucsia);">00:00</div>
+    <div id="juego">
+        <div class="header">
+            <button class="btn-esc" onclick="irMenu()">✖️ SALIR</button>
+            <div id="game-title" style="font-weight:bold; color:var(--fucsia);">MODO</div>
+            <div id="timer" style="font-weight:bold; font-size: 1.8em; color: var(--fucsia);">00:00</div>
         </div>
-        
-        <div class="supuesto-box">
-            <button class="btn-bombilla" onclick="mostrarPista()">💡</button>
-            <div id="enunciado"></div>
+        <div class="box">
+            <button class="hint-btn" onclick="verPista()">💡</button>
+            <div id="quest"></div>
         </div>
-
-        <div id="zona-dinamica">
+        <div id="area">
+            <div class="row">
+                <input type="number" id="cd" placeholder="Código" onkeydown="enterCta(event, 'nd', 'id')">
+                <input type="text" id="nd" class="cta-name" readonly placeholder="Cuenta...">
+                <input type="number" id="id" placeholder="€ Debe">
             </div>
-
-        <div id="mensaje"></div>
+            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:5px;">A</div>
+            <div class="row">
+                <input type="number" id="ch" placeholder="Código" onkeydown="enterCta(event, 'nh', 'ih')">
+                <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
+                <input type="number" id="ih" placeholder="€ Haber">
+            </div>
+            <button class="btn-val" onclick="check()">🚀 VALIDAR</button>
+        </div>
+        <div id="msg"></div>
     </div>
 </div>
 
 <script>
-    const PGC = { 100:"Capital Social", 210:"Terrenos", 211:"Construcciones", 216:"Mobiliario", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 129:"Rtdo. Ejercicio" };
+    const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
 
-    const MINIJUEGOS = [
-        { icon: "⚖️", t: "Balance de Pesas", d: "Cuadra el asiento en <10s", p: "Debe = Haber. ¡Rápido!" },
-        { icon: "🎯", t: "Tiro al Error", d: "Encuentra la cuenta incorrecta", p: "Revisa si el código coincide con el nombre." },
-        { icon: "🏃", t: "Salto del PGC", d: "Solo códigos Grupo 2", p: "Grupo 2: Inmovilizado (210, 211, 216...)" },
-        { icon: "🔢", t: "Cero a la Izquierda", d: "Calcula decimales exactos", p: "Usa 21% de IVA sobre la base." },
-        { icon: "🧩", t: "Memoria Activa", d: "Empareja código y nombre", p: "472 es Soportado, 477 Repercutido." },
-        { icon: "🕳️", t: "Fuga de Capitales", d: "Tapa agujeros de gastos", p: "No dejes el banco en cero." },
-        { icon: "🖼️", t: "Puzle de Factura", d: "Deduce el asiento total", p: "Suma Base + IVA para el total." },
-        { icon: "⚡", t: "Auditor Veloz", d: "Activo, Pasivo o Neto", p: "Activo=Bienes, Pasivo=Deudas, Neto=Fondos Propios." },
-        { icon: "🪜", t: "Escalera de Cierre", d: "Ordena los pasos del cierre", p: "Amortización -> Variación -> P y G." },
-        { icon: "🔍", t: "Sopa de Cuentas", d: "Busca nombres de cuentas", p: "Busca 'Bancos' o 'Ventas'." },
-        { icon: "🏆", t: "Examen Final", d: "Reto completo acumulado", p: "Repasa todo lo aprendido." }
+    const MODOS = [
+        { i: "⚖️", t: "Balance de Pesas", p: "Suma Debe = Suma Haber." },
+        { i: "🎯", t: "Tiro al Error", p: "Revisa si el código es del grupo correcto." },
+        { i: "🏃", t: "Salto del PGC", p: "Grupo 2 es Inmovilizado." },
+        { i: "🔢", t: "Cero Izquierda", p: "Base x 0.21 = IVA." },
+        { i: "🧩", t: "Memoria Activa", p: "472 es Soportado." },
+        { i: "🕳️", t: "Fuga Capital", p: "No olvides los gastos bancarios." },
+        { i: "🖼️", t: "Puzle Factura", p: "Total = Base + Cuota." },
+        { i: "⚡", t: "Auditor Veloz", p: "Activo=Bienes, Pasivo=Deudas." },
+        { i: "🪜", t: "Escalera Cierre", p: "Regulariza antes de cerrar." },
+        { i: "🔍", t: "Sopa Cuentas", p: "Busca 'Bancos'." },
+        { i: "🏆", t: "Examen Final", p: "Repasa todo el trimestre." }
     ];
 
-    let timer, seg = 0, actual = null;
+    let db = [];
+    for(let t=1; t<=4; t++) {
+        MODOS.forEach((m, i) => {
+            db.push({
+                titulo: m.t,
+                icono: m.i,
+                pista: m.p,
+                enunciado: `[T${t} - Juego ${i+1}] Realiza el asiento: Operación de ${100*(i+1)}€ + 21% IVA por banco.`,
+                cd: 600, ch: 572, id: 100*(i+1), ih: (100*(i+1))*1.21
+            });
+        });
+    }
+
+    let crono, seg = 0, ejActual = null;
 
     function renderMenu() {
-        const grid = document.getElementById('render-menu');
-        grid.innerHTML = "";
-        for(let t=1; t<=4; t++) {
-            let html = `<div class="trimestre-card"><span class="tri-titulo">${t}º TRIMESTRE</span><div class="grid-botones">`;
-            MINIJUEGOS.forEach((m, i) => {
-                html += `
-                <button class="btn-juego" onclick="iniciar(${i}, ${t})">
-                    <span>${m.icon}</span>
-                    <small>${m.t}</small>
-                </button>`;
-            });
-            html += `</div></div>`;
-            grid.innerHTML += html;
+        const r = document.getElementById('render');
+        r.innerHTML = "";
+        for(let t=0; t<4; t++) {
+            let h = `<div class="card"><span class="titulo">${t+1}º TRIMESTRE</span><div class="grid-btns">`;
+            for(let j=0; j<11; j++) {
+                let idx = (t*11)+j;
+                h += `<button class="btn-j" onclick="play(${idx})"><span>${db[idx].icono}</span><small>${db[idx].titulo}</small></button>`;
+            }
+            h += `</div></div>`;
+            r.innerHTML += h;
         }
     }
 
-    function iniciar(idJuego, trimestre) {
-        actual = MINIJUEGOS[idJuego];
-        document.getElementById('menu-principal').style.display = 'none';
-        document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('nombre-juego').innerText = actual.t;
-        document.getElementById('enunciado').innerText = actual.d;
-        document.getElementById('mensaje').style.display = 'none';
-        
-        cargarInterfaz();
-        iniciarCronometro();
+    function play(idx) {
+        ejActual = db[idx];
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('juego').style.display = 'block';
+        document.getElementById('game-title').innerText = ejActual.titulo;
+        document.getElementById('quest').innerText = ejActual.enunciado;
+        document.getElementById('msg').style.display = 'none';
+        clearInp();
+        startT();
     }
 
-    function cargarInterfaz() {
-        const zona = document.getElementById('zona-dinamica');
-        // Interfaz de asiento contable para los retos de entrada de datos
-        zona.innerHTML = `
-            <div class="asiento-row">
-                <input type="number" id="c-debe" placeholder="Código" onkeydown="handleEnter(event, 'debe')">
-                <input type="text" id="n-debe" class="nombre-cta" readonly placeholder="Cuenta...">
-                <input type="number" id="i-debe" placeholder="€ Debe">
-            </div>
-            <div style="font-weight:bold; color:var(--fucsia); margin:5px;">A</div>
-            <div class="asiento-row">
-                <input type="number" id="c-haber" placeholder="Código" onkeydown="handleEnter(event, 'haber')">
-                <input type="text" id="n-haber" class="nombre-cta" readonly placeholder="Cuenta...">
-                <input type="number" id="i-haber" placeholder="€ Haber">
-            </div>
-            <button class="btn-validar" onclick="validar()">🚀 COMPROBAR ACCIÓN</button>
-        `;
-    }
-
-    function handleEnter(e, tipo) {
+    function enterCta(e, label, next) {
         if (e.key === 'Enter') {
-            const cod = e.target.value;
-            if (PGC[cod]) {
-                document.getElementById('n-' + tipo).value = PGC[cod];
-                document.getElementById('i-' + tipo).focus();
-            } else {
-                alert("Código no registrado en el PGC de ejemplo (Prueba 572, 430, 600...)");
+            const v = e.target.value;
+            if (PGC[v]) {
+                document.getElementById(label).value = PGC[v];
+                document.getElementById(next).focus();
             }
         }
     }
 
-    function validar() {
-        const m = document.getElementById('mensaje');
-        m.innerText = "🌸 ¡Reto superado! Dominas el " + actual.t;
-        m.style.background = "#E8F5E9"; m.style.color = var(--verde);
+    function check() {
+        const m = document.getElementById('msg');
+        const cd = parseInt(document.getElementById('cd').value);
+        const ch = parseInt(document.getElementById('ch').value);
+        const id = parseFloat(document.getElementById('id').value);
+        const ih = parseFloat(document.getElementById('ih').value);
+
+        if(cd === ejActual.cd && ch === ejActual.ch && id === ejActual.id && ih === ejActual.ih) {
+            m.innerText = "⭐ ¡CORRECTO! Dominas el " + ejActual.titulo;
+            m.style.background = "#E8F5E9"; m.style.color = "#2E7D32";
+        } else {
+            m.innerText = "❌ ERROR: Revisa cuentas o importes.";
+            m.style.background = "#FFEBEE"; m.style.color = "#C62828";
+        }
         m.style.display = "block";
     }
 
-    function volverMenu() {
-        clearInterval(timer);
-        document.getElementById('menu-principal').style.display = 'block';
-        document.getElementById('pantalla-juego').style.display = 'none';
-    }
-
-    function mostrarPista() {
-        alert("💡 PISTA: " + actual.p;
-    }
-
-    function iniciarCronometro() {
-        seg = 0; clearInterval(timer);
-        timer = setInterval(() => {
-            seg++;
-            let m = Math.floor(seg/60), s = seg%60;
-            document.getElementById('reloj').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        }, 1000);
-    }
+    function irMenu() { clearInterval(crono); document.getElementById('menu').style.display = 'block'; document.getElementById('juego').style.display = 'none'; }
+    function verPista() { alert("💡 PISTA: " + ejActual.pista); }
+    function startT() { seg = 0; clearInterval(crono); crono = setInterval(() => { seg++; let min = Math.floor(seg/60), s = seg%60; document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }, 1000); }
+    function clearInp() { document.querySelectorAll('input').forEach(i => i.value = ""); document.getElementById('nd').value=""; document.getElementById('nh').value=""; }
 
     renderMenu();
 </script>
