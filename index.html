@@ -87,7 +87,7 @@
         <h2 id="mini-g-title" style="color: var(--fucsia)"></h2>
         <div id="mini-g-content" style="font-size: 1.2em; margin-bottom: 15px;"></div>
         <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 25px;"></div>
-        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">FINALIZAR ACTIVIDAD</button>
+        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">SALIR DEL JUEGO</button>
     </div>
 </div>
 
@@ -129,48 +129,77 @@
         const overlay = document.getElementById('game-overlay');
         const content = document.getElementById('mini-g-content');
         const title = document.getElementById('mini-g-title');
+        const fb = document.getElementById('mini-feedback');
         overlay.style.display = 'flex';
+        fb.innerText = ""; // Limpiar feedback anterior
+        
         const rVal = () => Math.floor(Math.random() * 5000) + 100;
         const keys = Object.keys(PGC);
 
         switch(gameId) {
             case 'balance':
                 title.innerText = "⚖️ Balance";
-                let v1 = rVal(), v2 = rVal(); currentMiniAnswer = v1 + v2;
-                content.innerHTML = `<p>Debe: ${v1}€ y ${v2}€</p><p>¿Total Haber?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
+                let v1 = rVal(), v2 = rVal(); 
+                currentMiniAnswer = v1 + v2;
+                content.innerHTML = `<p>Debe: ${v1}€ y ${v2}€</p><p>¿Total Haber?</p>
+                <input type="number" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">
+                <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'iva':
                 title.innerText = "🔢 IVA";
-                let base = (Math.floor(Math.random()*30)+1)*10; currentMiniAnswer = (base * 0.21).toFixed(1);
-                content.innerHTML = `<p>Base: ${base}€</p><p>¿IVA (21%)? (1 decimal)</p><input type="number" step="0.1" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
+                let base = (Math.floor(Math.random()*30)+1)*10; 
+                currentMiniAnswer = (base * 0.21).toFixed(1);
+                content.innerHTML = `<p>Base: ${base}€</p><p>¿IVA (21%)? (Ej: 4.2)</p>
+                <input type="number" step="0.1" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">
+                <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'pgc':
             case 'sopa':
-                title.innerText = "🎯 Cuentas";
-                let correctK = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = correctK;
-                content.innerHTML = `<p>Código de: <b>${PGC[correctK]}</b>?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
+            case 'salto':
+                title.innerText = "🎯 Códigos";
+                let correctK = keys[Math.floor(Math.random()*keys.length)]; 
+                currentMiniAnswer = correctK;
+                content.innerHTML = `<p>Código de: <b>${PGC[correctK]}</b>?</p>
+                <input type="number" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">
+                <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'auditor':
-                title.innerText = "⚡ V o F";
-                let q = Math.random() > 0.5 ? {q:"¿La 572 es Activo?", a:"V"} : {q:"¿La 400 es Activo?", a:"F"}; currentMiniAnswer = q.a;
-                content.innerHTML = `<p>${q.q}</p><button class="btn-check" onclick="checkMini('V')">V</button><button class="btn-check" onclick="checkMini('F')">F</button>`;
+                title.innerText = "⚡ Auditor";
+                let keysAudit = [100, 400, 572, 430, 210];
+                let kAudit = keysAudit[Math.floor(Math.random()*keysAudit.length)];
+                let isAct = [100, 400].includes(kAudit) ? "F" : "V"; 
+                currentMiniAnswer = isAct;
+                content.innerHTML = `<p>¿Es la cuenta <b>${kAudit} (${PGC[kAudit]})</b> de Activo?</p>
+                <button class="btn-check" onclick="checkMini('V')">SÍ (Verdadero)</button>
+                <button class="btn-check" onclick="checkMini('F')">NO (Falso)</button>`;
                 break;
             default:
-                let kr = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = kr;
-                content.innerHTML = `<p>Código de <b>${PGC[kr]}</b></p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
+                let kr = keys[Math.floor(Math.random()*keys.length)]; 
+                currentMiniAnswer = kr;
+                content.innerHTML = `<p>Código de <b>${PGC[kr]}</b></p>
+                <input type="number" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">
+                <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
         }
     }
 
     function checkMini(val) {
         const fb = document.getElementById('mini-feedback');
-        if (val == currentMiniAnswer) {
-            fb.innerHTML = "<span style='color:green'>¡BIEN! +1</span>";
-            setTimeout(() => { fb.innerText = ""; launchMini(lastMode); }, 500);
-        } else fb.innerHTML = "<span style='color:red'>Revisa...</span>";
+        // Normalización básica para decimales
+        if (parseFloat(val) == parseFloat(currentMiniAnswer) || val.toString().toUpperCase() == currentMiniAnswer) {
+            fb.innerHTML = "<span style='color:green'>¡CORRECTO! +1</span>";
+            setTimeout(() => { launchMini(lastMode); }, 600);
+        } else {
+            fb.innerHTML = "<span style='color:red'>Incorrecto, prueba otra vez</span>";
+        }
     }
 
     function generarAsientoAleatorio() {
-        const tipos = [{e:"Compra mercaderías",cd:600,ch:572},{e:"Venta mercaderías",cd:572,ch:700},{e:"Luz/Agua",cd:628,ch:572}];
+        const tipos = [
+            {e:"Compra mercaderías",cd:600,ch:572},
+            {e:"Venta mercaderías",cd:572,ch:700},
+            {e:"Pago de luz",cd:628,ch:572},
+            {e:"Pago de nómina",cd:640,ch:572}
+        ];
         let sel = tipos[Math.floor(Math.random()*tipos.length)];
         let monto = (Math.floor(Math.random()*20)+1)*50;
         ejActual = { cd:sel.cd, ch:sel.ch, v:monto };
@@ -186,9 +215,9 @@
         const c1 = parseInt(document.getElementById('cd').value), c2 = parseInt(document.getElementById('ch').value);
         const v1 = parseFloat(document.getElementById('id').value), v2 = parseFloat(document.getElementById('ih').value);
         if(c1==ejActual.cd && c2==ejActual.ch && v1==ejActual.v && v2==ejActual.v) {
-            m.innerText = "⭐ ¡CORRECTO! Generando otro..."; m.style.color="green"; m.style.display="block";
-            setTimeout(generarAsientoAleatorio, 1500);
-        } else { m.innerText = "❌ Error"; m.style.color="red"; m.style.display="block"; }
+            m.innerText = "⭐ ¡CORRECTO! Siguiente asiento..."; m.style.color="green"; m.style.display="block";
+            setTimeout(generarAsientoAleatorio, 1200);
+        } else { m.innerText = "❌ Datos incorrectos"; m.style.color="red"; m.style.display="block"; }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = PGC[el.value] || ""; }
