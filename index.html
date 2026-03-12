@@ -5,49 +5,50 @@
     <title>ContaMaster 44 ✨ Versión Final</title>
     <style>
         :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
-        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; margin: 0; padding: 20px; color: #333; }
+        /* Fuente aumentada de 16px a 18px */
+        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; margin: 0; padding: 20px; color: #333; font-size: 18px; }
         .container { max-width: 1100px; margin: auto; }
         
         #menu { display: block; text-align: center; }
         .tri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: #FFF; border: 2px solid #EEE; border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .titulo { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; margin-bottom: 15px; }
+        .titulo { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; margin-bottom: 15px; font-size: 1.2em; }
         
         .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
         .btn-j { background: #FFF; border: 1px solid #DDD; border-radius: 12px; padding: 10px 2px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
         .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); }
-        .btn-j span { font-size: 1.4em; }
-        .btn-j small { font-size: 0.6em; font-weight: bold; color: #777; margin-top: 3px; }
+        .btn-j span { font-size: 1.6em; }
+        .btn-j small { font-size: 0.7em; font-weight: bold; color: #777; margin-top: 3px; }
 
         #juego { display: none; background: #FFF; padding: 25px; border-radius: 25px; border: 3px solid var(--fucsia); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
         
-        .box { background: var(--rosa); padding: 20px; border-radius: 15px; margin-bottom: 20px; font-size: 1.2em; font-weight: bold; position: relative; }
-        .hint-btn { position: absolute; top: 10px; right: 10px; font-size: 1.6em; cursor: pointer; background: none; border: none; }
+        .box { background: var(--rosa); padding: 20px; border-radius: 15px; margin-bottom: 20px; font-size: 1.3em; font-weight: bold; position: relative; }
+        .hint-btn { position: absolute; top: 10px; right: 10px; font-size: 1.8em; cursor: pointer; background: none; border: none; }
 
-        .row { display: grid; grid-template-columns: 100px 1fr 150px; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 650px; margin: auto; }
-        input { padding: 12px; border: 2px solid #DDD; border-radius: 10px; text-align: center; }
+        .row { display: grid; grid-template-columns: 110px 1fr 160px; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 700px; margin: auto; }
+        input { padding: 15px; border: 2px solid #DDD; border-radius: 10px; text-align: center; font-size: 18px; }
         input:focus { border-color: var(--fucsia); outline: none; }
-        .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 10px; }
+        .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 10px; font-size: 18px; }
         
-        .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 650px; padding: 18px; border-radius: 15px; font-size: 1.2em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 20px auto; }
-        #msg { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; font-weight: bold; }
+        .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 700px; padding: 20px; border-radius: 15px; font-size: 1.3em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 20px auto; }
+        #msg { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="menu">
-        <h1 style="color: var(--fucsia);">🌸 CONTAMASTER 44</h1>
+        <h1 style="color: var(--fucsia); font-size: 2.5em;">🌸 CONTAMASTER 44</h1>
         <div class="tri-grid" id="render"></div>
     </div>
 
     <div id="juego">
         <div class="header">
             <button class="btn-esc" onclick="irMenu()">✖️ SALIR</button>
-            <div id="game-title" style="font-weight:bold; color:var(--fucsia);">MODO</div>
-            <div id="timer" style="font-weight:bold; font-size: 1.8em; color: var(--fucsia);">00:00</div>
+            <div id="game-title" style="font-weight:bold; color:var(--fucsia); font-size: 1.3em;">MODO</div>
+            <div id="timer" style="font-weight:bold; font-size: 2em; color: var(--fucsia);">00:00</div>
         </div>
         <div class="box">
             <button class="hint-btn" onclick="verPista()">💡</button>
@@ -59,7 +60,7 @@
                 <input type="text" id="nd" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="id" placeholder="€ Debe">
             </div>
-            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:5px;">A</div>
+            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:5px; font-size: 1.2em;">A</div>
             <div class="row">
                 <input type="number" id="ch" placeholder="Código" onkeydown="enterCta(event, 'nh', 'ih')">
                 <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
