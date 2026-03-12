@@ -1,8 +1,3 @@
-Lamento la confusión. He revisado el código para asegurar que la lógica de navegación sea exactamente la que pides: al abrir el archivo, solo verás los 4 botones grandes de los trimestres. Solo al pulsar uno, aparecerán los minijuegos.
-
-Aquí tienes el código íntegro en un solo bloque HTML, con el diseño ampliado y el fondo que habías generado:
-
-HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -224,5 +219,84 @@ HTML
     function startT() { seg = 0; clearInterval(crono); crono = setInterval(() => { seg++; let min = Math.floor(seg/60), s = seg%60; document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }, 1000); }
     function clearInp() { document.querySelectorAll('input').forEach(i => i.value = ""); document.getElementById('nd').value=""; document.getElementById('nh').value=""; }
 </script>
+    <script>
+    const content = document.getElementById('g-content');
+    const feedback = document.getElementById('feedback');
+    const title = document.getElementById('g-title');
+    let currentAnswer = "";
+
+    function launch(game) {
+        // Asegúrate de que estos IDs existan en tu HTML
+        document.getElementById('game-overlay').style.display = 'flex';
+        feedback.innerText = "";
+        content.innerHTML = "";
+        
+        switch(game) {
+            case 'balance':
+                title.innerText = "Balance de Pesas";
+                let debe = Math.floor(Math.random() * 5000) + 1000;
+                currentAnswer = debe;
+                content.innerHTML = `<p>Debe: <b>${debe}€</b></p><p>Escribe el Haber para cuadrar:</p>
+                                    <input type="number" id="ans">
+                                    <button class="btn btn-check" onclick="check(document.getElementById('ans').value)">Cuadrar</button>`;
+                break;
+
+            case 'iva':
+                title.innerText = "Cero a la Izquierda";
+                let base = [100, 200, 500, 1000][Math.floor(Math.random()*4)];
+                currentAnswer = base * 0.21;
+                content.innerHTML = `<p>Base Imponible: <b>${base}€</b></p><p>¿IVA (21%)?</p>
+                                    <input type="number" id="ans">
+                                    <button class="btn btn-check" onclick="check(document.getElementById('ans').value)">Calcular</button>`;
+                break;
+
+            case 'pgc':
+                title.innerText = "Tiro al Error";
+                content.innerHTML = `<p>¿Grupo de la cuenta <b>(572) Bancos</b>?</p>
+                                    <select id="ans"><option value="1">1</option><option value="4">4</option><option value="5">5</option></select>
+                                    <button class="btn btn-check" onclick="check(document.getElementById('ans').value)">Disparar</button>`;
+                currentAnswer = "5";
+                break;
+
+            case 'auditor':
+                title.innerText = "Auditor Veloz";
+                content.innerHTML = `<p><b>Deuda con Proveedores</b> es...</p>
+                                    <button class="btn" onclick="check('P')">PASIVO</button> <button class="btn" onclick="check('A')">ACTIVO</button>`;
+                currentAnswer = "P";
+                break;
+
+            case 'fuga':
+                title.innerText = "Fuga de Capital";
+                content.innerHTML = `<p>Cuenta de comisiones bancarias:</p>
+                                    <input type="number" id="ans" placeholder="Código">
+                                    <button class="btn btn-check" onclick="check(document.getElementById('ans').value)">Localizar</button>`;
+                currentAnswer = 626;
+                break;
+
+            // Puedes seguir añadiendo los casos (memoria, puzle, etc.) siguiendo este patrón
+        }
+    }
+
+    function check(val) {
+        if (val == currentAnswer) {
+            feedback.innerHTML = "<span style='color:green'>¡CORRECTO! 🌟</span>";
+            setTimeout(() => { document.getElementById('game-overlay').style.display = 'none'; }, 1000);
+        } else {
+            feedback.innerHTML = "<span style='color:red'>Incorrecto, prueba de nuevo.</span>";
+        }
+    }
+</script>
+2. La Ventana Emergente (HTML)
+Necesitas un contenedor donde se "dibujará" el juego cuando el usuario haga clic. Pega esto en cualquier parte de tu <body>:
+
+HTML
+<div id="game-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; color: white;">
+    <div style="background: white; color: #333; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center;">
+        <h2 id="g-title"></h2>
+        <div id="g-content"></div>
+        <div id="feedback" style="margin: 15px 0; font-weight: bold;"></div>
+        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">CERRAR</button>
+    </div>
+</div>
 </body>
 </html>
