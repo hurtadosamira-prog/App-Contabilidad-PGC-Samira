@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>✨ ContaMaster ✨</title>
-    <style>
-        :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
+; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
         
         body { font-family: 'Segoe UI', sans-serif; background: #F5F5F5; margin: 0; padding: 40px; color: #333; font-size: 20px; }
         .container { max-width: 1400px; margin: auto; }
         
         #menu { display: block; text-align: center; }
         
-        /* Vista inicial: 4 Trimestres únicamente */
         .tri-selector { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -38,7 +31,6 @@
             transform: translateY(-10px);
         }
 
-        /* Contenedor de Minijuegos */
         #vista-juegos { display: none; }
         
         .card { background: #FFF; border: 3px solid #EEE; border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-top: 20px; }
@@ -50,7 +42,6 @@
         .btn-j span { font-size: 2.5em; }
         .btn-j small { font-size: 0.8em; font-weight: bold; color: #777; margin-top: 10px; }
 
-        /* Pantalla de Juego Activo */
         #pantalla-juego { display: none; background: #FFF; padding: 40px; border-radius: 40px; border: 5px solid var(--fucsia); box-shadow: 0 25px 60px rgba(0,0,0,0.1); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 15px 35px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 20px; }
@@ -66,7 +57,7 @@
         .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 900px; padding: 25px; border-radius: 20px; font-size: 1.6em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; }
         #msg { margin-top: 25px; padding: 20px; border-radius: 20px; text-align: center; display: none; font-weight: bold; font-size: 22px; }
 
-        .btn-check { background: var(--fucsia); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .btn-check { background: var(--fucsia); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; margin: 10px 5px; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -122,7 +113,7 @@
 </div>
 
 <div id="game-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; color: white;">
-    <div style="background: white; color: #333; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center;">
+    <div style="background: white; color: #333; padding: 25px; border-radius: 15px; width: 90%; max-width: 500px; text-align: center;">
         <h2 id="mini-g-title" style="color: var(--fucsia)"></h2>
         <div id="mini-g-content" style="font-size: 1.2em; margin-bottom: 15px;"></div>
         <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 25px;"></div>
@@ -135,16 +126,16 @@
 
     const MODOS = [
         { modeId: "balance", i: "⚖️", t: "Balance Pesas", p: "Suma Debe = Suma Haber." },
-        { modeId: "pgc", i: "🎯", t: "Tiro al Error", p: "Revisa el código PGC." },
-        { modeId: "salto", i: "🏃", t: "Salto PGC", p: "Grupo 2 = Inmovilizado." },
-        { modeId: "iva", i: "🔢", t: "Cero Izq.", p: "Base x 0.21 = IVA." },
-        { modeId: "memoria", i: "🧩", t: "Memoria Act.", p: "472 es Soportado." },
-        { modeId: "fuga", i: "🕳️", t: "Fuga Capital", p: "Revisa gastos bancarios." },
-        { modeId: "puzle", i: "🖼️", t: "Puzle Fact.", p: "Total = Base + Cuota." },
-        { modeId: "auditor", i: "⚡", t: "Auditor Veloz", p: "Activo=Bienes, Pasivo=Deudas." },
-        { modeId: "escalera", i: "🪜", t: "Escalera", p: "Regulariza antes de cerrar." },
-        { modeId: "sopa", i: "🔍", t: "Sopa Cuentas", p: "Busca 'Bancos'." },
-        { modeId: "examen", i: "🏆", t: "Examen Final", p: "Repasa todo el trimestre." }
+        { modeId: "pgc", i: "🎯", t: "Tiro al Error", p: "Encuentra el código correcto." },
+        { modeId: "salto", i: "🏃", t: "Salto PGC", p: "Identifica el grupo correcto." },
+        { modeId: "iva", i: "🔢", t: "Cero Izq.", p: "Calcula el IVA (21%)." },
+        { modeId: "memoria", i: "🧩", t: "Memoria Act.", p: "Clasifica Activo o Pasivo." },
+        { modeId: "fuga", i: "🕳️", t: "Fuga Capital", p: "Encuentra el importe que falta." },
+        { modeId: "puzle", i: "🖼️", t: "Puzle Fact.", p: "Base + IVA = Total." },
+        { modeId: "auditor", i: "⚡", t: "Auditor Veloz", p: "Verdadero o Falso." },
+        { modeId: "escalera", i: "🪜", t: "Escalera", p: "Diferencia Gasto de Ingreso." },
+        { modeId: "sopa", i: "🔍", t: "Sopa Cuentas", p: "Traduce nombre a código." },
+        { modeId: "examen", i: "🏆", t: "Examen Final", p: "Asiento completo aleatorio." }
     ];
 
     let db = [];
@@ -155,8 +146,7 @@
                 titulo: m.t,
                 icono: m.i,
                 pista: m.p,
-                enunciado: `[T${t} - Juego ${i+1}] Realiza el asiento: Operación de ${100*(i+1)}€ + 21% IVA por banco.`,
-                cd: 600, ch: 572, id_val: 100*(i+1), ih_val: (100*(i+1))*1.21
+                t: t
             });
         });
     }
@@ -181,15 +171,10 @@
     function lanzarJuego(idx) {
         const juego = db[idx];
         if(juego.modeId === 'examen') {
-            comenzarJuegoAsiento(idx);
+            generarAsientoAleatorio(juego);
         } else {
             launchMini(juego.modeId);
         }
-    }
-
-    function volverAInicio() {
-        document.getElementById('selector-trimestres').style.display = 'grid';
-        document.getElementById('vista-juegos').style.display = 'none';
     }
 
     function launchMini(gameId) {
@@ -202,39 +187,95 @@
         feedback.innerText = "";
         content.innerHTML = "";
         
+        const rVal = () => Math.floor(Math.random() * 9000) + 100;
+
         switch(gameId) {
             case 'balance':
-                title.innerText = "Balance de Pesas";
-                let debe = Math.floor(Math.random() * 5000) + 1000;
-                currentMiniAnswer = debe;
-                content.innerHTML = `<p>Debe: <b>${debe}€</b></p><p>¿Cuánto falta en el Haber?</p>
+                title.innerText = "⚖️ Balance de Pesas";
+                let v1 = rVal(), v2 = rVal();
+                currentMiniAnswer = v1 + v2;
+                content.innerHTML = `<p>Debe 1: ${v1}€ | Debe 2: ${v2}€</p><p>¿Total en el Haber para cuadrar?</p>
                                     <input type="number" id="mini-ans" style="width:150px">
                                     <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">CUADRAR</button>`;
                 break;
             case 'iva':
-                title.innerText = "Cero a la Izquierda";
-                let base = [100, 200, 500, 1000][Math.floor(Math.random()*4)];
-                currentMiniAnswer = base * 0.21;
-                content.innerHTML = `<p>Base: <b>${base}€</b></p><p>Calcula el 21% de IVA:</p>
-                                    <input type="number" id="mini-ans" style="width:150px">
+                title.innerText = "🔢 Cero a la Izquierda";
+                let base = [100, 200, 300, 400, 500, 1000, 2000][Math.floor(Math.random()*7)];
+                currentMiniAnswer = (base * 0.21).toFixed(2);
+                content.innerHTML = `<p>Base Imponible: <b>${base}€</b></p><p>Calcula el 21% de IVA:</p>
+                                    <input type="number" step="0.01" id="mini-ans" style="width:150px">
                                     <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">CALCULAR</button>`;
                 break;
             case 'pgc':
-                title.innerText = "Tiro al Error";
-                content.innerHTML = `<p>¿Grupo de la cuenta <b>(572) Bancos</b>?</p>
-                                    <button class="btn-check" onclick="checkMini(1)">G1</button> 
-                                    <button class="btn-check" onclick="checkMini(5)">G5</button>`;
-                currentMiniAnswer = 5;
+                title.innerText = "🎯 Tiro al Error";
+                let keys = Object.keys(PGC);
+                let correctK = keys[Math.floor(Math.random()*keys.length)];
+                currentMiniAnswer = correctK;
+                content.innerHTML = `<p>¿Qué código pertenece a: <b>${PGC[correctK]}</b>?</p>
+                                    <input type="number" id="mini-ans" style="width:150px">
+                                    <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">DISPARAR</button>`;
+                break;
+            case 'salto':
+                title.innerText = "🏃 Salto PGC";
+                let k2 = Object.keys(PGC)[Math.floor(Math.random()*Object.keys(PGC).length)];
+                currentMiniAnswer = k2[0];
+                content.innerHTML = `<p>¿A qué GRUPO (1-7) pertenece <b>${PGC[k2]} (${k2})</b>?</p>
+                                    <input type="number" id="mini-ans" style="width:100px">
+                                    <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SALTAR</button>`;
+                break;
+            case 'memoria':
+                title.innerText = "🧩 Memoria Activa";
+                let ctas = [ {n:"Bancos", t:"A"}, {n:"Proveedores", t:"P"}, {n:"Clientes", t:"A"}, {n:"Capital Social", t:"P"}, {n:"Mobiliario", t:"A"} ];
+                let sel = ctas[Math.floor(Math.random()*ctas.length)];
+                currentMiniAnswer = sel.t;
+                content.innerHTML = `<p>La cuenta <b>${sel.n}</b> es...</p>
+                                    <button class="btn-check" onclick="checkMini('A')">ACTIVO</button>
+                                    <button class="btn-check" onclick="checkMini('P')">PASIVO/PN</button>`;
+                break;
+            case 'fuga':
+                title.innerText = "🕳️ Fuga de Capital";
+                let totalF = rVal();
+                let parcial = Math.floor(totalF * 0.7);
+                currentMiniAnswer = totalF - parcial;
+                content.innerHTML = `<p>Total Haber: ${totalF}€ | Apunte 1 Debe: ${parcial}€</p><p>¿Importe del apunte fugado en el Debe?</p>
+                                    <input type="number" id="mini-ans" style="width:150px">
+                                    <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">CAPTURAR</button>`;
+                break;
+            case 'puzle':
+                title.innerText = "🖼️ Puzle de Factura";
+                let b2 = rVal();
+                let iva2 = b2 * 0.21;
+                currentMiniAnswer = (b2 + iva2).toFixed(2);
+                content.innerHTML = `<p>Base: ${b2}€ | IVA: ${iva2.toFixed(2)}€</p><p>¿Total Factura?</p>
+                                    <input type="number" step="0.01" id="mini-ans" style="width:150px">
+                                    <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">ARMAR</button>`;
                 break;
             case 'auditor':
-                title.innerText = "Auditor Veloz";
-                content.innerHTML = `<p>¿<b>Clientes (430)</b> es...?</p>
-                                    <button class="btn-check" onclick="checkMini('A')">ACTIVO</button> 
-                                    <button class="btn-check" onclick="checkMini('P')">PASIVO</button>`;
-                currentMiniAnswer = "A";
+                title.innerText = "⚡ Auditor Veloz";
+                let afirma = [ {q:"El IVA soportado va al Debe", a:"V"}, {q:"Las ventas son gastos", a:"F"}, {q:"Bancos es una cuenta de Pasivo", a:"F"}, {q:"El Capital es Patrimonio Neto", a:"V"} ];
+                let s2 = afirma[Math.floor(Math.random()*afirma.length)];
+                currentMiniAnswer = s2.a;
+                content.innerHTML = `<p>${s2.q}</p>
+                                    <button class="btn-check" onclick="checkMini('V')">VERDADERO</button>
+                                    <button class="btn-check" onclick="checkMini('F')">FALSO</button>`;
                 break;
-            default:
-                content.innerHTML = "<p>¡Próximamente más niveles de este modo!</p>";
+            case 'escalera':
+                title.innerText = "🪜 Escalera Contable";
+                let g = [ {n:"Sueldos", t:"G"}, {n:"Ventas", t:"I"}, {n:"Suministros", t:"G"}, {n:"Compras", t:"G"} ];
+                let s3 = g[Math.floor(Math.random()*g.length)];
+                currentMiniAnswer = s3.t;
+                content.innerHTML = `<p>La cuenta <b>${s3.n}</b> representa un...</p>
+                                    <button class="btn-check" onclick="checkMini('G')">GASTO (6)</button>
+                                    <button class="btn-check" onclick="checkMini('I')">INGRESO (7)</button>`;
+                break;
+            case 'sopa':
+                title.innerText = "🔍 Sopa de Cuentas";
+                let k3 = Object.keys(PGC)[Math.floor(Math.random()*Object.keys(PGC).length)];
+                currentMiniAnswer = k3;
+                content.innerHTML = `<p>¿Cuál es el CÓDIGO de <b>${PGC[k3]}</b>?</p>
+                                    <input type="number" id="mini-ans" style="width:150px">
+                                    <button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">ENCONTRAR</button>`;
+                break;
         }
     }
 
@@ -242,14 +283,29 @@
         const fb = document.getElementById('mini-feedback');
         if (val == currentMiniAnswer) {
             fb.innerHTML = "<span style='color:green'>¡CORRECTO! 🌟</span>";
-            setTimeout(() => { document.getElementById('game-overlay').style.display = 'none'; }, 1000);
+            setTimeout(() => { document.getElementById('game-overlay').style.display = 'none'; }, 800);
         } else {
-            fb.innerHTML = "<span style='color:red'>Error. Intenta de nuevo.</span>";
+            fb.innerHTML = "<span style='color:red'>Incorrecto. Prueba de nuevo.</span>";
         }
     }
 
-    function comenzarJuegoAsiento(idx) {
-        ejActual = db[idx];
+    function generarAsientoAleatorio(juegoBase) {
+        const tipos = [
+            { e: "Compra mercaderías", cd: 600, ch: 572, p: "Gasto en el Debe, Banco baja en el Haber." },
+            { e: "Venta mercaderías", cd: 572, ch: 700, p: "Banco sube en el Debe, Ingreso en el Haber." },
+            { e: "Pago de sueldos", cd: 640, ch: 572, p: "Gasto de personal contra Banco." },
+            { e: "Pago de suministros (luz/agua)", cd: 628, ch: 572, p: "Gasto de suministros contra Banco." }
+        ];
+        let sel = tipos[Math.floor(Math.random() * tipos.length)];
+        let monto = (Math.floor(Math.random() * 50) + 1) * 100;
+
+        ejActual = {
+            ...juegoBase,
+            enunciado: `[T${juegoBase.t}] ${sel.e} por importe de ${monto}€ (sin IVA por ahora).`,
+            cd: sel.cd, ch: sel.ch, id_val: monto, ih_val: monto,
+            pista: sel.p
+        };
+
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
         document.getElementById('game-title').innerText = ejActual.titulo;
@@ -259,31 +315,14 @@
         startT();
     }
 
-    function cerrarJuego() { 
-        clearInterval(crono); 
-        document.getElementById('menu').style.display = 'block'; 
-        document.getElementById('pantalla-juego').style.display = 'none'; 
-        abrirTrimestre(triActualIdx); 
-    }
-
-    function enterCta(e, label, next) {
-        if (e.key === 'Enter') {
-            const v = e.target.value;
-            if (PGC[v]) {
-                document.getElementById(label).value = PGC[v];
-                document.getElementById(next).focus();
-            }
-        }
-    }
-
     function check() {
         const m = document.getElementById('msg');
         const cd = parseInt(document.getElementById('cd').value);
         const ch = parseInt(document.getElementById('ch').value);
-        const valDebe = parseFloat(document.getElementById('id').value);
-        const valHaber = parseFloat(document.getElementById('ih').value);
+        const valD = parseFloat(document.getElementById('id').value);
+        const valH = parseFloat(document.getElementById('ih').value);
 
-        if(cd === ejActual.cd && ch === ejActual.ch && valDebe === ejActual.id_val && valHaber === ejActual.ih_val) {
+        if(cd === ejActual.cd && ch === ejActual.ch && valD === ejActual.id_val && valH === ejActual.ih_val) {
             m.innerText = "⭐ ¡CORRECTO! Dominas el " + ejActual.titulo;
             m.style.background = "#E8F5E9"; m.style.color = "#2E7D32";
         } else {
@@ -293,9 +332,12 @@
         m.style.display = "block";
     }
 
+    function volverAInicio() { document.getElementById('selector-trimestres').style.display = 'grid'; document.getElementById('vista-juegos').style.display = 'none'; }
+    function cerrarJuego() { clearInterval(crono); document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; abrirTrimestre(triActualIdx); }
     function verPista() { alert("💡 PISTA: " + ejActual.pista); }
     function startT() { seg = 0; clearInterval(crono); crono = setInterval(() => { seg++; let min = Math.floor(seg/60), s = seg%60; document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }, 1000); }
     function clearInp() { document.querySelectorAll('#pantalla-juego input').forEach(i => i.value = ""); document.getElementById('nd').value=""; document.getElementById('nh').value=""; }
+    function enterCta(e, label, next) { if (e.key === 'Enter') { const v = e.target.value; if (PGC[v]) { document.getElementById(label).value = PGC[v]; document.getElementById(next).focus(); } } }
 </script>
 </body>
 </html>
