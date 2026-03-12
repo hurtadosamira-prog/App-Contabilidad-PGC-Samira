@@ -38,7 +38,7 @@
             transform: translateY(-10px);
         }
 
-        /* Contenedor de Minijuegos (Oculto por defecto) */
+        /* Contenedor de Minijuegos */
         #vista-juegos { display: none; }
         
         .card { background: #FFF; border: 3px solid #EEE; border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-top: 20px; }
@@ -66,7 +66,6 @@
         .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 900px; padding: 25px; border-radius: 20px; font-size: 1.6em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; }
         #msg { margin-top: 25px; padding: 20px; border-radius: 20px; text-align: center; display: none; font-weight: bold; font-size: 22px; }
 
-        /* Estilos extras para botones de minijuegos */
         .btn-check { background: var(--fucsia); color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
@@ -135,24 +134,24 @@
     const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
 
     const MODOS = [
-        { id: "balance", i: "⚖️", t: "Balance Pesas", p: "Suma Debe = Suma Haber." },
-        { id: "pgc", i: "🎯", t: "Tiro al Error", p: "Revisa el código PGC." },
-        { id: "salto", i: "🏃", t: "Salto PGC", p: "Grupo 2 = Inmovilizado." },
-        { id: "iva", i: "🔢", t: "Cero Izq.", p: "Base x 0.21 = IVA." },
-        { id: "memoria", i: "🧩", t: "Memoria Act.", p: "472 es Soportado." },
-        { id: "fuga", i: "🕳️", t: "Fuga Capital", p: "Revisa gastos bancarios." },
-        { id: "puzle", i: "🖼️", t: "Puzle Fact.", p: "Total = Base + Cuota." },
-        { id: "auditor", i: "⚡", t: "Auditor Veloz", p: "Activo=Bienes, Pasivo=Deudas." },
-        { id: "escalera", i: "🪜", t: "Escalera", p: "Regulariza antes de cerrar." },
-        { id: "sopa", i: "🔍", t: "Sopa Cuentas", p: "Busca 'Bancos'." },
-        { id: "examen", i: "🏆", t: "Examen Final", p: "Repasa todo el trimestre." }
+        { modeId: "balance", i: "⚖️", t: "Balance Pesas", p: "Suma Debe = Suma Haber." },
+        { modeId: "pgc", i: "🎯", t: "Tiro al Error", p: "Revisa el código PGC." },
+        { modeId: "salto", i: "🏃", t: "Salto PGC", p: "Grupo 2 = Inmovilizado." },
+        { modeId: "iva", i: "🔢", t: "Cero Izq.", p: "Base x 0.21 = IVA." },
+        { modeId: "memoria", i: "🧩", t: "Memoria Act.", p: "472 es Soportado." },
+        { modeId: "fuga", i: "🕳️", t: "Fuga Capital", p: "Revisa gastos bancarios." },
+        { modeId: "puzle", i: "🖼️", t: "Puzle Fact.", p: "Total = Base + Cuota." },
+        { modeId: "auditor", i: "⚡", t: "Auditor Veloz", p: "Activo=Bienes, Pasivo=Deudas." },
+        { modeId: "escalera", i: "🪜", t: "Escalera", p: "Regulariza antes de cerrar." },
+        { modeId: "sopa", i: "🔍", t: "Sopa Cuentas", p: "Busca 'Bancos'." },
+        { modeId: "examen", i: "🏆", t: "Examen Final", p: "Repasa todo el trimestre." }
     ];
 
     let db = [];
     for(let t=1; t<=4; t++) {
         MODOS.forEach((m, i) => {
             db.push({
-                id: m.id,
+                modeId: m.modeId,
                 titulo: m.t,
                 icono: m.i,
                 pista: m.p,
@@ -181,11 +180,10 @@
 
     function lanzarJuego(idx) {
         const juego = db[idx];
-        // El examen final siempre abre la pantalla de asientos
-        if(juego.id === 'examen') {
+        if(juego.modeId === 'examen') {
             comenzarJuegoAsiento(idx);
         } else {
-            launchMini(juego.id);
+            launchMini(juego.modeId);
         }
     }
 
@@ -194,7 +192,6 @@
         document.getElementById('vista-juegos').style.display = 'none';
     }
 
-    // LÓGICA MINIJUEGOS RÁPIDOS
     function launchMini(gameId) {
         const overlay = document.getElementById('game-overlay');
         const content = document.getElementById('mini-g-content');
@@ -251,7 +248,6 @@
         }
     }
 
-    // LÓGICA ASIENTOS (EXAMEN)
     function comenzarJuegoAsiento(idx) {
         ejActual = db[idx];
         document.getElementById('menu').style.display = 'none';
@@ -284,10 +280,10 @@
         const m = document.getElementById('msg');
         const cd = parseInt(document.getElementById('cd').value);
         const ch = parseInt(document.getElementById('ch').value);
-        const id_val = parseFloat(document.getElementById('id').value);
-        const ih_val = parseFloat(document.getElementById('ih').value);
+        const valDebe = parseFloat(document.getElementById('id').value);
+        const valHaber = parseFloat(document.getElementById('ih').value);
 
-        if(cd === ejActual.cd && ch === ejActual.ch && id_val === ejActual.id_val && ih_val === ejActual.ih_val) {
+        if(cd === ejActual.cd && ch === ejActual.ch && valDebe === ejActual.id_val && valHaber === ejActual.ih_val) {
             m.innerText = "⭐ ¡CORRECTO! Dominas el " + ejActual.titulo;
             m.style.background = "#E8F5E9"; m.style.color = "#2E7D32";
         } else {
