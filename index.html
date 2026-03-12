@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>✨ ContaMaster Pro: Especialización ✨</title>
+    <title>✨ ContaMaster ✨</title>
     <style>
         :root { 
             --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; 
@@ -40,10 +40,10 @@
     <div id="menu">
         <h1 style="color: var(--fucsia); font-size: 3.5em;">✨ ContaMaster ✨</h1>
         <div id="selector-trimestres" class="tri-selector">
-            <button class="btn-trimestre" onclick="abrirTrimestre(0)">1º TRIMESTRE</button>
-            <button class="btn-trimestre" onclick="abrirTrimestre(1)">2º TRIMESTRE</button>
-            <button class="btn-trimestre" onclick="abrirTrimestre(2)">3º TRIMESTRE</button>
-            <button class="btn-trimestre" onclick="abrirTrimestre(3)">4º TRIMESTRE</button>
+            <button class="btn-trimestre" onclick="abrirTrimestre(1)">1º TRIMESTRE</button>
+            <button class="btn-trimestre" onclick="abrirTrimestre(2)">2º TRIMESTRE</button>
+            <button class="btn-trimestre" onclick="abrirTrimestre(3)">3º TRIMESTRE</button>
+            <button class="btn-trimestre" onclick="abrirTrimestre(4)">4º TRIMESTRE</button>
         </div>
         <div id="vista-juegos">
             <div class="card">
@@ -60,7 +60,7 @@
         <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px;">
             <button class="btn-esc" onclick="cerrarJuego()" style="background:var(--rojo); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer;">✖️ SALIR</button>
             <h2 id="game-title" style="color:var(--fucsia); margin:0;">MODO EXAMEN</h2>
-            <div id="timer" style="font-weight:bold; font-size: 1.5em; color: var(--fucsia);">ASIENTOS</div>
+            <div id="tri-badge" style="font-weight:bold; color: var(--fucsia);">T1</div>
         </div>
         <div class="box" id="quest"></div>
         <div id="area">
@@ -98,30 +98,40 @@
 </div>
 
 <script>
-    const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos", 570:"Caja" };
-    
-    const MODOS = [
-        { id: "balance", i: "⚖️", t: "Balance Pesas", c: "var(--azul)", h: "Cuadre de Masas: Calcula el Capital Social restando el Activo del Pasivo." },
-        { id: "pgc", i: "🎯", t: "Tiro al Error", c: "var(--naranja)", h: "Codificación: Identifica el código de la cuenta indicada." },
-        { id: "salto", i: "🏃", t: "Salto PGC", c: "var(--verde)", h: "Clasificación Patrimonial: ¿Es Activo (A), Pasivo (P) o Netos (N)?" },
-        { id: "iva", i: "🔢", t: "Cero Izq.", c: "#D47088", h: "Fiscalidad: Calcula el IVA soportado (21%) de la operación." },
-        { id: "memoria", i: "🧩", t: "Memoria Act.", c: "var(--morado)", h: "Nomenclatura: Escribe el nombre exacto de la cuenta por su código." },
-        { id: "fuga", i: "🕳️", t: "Fuga Capital", c: "var(--grey)", h: "Aritmética: Si compras por X y pagas Y, ¿cuánto debes al proveedor?" },
-        { id: "puzle", i: "🖼️", t: "Puzle Fact.", c: "var(--brown)", h: "Liquidación: Suma Base + IVA para hallar el Total Factura." },
-        { id: "auditor", i: "⚡", t: "Auditor Veloz", c: "#E91E63", h: "Naturaleza: ¿La cuenta nace por el DEBE (D) o por el HABER (H)?" },
-        { id: "escalera", i: "🪜", t: "Escalera", c: "var(--teal)", h: "Tesorería: Entra dinero en caja, sale dinero. Calcula el Saldo Final." },
-        { id: "sopa", i: "🔍", t: "Sopa Cuentas", c: "#8BC34A", h: "Grupos: ¿A qué grupo (1-7) pertenece esta cuenta?" },
-        { id: "examen", i: "🏆", t: "Examen Final", c: "var(--fucsia)", h: "Registro: Realiza el asiento contable de la operación." }
-    ];
+    // PGC EXTENDIDO Y CLASIFICADO POR DIFICULTAD/TRIMESTRE
+    const PGC_DATA = {
+        1: { 572:"Bancos", 570:"Caja", 430:"Clientes", 400:"Proveedores", 600:"Compras Mercad.", 700:"Ventas Mercad.", 472:"IVA Soportado", 477:"IVA Repercutido" },
+        2: { 210:"Terrenos", 211:"Construcciones", 216:"Mobiliario", 217:"Equipos Info", 640:"Sueldos y Salarios", 642:"Seg. Social Empresa", 4751:"Hda. Retenciones", 476:"Org. Seg. Social" },
+        3: { 100:"Capital Social", 170:"Deudas L/P Bancos", 520:"Deudas C/P Bancos", 410:"Acreedores Serv.", 628:"Suministros", 627:"Publicidad", 759:"Ingresos Serv. Div.", 129:"Rtdo. Ejercicio" },
+        4: { 281:"Amort. Acum. Inm.", 681:"Amort. Inmovilizado", 112:"Reserva Legal", 431:"Efectos Comerciales", 490:"Deterioro Créditos", 694:"Pérdidas Créditos", 794:"Reversión Deterioro", 113:"Reservas Voluntarias" }
+    };
 
+    let triActual = 1;
     let lastId = "", currentAns = "", targetAsiento = null;
 
+    function getPGCActual() {
+        let pgcTotal = {};
+        for(let i=1; i<=triActual; i++) Object.assign(pgcTotal, PGC_DATA[i]);
+        return pgcTotal;
+    }
+
     function abrirTrimestre(n) {
+        triActual = n;
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'block';
-        document.getElementById('txt-trimestre').innerText = (n+1) + "º TRIMESTRE";
+        document.getElementById('txt-trimestre').innerText = n + "º TRIMESTRE (Dificultad " + (n==4?'Máxima':'Nivel '+n) + ")";
+        document.getElementById('tri-badge').innerText = "T" + n;
+        
         const grid = document.getElementById('render-botones');
         grid.innerHTML = "";
+        const MODOS = [
+            { id: "balance", i: "⚖️", t: "Balance", c: "var(--azul)", h: "Cuadre: Calcula el Neto (Activo - Pasivo)." },
+            { id: "pgc", i: "🎯", t: "Códigos", c: "var(--naranja)", h: "Codificación: Identifica el código de la cuenta." },
+            { id: "salto", i: "🏃", t: "Masas", c: "var(--verde)", h: "Clasificación: ¿Activo (A), Pasivo (P) o Neto (N)?" },
+            { id: "iva", i: "🔢", t: "Fiscal", c: "#D47088", h: "Cálculo IVA (21%) sobre la base imponible." },
+            { id: "memoria", i: "🧩", t: "Nombres", c: "var(--morado)", h: "Escribe el nombre de la cuenta por su código." },
+            { id: "examen", i: "🏆", t: "Asientos", c: "var(--fucsia)", h: "Registro: Realiza el asiento contable." }
+        ];
         MODOS.forEach(m => {
             grid.innerHTML += `<button class="btn-j" onclick="lanzarModo('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`;
         });
@@ -130,7 +140,14 @@
     function lanzarModo(id) {
         lastId = id;
         if(id === 'examen') return generarExamen();
-        const m = MODOS.find(x => x.id === id);
+        const m = [
+            { id: "balance", i: "⚖️", t: "Balance", c: "var(--azul)", h: "Cuadre: Calcula el Neto (Activo - Pasivo)." },
+            { id: "pgc", i: "🎯", t: "Códigos", c: "var(--naranja)", h: "Codificación: Identifica el código de la cuenta." },
+            { id: "salto", i: "🏃", t: "Masas", c: "var(--verde)", h: "Clasificación: ¿Activo (A), Pasivo (P) o Neto (N)?" },
+            { id: "iva", i: "🔢", t: "Fiscal", c: "#D47088", h: "Cálculo IVA (21%) sobre la base imponible." },
+            { id: "memoria", i: "🧩", t: "Nombres", c: "var(--morado)", h: "Escribe el nombre de la cuenta por su código." }
+        ].find(x => x.id === id);
+        
         const modal = document.getElementById('modal-color');
         modal.style.borderColor = m.c;
         document.getElementById('m-titulo').innerText = m.i + " " + m.t;
@@ -152,83 +169,72 @@
         const a = document.getElementById('m-input-area');
         const fb = document.getElementById('m-feedback');
         fb.innerText = "";
-        const keys = Object.keys(PGC);
+        const pgc = getPGCActual();
+        const keys = Object.keys(pgc);
         const rand = (max=5000) => Math.floor(Math.random()*max)+500;
 
         switch(lastId) {
-            case 'balance': // REFUERZA: Ecuación fundamental
-                let activo = rand(8000), pasivo = rand(2000); currentAns = activo - pasivo;
-                p.innerText = `Activo: ${activo}€ | Pasivo: ${pasivo}€`;
-                a.innerHTML = `<p>¿A cuánto asciende el Patrimonio Neto?</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+            case 'balance':
+                let act = rand(10000), pas = rand(4000); currentAns = act - pas;
+                p.innerText = `ACTIVO: ${act}€ | PASIVO: ${pas}€`;
+                a.innerHTML = `<p>Calcula el NETO:</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
                 break;
-            case 'salto': // REFUERZA: Masas Patrimoniales
-                let c = keys[Math.floor(Math.random()*keys.length)]; 
-                currentAns = (c < 129) ? "N" : (c < 400 || c == 430 || c >= 570) ? "A" : "P";
-                p.innerText = `Cuenta: ${c} - ${PGC[c]}`;
+            case 'salto':
+                let c = keys[Math.floor(Math.random()*keys.length)];
+                currentAns = (c.startsWith('10') || c.startsWith('11') || c.startsWith('12')) ? "N" : (c.startsWith('17') || c.startsWith('52') || c.startsWith('40') || c.startsWith('475') || c.startsWith('476')) ? "P" : "A";
+                p.innerText = `Cuenta: ${c} - ${pgc[c]}`;
                 a.innerHTML = `<button class="btn-val" style="background:var(--azul)" onclick="validarMini('A')">ACTIVO (A)</button><button class="btn-val" style="background:var(--rojo)" onclick="validarMini('P')">PASIVO (P)</button><button class="btn-val" style="background:var(--naranja)" onclick="validarMini('N')">NETO (N)</button>`;
                 break;
-            case 'fuga': // REFUERZA: Proveedores/Deudas
-                let total = rand(2000), pago = Math.floor(total * 0.4); currentAns = total - pago;
-                p.innerText = `Compra: ${total}€ | Pagas al contado: ${pago}€`;
-                a.innerHTML = `<p>¿Qué cantidad queda pendiente en (400) Proveedores?</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+            case 'pgc':
+                let k = keys[Math.floor(Math.random()*keys.length)]; currentAns = k;
+                p.innerText = `Cuenta: ${pgc[k]}`;
+                a.innerHTML = `<input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
                 break;
-            case 'auditor': // REFUERZA: Mecánica de cargos y abonos
-                let n = keys[Math.floor(Math.random()*keys.length)]; 
-                currentAns = (n == 600 || n == 628 || n == 640 || n < 400) ? "D" : "H";
-                p.innerText = `Para AUMENTAR el saldo de "${PGC[n]}"...`;
-                a.innerHTML = `<button class="btn-val" style="background:var(--verde)" onclick="validarMini('D')">Anoto en el DEBE (D)</button><button class="btn-val" style="background:var(--rojo)" onclick="validarMini('H')">Anoto en el HABER (H)</button>`;
-                break;
-            case 'escalera': // REFUERZA: Libros mayores
-                let saldoI = rand(1000), entra = rand(500), sale = rand(300); currentAns = saldoI + entra - sale;
-                p.innerText = `Saldo Inicial: ${saldoI}€ | Cobras: ${entra}€ | Pagas: ${sale}€`;
-                a.innerHTML = `<p>¿Cuál es el Saldo Final en Banco (572)?</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
-                break;
-            case 'sopa': // REFUERZA: Estructura del PGC
-                let k_sopa = keys[Math.floor(Math.random()*keys.length)]; currentAns = k_sopa[0];
-                p.innerText = `Cuenta: ${PGC[k_sopa]}`;
-                a.innerHTML = `<p>¿A qué GRUPO (primer dígito) pertenece?</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+            case 'memoria':
+                let km = keys[Math.floor(Math.random()*keys.length)]; currentAns = pgc[km].toUpperCase();
+                p.innerText = `Código: ${km}`;
+                a.innerHTML = `<input type="text" id="ans" placeholder="Nombre..." autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
                 break;
             case 'iva':
-                let base = (Math.floor(Math.random()*20)+1)*100; currentAns = (base * 0.21).toFixed(0);
-                p.innerText = `Base Imponible: ${base}€`;
-                a.innerHTML = `<p>IVA (21%) soportado (sin decimales):</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+                let base = (Math.floor(Math.random()*20)+1)*100; currentAns = Math.round(base * 0.21);
+                p.innerText = `Base: ${base}€`;
+                a.innerHTML = `<p>IVA (21%):</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
                 break;
-            case 'puzle':
-                let b_puzle = rand(1000); let iva_puzle = Math.round(b_puzle * 0.21); currentAns = b_puzle + iva_puzle;
-                p.innerText = `Factura -> Base: ${b_puzle}€ | IVA: ${iva_puzle}€`;
-                a.innerHTML = `<p>¿Cuál es el Total a pagar?</p><input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
-                break;
-            default:
-                let kr = keys[Math.floor(Math.random()*keys.length)]; currentAns = kr;
-                p.innerText = `Código oficial de: ${PGC[kr]}`;
-                a.innerHTML = `<input type="number" id="ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
         }
         setTimeout(() => { if(document.getElementById('ans')) document.getElementById('ans').focus(); }, 100);
     }
 
     function validarMini(val) {
         const fb = document.getElementById('m-feedback');
-        if(Math.abs(parseFloat(val) - parseFloat(currentAns)) < 0.1 || val.toString().toUpperCase() == currentAns) {
-            fb.innerHTML = "<span style='color:green'>✔ ¡CONTABILIZADO! Siguiente...</span>";
+        let res = val.toString().trim().toUpperCase();
+        if(res == currentAns) {
+            fb.innerHTML = "<span style='color:green'>✔ ¡CORRECTO!</span>";
             setTimeout(generarPregunta, 800);
         } else {
-            fb.innerHTML = "<span style='color:red'>✘ Error en el cálculo/código</span>";
+            fb.innerHTML = "<span style='color:red'>✘ Error</span>";
         }
     }
 
     function generarExamen() {
-        const op = [
-            {q:"COMPRA de mobiliario pagada íntegramente por Banco", cd:216, ch:572},
-            {q:"VENTA de mercaderías cobrada por Caja", cd:570, ch:700},
-            {q:"PAGO de la nómina mensual por Banco", cd:640, ch:572},
-            {q:"INGRESO en Banco de dinero que había en Caja", cd:572, ch:570}
-        ];
-        let s = op[Math.floor(Math.random()*op.length)];
+        const pgc = getPGCActual();
+        const pool = [
+            {q:"Compra Mercaderías por Banco", cd:600, ch:572, t:1},
+            {q:"Venta Mercaderías por Caja", cd:570, ch:700, t:1},
+            {q:"Compra Mobiliario por Banco", cd:216, ch:572, t:2},
+            {q:"Pago Nómina por Banco", cd:640, ch:572, t:2},
+            {q:"Préstamo recibido L/P en Banco", cd:572, ch:170, t:3},
+            {q:"Pago Publicidad por Banco", cd:627, ch:572, t:3},
+            {q:"Dotación Amortización Inmov.", cd:681, ch:281, t:4},
+            {q:"Pérdida por créditos incobrables", cd:694, ch:430, t:4}
+        ].filter(x => x.t <= triActual);
+        
+        let s = pool[Math.floor(Math.random()*pool.length)];
         let v = (Math.floor(Math.random()*10)+5)*100;
         targetAsiento = { cd:s.cd, ch:s.ch, v:v };
+        
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerHTML = `<span style="font-size:0.8em; color:var(--grey)">REGISTRO DIARIO:</span><br>${s.q} por <b>${v}€</b>.`;
+        document.getElementById('quest').innerHTML = `T${triActual}: ${s.q} por <b>${v}€</b>.`;
         document.getElementById('msg').style.display = 'none';
         clearInp();
     }
@@ -238,12 +244,15 @@
         const c1 = document.getElementById('cd').value, c2 = document.getElementById('ch').value;
         const v1 = document.getElementById('id').value, v2 = document.getElementById('ih').value;
         if(c1 == targetAsiento.cd && c2 == targetAsiento.ch && v1 == targetAsiento.v && v2 == targetAsiento.v) {
-            m.innerText = "⭐ ASIENTO CORRECTO Y CUADRADO"; m.style.color="green"; m.style.display="block";
+            m.innerText = "⭐ ¡CORRECTO!"; m.style.color="green"; m.style.display="block";
             setTimeout(generarExamen, 1500);
-        } else { m.innerText = "❌ El asiento no cuadra o los códigos son erróneos."; m.style.color="red"; m.style.display="block"; }
+        } else { m.innerText = "❌ Revisa códigos/importes"; m.style.color="red"; m.style.display="block"; }
     }
 
-    function updateName(el, targetId) { document.getElementById(targetId).value = PGC[el.value] || ""; }
+    function updateName(el, targetId) { 
+        const pgc = getPGCActual();
+        document.getElementById(targetId).value = pgc[el.value] || ""; 
+    }
     function volverAInicio() { document.getElementById('selector-trimestres').style.display = 'grid'; document.getElementById('vista-juegos').style.display = 'none'; }
     function cerrarJuego() { document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; }
     function clearInp() { document.querySelectorAll('#pantalla-juego input').forEach(i => i.value = ""); }
