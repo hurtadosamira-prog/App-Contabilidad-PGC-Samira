@@ -66,13 +66,13 @@
         </div>
         <div id="area">
             <div class="row">
-                <input type="number" id="cd" placeholder="Código" oninput="updateName(this, 'nd')" onkeydown="if(e.key==='Enter') document.getElementById('id').focus()">
+                <input type="number" id="cd" placeholder="Código" oninput="updateName(this, 'nd')">
                 <input type="text" id="nd" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="id" placeholder="€ Debe">
             </div>
             <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:15px; font-size: 1.5em;">A</div>
             <div class="row">
-                <input type="number" id="ch" placeholder="Código" oninput="updateName(this, 'nh')" onkeydown="if(e.key==='Enter') document.getElementById('ih').focus()">
+                <input type="number" id="ch" placeholder="Código" oninput="updateName(this, 'nh')">
                 <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="ih" placeholder="€ Haber">
             </div>
@@ -87,130 +87,113 @@
         <h2 id="mini-g-title" style="color: var(--fucsia)"></h2>
         <div id="mini-g-content" style="font-size: 1.2em; margin-bottom: 15px;"></div>
         <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 25px;"></div>
-        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">CERRAR</button>
+        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">FINALIZAR ACTIVIDAD</button>
     </div>
 </div>
 
 <script>
     const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
-
     const MODOS = [
-        { modeId: "balance", i: "⚖️", t: "Balance Pesas", p: "Suma Debe = Suma Haber." },
-        { modeId: "pgc", i: "🎯", t: "Tiro al Error", p: "Encuentra el código correcto." },
-        { modeId: "salto", i: "🏃", t: "Salto PGC", p: "Identifica el grupo correcto." },
-        { modeId: "iva", i: "🔢", t: "Cero Izq.", p: "Calcula el IVA (21%)." },
-        { modeId: "memoria", i: "🧩", t: "Memoria Act.", p: "Clasifica Activo o Pasivo." },
-        { modeId: "fuga", i: "🕳️", t: "Fuga Capital", p: "Encuentra el importe que falta." },
-        { modeId: "puzle", i: "🖼️", t: "Puzle Fact.", p: "Base + IVA = Total." },
-        { modeId: "auditor", i: "⚡", t: "Auditor Veloz", p: "Verdadero o Falso." },
-        { modeId: "escalera", i: "🪜", t: "Escalera", p: "Diferencia Gasto de Ingreso." },
-        { modeId: "sopa", i: "🔍", t: "Sopa Cuentas", p: "Traduce nombre a código." },
-        { modeId: "examen", i: "🏆", t: "Examen Final", p: "Asiento completo aleatorio." }
+        { modeId: "balance", i: "⚖️", t: "Balance Pesas" },
+        { modeId: "pgc", i: "🎯", t: "Tiro al Error" },
+        { modeId: "salto", i: "🏃", t: "Salto PGC" },
+        { modeId: "iva", i: "🔢", t: "Cero Izq." },
+        { modeId: "memoria", i: "🧩", t: "Memoria Act." },
+        { modeId: "fuga", i: "🕳️", t: "Fuga Capital" },
+        { modeId: "puzle", i: "🖼️", t: "Puzle Fact." },
+        { modeId: "auditor", i: "⚡", t: "Auditor Veloz" },
+        { modeId: "escalera", i: "🪜", t: "Escalera" },
+        { modeId: "sopa", i: "🔍", t: "Sopa Cuentas" },
+        { modeId: "examen", i: "🏆", t: "Examen Final" }
     ];
 
-    let crono, seg = 0, ejActual = null, triActualIdx = 0;
-    let currentMiniAnswer = "";
+    let ejActual = null, currentMiniAnswer = "", lastMode = "";
 
     function abrirTrimestre(tIdx) {
-        triActualIdx = tIdx;
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'block';
         document.getElementById('txt-trimestre').innerText = (tIdx + 1) + "º TRIMESTRE";
         const r = document.getElementById('render-botones');
         r.innerHTML = "";
-        MODOS.forEach((m, idx) => {
-            r.innerHTML += `<button class="btn-j" onclick="lanzarJuego('${m.modeId}', '${m.t}', '${m.p}')"><span>${m.i}</span><small>${m.t}</small></button>`;
+        MODOS.forEach((m) => {
+            r.innerHTML += `<button class="btn-j" onclick="lanzarJuego('${m.modeId}', '${m.t}')"><span>${m.i}</span><small>${m.t}</small></button>`;
         });
     }
 
-    function lanzarJuego(modeId, titulo, pista) {
-        if(modeId === 'examen') {
-            generarAsientoAleatorio(titulo, pista);
-        } else {
-            launchMini(modeId);
-        }
+    function lanzarJuego(modeId, titulo) {
+        if(modeId === 'examen') generarAsientoAleatorio();
+        else { lastMode = modeId; launchMini(modeId); }
     }
 
     function launchMini(gameId) {
         const overlay = document.getElementById('game-overlay');
         const content = document.getElementById('mini-g-content');
-        const feedback = document.getElementById('mini-feedback');
         const title = document.getElementById('mini-g-title');
         overlay.style.display = 'flex';
-        feedback.innerText = "";
         const rVal = () => Math.floor(Math.random() * 5000) + 100;
         const keys = Object.keys(PGC);
 
         switch(gameId) {
             case 'balance':
-                title.innerText = "⚖️ Balance de Pesas";
+                title.innerText = "⚖️ Balance";
                 let v1 = rVal(), v2 = rVal(); currentMiniAnswer = v1 + v2;
-                content.innerHTML = `<p>Debe 1: ${v1}€ | Debe 2: ${v2}€</p><p>¿Total en el Haber?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">CUADRAR</button>`;
+                content.innerHTML = `<p>Debe: ${v1}€ y ${v2}€</p><p>¿Total Haber?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'iva':
-                title.innerText = "🔢 Cero a la Izquierda";
-                let base = (Math.floor(Math.random()*20)+1)*100; currentMiniAnswer = (base * 0.21).toFixed(0);
-                content.innerHTML = `<p>Base: ${base}€</p><p>¿IVA (21%) aproximado?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">CALCULAR</button>`;
+                title.innerText = "🔢 IVA";
+                let base = (Math.floor(Math.random()*30)+1)*10; currentMiniAnswer = (base * 0.21).toFixed(1);
+                content.innerHTML = `<p>Base: ${base}€</p><p>¿IVA (21%)? (1 decimal)</p><input type="number" step="0.1" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'pgc':
-                title.innerText = "🎯 Tiro al Error";
+            case 'sopa':
+                title.innerText = "🎯 Cuentas";
                 let correctK = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = correctK;
-                content.innerHTML = `<p>Código de: <b>${PGC[correctK]}</b>?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">DISPARAR</button>`;
+                content.innerHTML = `<p>Código de: <b>${PGC[correctK]}</b>?</p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
                 break;
             case 'auditor':
-                title.innerText = "⚡ Auditor Veloz";
-                let q = Math.random() > 0.5 ? {q:"La 572 es Activo", a:"V"} : {q:"La 400 es Activo", a:"F"}; currentMiniAnswer = q.a;
+                title.innerText = "⚡ V o F";
+                let q = Math.random() > 0.5 ? {q:"¿La 572 es Activo?", a:"V"} : {q:"¿La 400 es Activo?", a:"F"}; currentMiniAnswer = q.a;
                 content.innerHTML = `<p>${q.q}</p><button class="btn-check" onclick="checkMini('V')">V</button><button class="btn-check" onclick="checkMini('F')">F</button>`;
                 break;
             default:
-                let kRandom = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = kRandom;
-                content.innerHTML = `<p>Busca el código de: <b>${PGC[kRandom]}</b></p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">LISTO</button>`;
+                let kr = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = kr;
+                content.innerHTML = `<p>Código de <b>${PGC[kr]}</b></p><input type="number" id="mini-ans"><button class="btn-check" onclick="checkMini(document.getElementById('mini-ans').value)">SIGUIENTE</button>`;
         }
     }
 
     function checkMini(val) {
         const fb = document.getElementById('mini-feedback');
         if (val == currentMiniAnswer) {
-            fb.innerHTML = "<span style='color:green'>¡CORRECTO! 🌟</span>";
-            setTimeout(() => { document.getElementById('game-overlay').style.display = 'none'; }, 600);
-        } else fb.innerHTML = "<span style='color:red'>Error</span>";
+            fb.innerHTML = "<span style='color:green'>¡BIEN! +1</span>";
+            setTimeout(() => { fb.innerText = ""; launchMini(lastMode); }, 500);
+        } else fb.innerHTML = "<span style='color:red'>Revisa...</span>";
     }
 
-    function generarAsientoAleatorio(titulo, pistaDefault) {
-        const tipos = [
-            { e: "Compra mercaderías", cd: 600, ch: 572, p: "Gasto (6) contra Banco (572)" },
-            { e: "Venta mercaderías", cd: 572, ch: 700, p: "Banco (572) contra Ingreso (7)" },
-            { e: "Pago de luz", cd: 628, ch: 572, p: "Suministros (6) contra Banco (572)" }
-        ];
-        let sel = tipos[Math.floor(Math.random() * tipos.length)];
-        let monto = (Math.floor(Math.random() * 50) + 1) * 100;
-        ejActual = { titulo: titulo, enunciado: `${sel.e} por ${monto}€.`, cd: sel.cd, ch: sel.ch, id_val: monto, ih_val: monto, pista: sel.p };
+    function generarAsientoAleatorio() {
+        const tipos = [{e:"Compra mercaderías",cd:600,ch:572},{e:"Venta mercaderías",cd:572,ch:700},{e:"Luz/Agua",cd:628,ch:572}];
+        let sel = tipos[Math.floor(Math.random()*tipos.length)];
+        let monto = (Math.floor(Math.random()*20)+1)*50;
+        ejActual = { cd:sel.cd, ch:sel.ch, v:monto };
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = ejActual.enunciado;
+        document.getElementById('quest').innerText = `${sel.e} por ${monto}€.`;
         document.getElementById('msg').style.display = 'none';
-        clearInp(); startT();
+        clearInp();
     }
 
     function check() {
         const m = document.getElementById('msg');
-        const cd = parseInt(document.getElementById('cd').value);
-        const ch = parseInt(document.getElementById('ch').value);
-        const valD = parseFloat(document.getElementById('id').value);
-        const valH = parseFloat(document.getElementById('ih').value);
-        if(cd === ejActual.cd && ch === ejActual.ch && valD === ejActual.id_val && valH === ejActual.ih_val) {
-            m.innerText = "⭐ ¡CORRECTO!"; m.style.background = "#E8F5E9"; m.style.color = "#2E7D32";
-        } else {
-            m.innerText = "❌ ERROR: Revisa los datos."; m.style.background = "#FFEBEE"; m.style.color = "#C62828";
-        }
-        m.style.display = "block";
+        const c1 = parseInt(document.getElementById('cd').value), c2 = parseInt(document.getElementById('ch').value);
+        const v1 = parseFloat(document.getElementById('id').value), v2 = parseFloat(document.getElementById('ih').value);
+        if(c1==ejActual.cd && c2==ejActual.ch && v1==ejActual.v && v2==ejActual.v) {
+            m.innerText = "⭐ ¡CORRECTO! Generando otro..."; m.style.color="green"; m.style.display="block";
+            setTimeout(generarAsientoAleatorio, 1500);
+        } else { m.innerText = "❌ Error"; m.style.color="red"; m.style.display="block"; }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = PGC[el.value] || ""; }
     function volverAInicio() { document.getElementById('selector-trimestres').style.display = 'grid'; document.getElementById('vista-juegos').style.display = 'none'; }
-    function cerrarJuego() { clearInterval(crono); document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; }
-    function verPista() { alert("💡 PISTA: " + ejActual.pista); }
-    function startT() { seg = 0; clearInterval(crono); crono = setInterval(() => { seg++; let min = Math.floor(seg/60), s = seg%60; document.getElementById('timer').innerText = `${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }, 1000); }
+    function cerrarJuego() { document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; }
     function clearInp() { document.querySelectorAll('#pantalla-juego input').forEach(i => i.value = ""); }
 </script>
 </body>
