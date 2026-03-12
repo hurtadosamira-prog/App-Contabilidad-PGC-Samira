@@ -32,9 +32,10 @@
         .row { display: grid; grid-template-columns: 140px 1fr 200px; gap: 20px; margin-bottom: 15px; width: 100%; max-width: 900px; margin: auto; }
         input { padding: 20px; border: 3px solid #DDD; border-radius: 15px; text-align: center; font-size: 22px; width: 100%; box-sizing: border-box; }
         
-        .footer-actions { display: flex; justify-content: center; gap: 20px; max-width: 900px; margin: 20px auto; }
-        .btn-validar { background: var(--fucsia); color: white; border: none; padding: 20px; border-radius: 20px; font-size: 1.2em; font-weight: bold; cursor: pointer; flex: 2; }
+        .footer-actions { display: flex; justify-content: center; gap: 10px; max-width: 900px; margin: 20px auto; flex-wrap: wrap; }
+        .btn-validar { background: var(--fucsia); color: white; border: none; padding: 20px; border-radius: 20px; font-size: 1.2em; font-weight: bold; cursor: pointer; flex: 2; min-width: 200px; }
         .btn-nodado { background: #eee; color: #666; border: none; padding: 15px 25px; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; }
+        .btn-solucion { background: var(--teal); color: white; border: none; padding: 15px 25px; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; }
 
         #game-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
         .modal { background: white; padding: 40px; border-radius: 30px; width: 90%; max-width: 600px; text-align: center; border: 10px solid var(--fucsia); position: relative; }
@@ -81,6 +82,7 @@
             </div>
             <div class="footer-actions">
                 <button class="btn-nodado" onclick="noDado()">NO DADO</button>
+                <button class="btn-solucion" onclick="verSolucion()">SOLUCIÓN</button>
                 <button class="btn-validar" onclick="checkAsiento()">🚀 VALIDAR ASIENTO</button>
             </div>
             <button class="btn-nodado" style="width:100%; background:var(--rojo); color:white; margin-top:10px;" onclick="cerrarJuego()">SALIR</button>
@@ -96,6 +98,7 @@
         <div id="m-input-area"></div>
         <div class="footer-actions">
             <button class="btn-nodado" onclick="noDado()">NO DADO</button>
+            <button class="btn-solucion" onclick="verSolucion()">SOLUCIÓN</button>
             <button class="btn-validar" id="m-btn-validar">VALIDAR</button>
         </div>
         <button onclick="document.getElementById('game-overlay').style.display='none'" style="margin-top:20px; background:none; border:none; color:#999; text-decoration:underline; cursor:pointer;">Cerrar</button>
@@ -103,7 +106,6 @@
 </div>
 
 <script>
-    // PGC Clasificado por trimestres (Progresivo)
     const PGC_POR_TRIMESTRE = {
         1: {572:"Bancos", 570:"Caja", 430:"Clientes", 400:"Proveedores", 600:"Compras Mercad.", 700:"Ventas Mercad.", 472:"IVA Sop.", 477:"IVA Rep."},
         2: {210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 640:"Sueldos y Sal.", 642:"S.S. Empresa", 4751:"Hda. Retenc."},
@@ -158,6 +160,14 @@
 
     function darPista() { alert("Pista: El código empieza por " + currentAns.toString()[0]); }
     function noDado() { alert("Saltando..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
+
+    function verSolucion() {
+        if(lastId === 'examen') {
+            alert(`Solución Asiento:\nDebe: ${targetAsiento.cd} por ${targetAsiento.v}€\nHaber: ${targetAsiento.ch} por ${targetAsiento.v}€`);
+        } else {
+            alert(`La respuesta correcta es: ${currentAns}`);
+        }
+    }
 
     function validarMini(v) {
         if(v == currentAns) { alert("¡Correcto!"); generarPregunta(); }
