@@ -2,52 +2,65 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>✨ ContaMaster ✨ Versión Final</title>
+    <title>✨ ContaMaster ✨</title>
     <style>
-        :root { --celeste: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
-        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; margin: 0; padding: 24px; color: #333; font-size: 22px; }
-        .container { max-width: 1100px; margin: auto; }
+        :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
+        
+        /* Fuente base y escala general ampliada */
+        body { font-family: 'Segoe UI', sans-serif; background: #FFFFFF; margin: 0; padding: 40px; color: #333; font-size: 20px; }
+        .container { max-width: 1400px; margin: auto; }
         
         #menu { display: block; text-align: center; }
-        .tri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: #FFF; border: 2px solid #EEE; border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .titulo { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 5px solid var(--fucsia); padding-left: 10px; margin-bottom: 15px; font-size: 1.2em; }
         
-        .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-        .btn-j { background: #FFF; border: 1px solid #DDD; border-radius: 12px; padding: 10px 2px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
-        .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); }
-        .btn-j span { font-size: 1.6em; }
-        .btn-j small { font-size: 0.7em; font-weight: bold; color: #777; margin-top: 3px; }
+        /* Ajuste de rejilla para que ocupe más espacio */
+        .tri-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); 
+            gap: 30px; 
+            margin-top: 30px; 
+        }
+        
+        .card { background: #FFF; border: 3px solid #EEE; border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .titulo { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 8px solid var(--fucsia); padding-left: 15px; margin-bottom: 25px; font-size: 1.5em; }
+        
+        /* Botones de menú mucho más grandes */
+        .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+        .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 18px; padding: 20px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+        .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); transform: scale(1.05); }
+        .btn-j span { font-size: 2.2em; }
+        .btn-j small { font-size: 0.75em; font-weight: bold; color: #777; margin-top: 8px; }
 
-        #juego { display: none; background: #FFF; padding: 25px; border-radius: 25px; border: 3px solid var(--fucsia); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        /* Pantalla de Juego Ampliada */
+        #juego { display: none; background: #FFF; padding: 40px; border-radius: 40px; border: 5px solid var(--fucsia); box-shadow: 0 25px 60px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 15px 35px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 20px; }
         
-        .box { background: var(--rosa); padding: 20px; border-radius: 15px; margin-bottom: 20px; font-size: 1.3em; font-weight: bold; position: relative; }
-        .hint-btn { position: absolute; top: 10px; right: 10px; font-size: 1.8em; cursor: pointer; background: none; border: none; }
+        .box { background: var(--rosa); padding: 30px; border-radius: 25px; margin-bottom: 30px; font-size: 1.5em; font-weight: bold; position: relative; }
+        .hint-btn { position: absolute; top: 15px; right: 20px; font-size: 2em; cursor: pointer; background: none; border: none; }
 
-        .row { display: grid; grid-template-columns: 110px 1fr 160px; gap: 10px; margin-bottom: 10px; width: 100%; max-width: 700px; margin: auto; }
-        input { padding: 15px; border: 2px solid #DDD; border-radius: 10px; text-align: center; font-size: 18px; }
-        input:focus { border-color: var(--fucsia); outline: none; }
-        .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 10px; font-size: 18px; }
+        /* Interfaz de Asiento más ancha y grande */
+        .row { display: grid; grid-template-columns: 140px 1fr 200px; gap: 20px; margin-bottom: 15px; width: 100%; max-width: 900px; margin: auto; }
+        input { padding: 20px; border: 3px solid #DDD; border-radius: 15px; text-align: center; font-size: 22px; }
+        input:focus { border-color: var(--fucsia); outline: none; box-shadow: 0 0 10px rgba(212, 112, 136, 0.2); }
+        .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 20px; font-size: 22px; }
         
-        .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 700px; padding: 20px; border-radius: 15px; font-size: 1.3em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 20px auto; }
-        #msg { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; font-weight: bold; font-size: 18px; }
+        .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 900px; padding: 25px; border-radius: 20px; font-size: 1.6em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; }
+        #msg { margin-top: 25px; padding: 20px; border-radius: 20px; text-align: center; display: none; font-weight: bold; font-size: 22px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="menu">
-        <h1 style="color: var(--fucsia); font-size: 2.5em;">🌸 CONTAMASTER 44</h1>
+        <h1 style="color: var(--fucsia); font-size: 3.5em; margin-bottom: 10px;">✨ ContaMaster ✨</h1>
         <div class="tri-grid" id="render"></div>
     </div>
 
     <div id="juego">
         <div class="header">
             <button class="btn-esc" onclick="irMenu()">✖️ SALIR</button>
-            <div id="game-title" style="font-weight:bold; color:var(--fucsia); font-size: 1.3em;">MODO</div>
-            <div id="timer" style="font-weight:bold; font-size: 2em; color: var(--fucsia);">00:00</div>
+            <div id="game-title" style="font-weight:bold; color:var(--fucsia); font-size: 1.6em;">MODO</div>
+            <div id="timer" style="font-weight:bold; font-size: 2.5em; color: var(--fucsia);">00:00</div>
         </div>
         <div class="box">
             <button class="hint-btn" onclick="verPista()">💡</button>
@@ -59,7 +72,7 @@
                 <input type="text" id="nd" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="id" placeholder="€ Debe">
             </div>
-            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:5px; font-size: 1.2em;">A</div>
+            <div style="text-align:center; font-weight:bold; color:var(--fucsia); margin:15px; font-size: 1.5em;">A</div>
             <div class="row">
                 <input type="number" id="ch" placeholder="Código" onkeydown="enterCta(event, 'nh', 'ih')">
                 <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
@@ -75,15 +88,15 @@
     const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
 
     const MODOS = [
-        { i: "⚖️", t: "Balance de Pesas", p: "Suma Debe = Suma Haber." },
-        { i: "🎯", t: "Tiro al Error", p: "Revisa si el código es del grupo correcto." },
-        { i: "🏃", t: "Salto del PGC", p: "Grupo 2 es Inmovilizado." },
-        { i: "🔢", t: "Cero Izquierda", p: "Base x 0.21 = IVA." },
-        { i: "🧩", t: "Memoria Activa", p: "472 es Soportado." },
-        { i: "🕳️", t: "Fuga Capital", p: "No olvides los gastos bancarios." },
-        { i: "🖼️", t: "Puzle Factura", p: "Total = Base + Cuota." },
+        { i: "⚖️", t: "Balance Pesas", p: "Suma Debe = Suma Haber." },
+        { i: "🎯", t: "Tiro al Error", p: "Revisa el código PGC." },
+        { i: "🏃", t: "Salto PGC", p: "Grupo 2 = Inmovilizado." },
+        { i: "🔢", t: "Cero Izq.", p: "Base x 0.21 = IVA." },
+        { i: "🧩", t: "Memoria Act.", p: "472 es Soportado." },
+        { i: "🕳️", t: "Fuga Capital", p: "Revisa gastos bancarios." },
+        { i: "🖼️", t: "Puzle Fact.", p: "Total = Base + Cuota." },
         { i: "⚡", t: "Auditor Veloz", p: "Activo=Bienes, Pasivo=Deudas." },
-        { i: "🪜", t: "Escalera Cierre", p: "Regulariza antes de cerrar." },
+        { i: "🪜", t: "Escalera", p: "Regulariza antes de cerrar." },
         { i: "🔍", t: "Sopa Cuentas", p: "Busca 'Bancos'." },
         { i: "🏆", t: "Examen Final", p: "Repasa todo el trimestre." }
     ];
