@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>✨ ContaMaster ✨</title>
+    <title>✨ ContaMaster Pro ✨</title>
     <style>
-        :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; }
+        :root { --fucsia: #D47088; --rosa: #FFF0F5; --rojo: #FF4D4D; --verde: #2E7D32; --azul: #4A90E2; }
         body { font-family: 'Segoe UI', sans-serif; background: #F5F5F5; margin: 0; padding: 40px; color: #333; font-size: 20px; }
         .container { max-width: 1400px; margin: auto; }
         #menu { display: block; text-align: center; }
@@ -14,21 +14,22 @@
         #vista-juegos { display: none; }
         .card { background: #FFF; border: 3px solid #EEE; border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-top: 20px; }
         .titulo-seccion { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 8px solid var(--fucsia); padding-left: 15px; margin-bottom: 25px; font-size: 1.8em; display: flex; justify-content: space-between; align-items: center; }
-        .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+        .grid-btns { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
         .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 18px; padding: 25px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
         .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); transform: scale(1.05); }
         .btn-j span { font-size: 2.5em; }
-        .btn-j small { font-size: 0.8em; font-weight: bold; color: #777; margin-top: 10px; }
+        .btn-j small { font-size: 0.9em; font-weight: bold; color: #777; margin-top: 10px; }
         #pantalla-juego { display: none; background: #FFF; padding: 40px; border-radius: 40px; border: 5px solid var(--fucsia); box-shadow: 0 25px 60px rgba(0,0,0,0.1); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .btn-esc { background: var(--rojo); color: #FFF; border: none; padding: 15px 35px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 20px; }
-        .box { background: var(--rosa); padding: 30px; border-radius: 25px; margin-bottom: 30px; font-size: 1.5em; font-weight: bold; position: relative; }
+        .box { background: var(--rosa); padding: 30px; border-radius: 25px; margin-bottom: 30px; font-size: 1.5em; font-weight: bold; }
         .row { display: grid; grid-template-columns: 140px 1fr 200px; gap: 20px; margin-bottom: 15px; width: 100%; max-width: 900px; margin: auto; }
         input { padding: 20px; border: 3px solid #DDD; border-radius: 15px; text-align: center; font-size: 22px; width: 100%; box-sizing: border-box; }
         .cta-name { background: #F5F5F5; border: none; color: var(--fucsia); font-weight: bold; text-align: left; padding-left: 20px; font-size: 22px; }
         .btn-val { background: var(--fucsia); color: #FFF; width: 100%; max-width: 900px; padding: 25px; border-radius: 20px; font-size: 1.6em; border: none; font-weight: bold; cursor: pointer; display: block; margin: 40px auto; }
         #msg { margin-top: 25px; padding: 20px; border-radius: 20px; text-align: center; display: none; font-weight: bold; font-size: 22px; }
-        .btn-check { background: var(--fucsia); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; margin: 10px 5px; font-weight: bold; font-size: 18px; }
+        #game-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; color: white; }
+        .modal { background: white; color: #333; padding: 40px; border-radius: 30px; width: 90%; max-width: 650px; text-align: center; }
     </style>
 </head>
 <body>
@@ -56,12 +57,10 @@
     <div id="pantalla-juego">
         <div class="header">
             <button class="btn-esc" onclick="cerrarJuego()">✖️ SALIR</button>
-            <div style="font-weight:bold; color:var(--fucsia); font-size: 1.6em;">MODO: EXAMEN ASIENTOS</div>
+            <div style="font-weight:bold; color:var(--fucsia); font-size: 1.6em;">MODO EXAMEN</div>
             <div id="timer" style="font-weight:bold; font-size: 2.5em; color: var(--fucsia);">00:00</div>
         </div>
-        <div class="box">
-            <div id="quest" style="line-height: 1.4;"></div>
-        </div>
+        <div class="box"><div id="quest"></div></div>
         <div id="area">
             <div class="row">
                 <input type="number" id="cd" placeholder="Código" oninput="updateName(this, 'nd')">
@@ -74,141 +73,145 @@
                 <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="ih" placeholder="€ Haber">
             </div>
-            <button class="btn-val" onclick="check()">🚀 VALIDAR RESPUESTA</button>
+            <button class="btn-val" onclick="checkAsiento()">🚀 VALIDAR ASIENTO</button>
         </div>
         <div id="msg"></div>
     </div>
 </div>
 
-<div id="game-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; color: white;">
-    <div style="background: white; color: #333; padding: 40px; border-radius: 25px; width: 90%; max-width: 600px; text-align: center; box-shadow: 0 0 50px var(--fucsia);">
-        <h2 id="mini-g-title" style="color: var(--fucsia); margin-top:0; font-size: 2em;"></h2>
-        
-        <div id="mini-g-setup" style="margin-bottom: 20px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 2px dashed #ddd;">
-            <p style="font-weight: bold; color: #555; margin-bottom: 10px;">INSTRUCCIONES:</p>
-            <p id="mini-g-instr" style="color: #666; font-size: 1.1em;"></p>
-            <button id="btn-start-mini" style="background: var(--verde); color: white; border: none; padding: 15px 40px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.2em; margin-top: 15px;" onclick="iniciarCiclo()">¡ENTENDIDO, EMPEZAR!</button>
+<div id="game-overlay">
+    <div class="modal">
+        <h2 id="m-title" style="color: var(--fucsia); font-size: 2em; margin-top:0;"></h2>
+        <div id="m-instr" style="background: #f0f0f0; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-style: italic; color: #555;"></div>
+        <div id="m-play" style="display:none;">
+            <div id="m-content" style="font-size: 1.5em; margin-bottom: 20px; font-weight: bold;"></div>
+            <div id="m-input-area"></div>
+            <div id="m-feedback" style="margin-top:20px; font-weight:bold; min-height: 30px;"></div>
         </div>
-
-        <div id="mini-g-play" style="display: none;">
-            <div id="mini-g-content" style="font-size: 1.4em; margin-bottom: 25px; font-weight: bold; color: #222;"></div>
-            <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 40px; font-size: 1.3em;"></div>
-            <div id="input-container"></div>
+        <div id="m-pre">
+            <button class="btn-val" style="margin:0; width:100%;" onclick="comenzarReto()">¡EMPEZAR RETO!</button>
         </div>
-
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
-        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer; font-weight: bold;">ABANDONAR MODO</button>
+        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background:none; border:none; color:#999; text-decoration:underline; cursor:pointer; margin-top:20px;">Abandonar Modo</button>
     </div>
 </div>
 
 <script>
     const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
     
-    const TEXTOS_AYUDA = {
-        balance: "Debes sumar los importes del DEBE y escribir el total exacto que debe ir en el HABER para cuadrar el asiento.",
-        pgc: "Se te mostrará el nombre de una cuenta. Debes escribir su código numérico de 3 dígitos según el PGC.",
-        iva: "Calcula el importe del IVA (21%) sobre la Base Imponible que te proporcionamos.",
-        auditor: "Determina si la cuenta mostrada es una cuenta de ACTIVO (clase 1, 2, 3, 430, 572). Pulsa SÍ o NO.",
-        sopa: "Encuentra el código correspondiente a la cuenta contable indicada."
-    };
+    const MODOS = [
+        { id: "balance", i: "⚖️", t: "Balance", h: "Suma el DEBE y calcula qué importe falta en el HABER para cuadrar." },
+        { id: "pgc", i: "🎯", t: "Tiro PGC", h: "Escribe el código numérico de 3 dígitos de la cuenta indicada." },
+        { id: "salto", i: "🏃", t: "Salto PGC", h: "Identifica la cuenta rápidamente por su código." },
+        { id: "iva", i: "🔢", t: "Cero IVA", h: "Calcula el 21% de IVA de la base imponible mostrada." },
+        { id: "memoria", i: "🧩", t: "Memoria", h: "Relaciona el nombre de la cuenta con su código oficial." },
+        { id: "fuga", i: "🕳️", t: "Fuga", h: "Descubre el dígito que falta en el código de cuenta." },
+        { id: "puzle", i: "🖼️", t: "Puzle", h: "Ordena los elementos de la cuenta contable." },
+        { id: "auditor", i: "⚡", t: "Auditor", h: "Indica rápidamente si la cuenta es de ACTIVO (SÍ/NO)." },
+        { id: "escalera", i: "🪜", t: "Escalera", h: "Responde correctamente para subir niveles de dificultad." },
+        { id: "sopa", i: "🔍", t: "Sopa", h: "Busca el código correcto entre varias opciones." },
+        { id: "examen", i: "🏆", t: "Examen", h: "Realiza el asiento contable completo de la operación." }
+    ];
 
-    let ejActual = null, currentMiniAnswer = "", lastMode = "";
+    let currentMode = "", currentAns = "", ejActual = null;
 
-    function abrirTrimestre(tIdx) {
+    function abrirTrimestre(n) {
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'block';
-        document.getElementById('txt-trimestre').innerText = (tIdx + 1) + "º TRIMESTRE";
-        const r = document.getElementById('render-botones');
-        r.innerHTML = "";
-        const mList = [{id:"balance", i:"⚖️", t:"Equilibrar"}, {id:"pgc", i:"🎯", t:"Códigos"}, {id:"iva", i:"🔢", t:"IVA 21%"}, {id:"auditor", i:"⚡", t:"Auditor"}, {id:"examen", i:"🏆", t:"Asientos"}];
-        mList.forEach(m => r.innerHTML += `<button class="btn-j" onclick="configurarModo('${m.id}', '${m.t}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+        document.getElementById('txt-trimestre').innerText = (n+1) + "º TRIMESTRE";
+        const grid = document.getElementById('render-botones');
+        grid.innerHTML = "";
+        MODOS.forEach(m => {
+            grid.innerHTML += `<button class="btn-j" onclick="configurarJuego('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`;
+        });
     }
 
-    function configurarModo(id, titulo) {
-        lastMode = id;
+    function configurarJuego(id) {
+        currentMode = id;
         if(id === 'examen') {
             generarAsientoAleatorio();
         } else {
-            document.getElementById('mini-g-title').innerText = "Modo: " + titulo;
-            document.getElementById('mini-g-instr').innerText = TEXTOS_AYUDA[id];
-            document.getElementById('mini-g-setup').style.display = "block";
-            document.getElementById('mini-g-play').style.display = "none";
-            document.getElementById('game-overlay').style.display = 'flex';
+            const m = MODOS.find(x => x.id === id);
+            document.getElementById('m-title').innerText = m.i + " " + m.t;
+            document.getElementById('m-instr').innerText = m.h;
+            document.getElementById('m-pre').style.display = "block";
+            document.getElementById('m-play').style.display = "none";
+            document.getElementById('game-overlay').style.display = "flex";
         }
     }
 
-    function iniciarCiclo() {
-        document.getElementById('mini-g-setup').style.display = "none";
-        document.getElementById('mini-g-play').style.display = "block";
-        lanzarReto();
+    function comenzarReto() {
+        document.getElementById('m-pre').style.display = "none";
+        document.getElementById('m-play').style.display = "block";
+        generarNuevoMiniReto();
     }
 
-    function lanzarReto() {
-        const cont = document.getElementById('mini-g-content');
-        const inpCont = document.getElementById('input-container');
-        document.getElementById('mini-feedback').innerText = "";
-        
-        const rVal = () => Math.floor(Math.random() * 8000) + 200;
+    function generarNuevoMiniReto() {
+        const cont = document.getElementById('m-content');
+        const area = document.getElementById('m-input-area');
+        document.getElementById('m-feedback').innerText = "";
         const keys = Object.keys(PGC);
+        const rand = () => Math.floor(Math.random()*5000)+100;
 
-        if(lastMode === 'balance') {
-            let a = rVal(), b = rVal(); currentMiniAnswer = a + b;
-            cont.innerHTML = `Asiento: [Cuenta A: ${a}€] + [Cuenta B: ${b}€]<br><span style='color:var(--fucsia)'>¿Qué importe cuadra el HABER?</span>`;
-            inpCont.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
-        } else if(lastMode === 'iva') {
-            let base = (Math.floor(Math.random()*50)+1)*10; currentMiniAnswer = (base * 0.21).toFixed(1);
-            cont.innerHTML = `Operación: Base Imponible de ${base}€.<br><span style='color:var(--fucsia)'>Calcula el IVA (21%)</span>`;
-            inpCont.innerHTML = `<input type="number" step="0.1" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
-        } else if(lastMode === 'auditor') {
-            let k = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = (k < 400 || k == 430 || k == 572) ? "V" : "F";
-            cont.innerHTML = `¿La cuenta <br>"${k} - ${PGC[k]}"<br> es de ACTIVO?`;
-            inpCont.innerHTML = `<button class="btn-check" onclick="validarReto('V')">SÍ</button><button class="btn-check" onclick="validarReto('F')">NO</button>`;
-        } else {
-            let k = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = k;
-            cont.innerHTML = `Escribe el código de:<br>"${PGC[k]}"`;
-            inpCont.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
+        switch(currentMode) {
+            case 'balance':
+                let d1 = rand(), d2 = rand(); currentAns = d1 + d2;
+                cont.innerHTML = `Debe: ${d1}€ y ${d2}€<br>¿Cuánto debe haber en el HABER?`;
+                area.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+                break;
+            case 'iva':
+                let b = (Math.floor(Math.random()*40)+1)*10; currentAns = (b * 0.21).toFixed(1);
+                cont.innerHTML = `Base Imponible: ${b}€<br>¿IVA Soportado (21%)?`;
+                area.innerHTML = `<input type="number" step="0.1" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
+                break;
+            case 'auditor':
+                let k = keys[Math.floor(Math.random()*keys.length)]; currentAns = (k < 400 || k == 430 || k == 572) ? "V" : "F";
+                cont.innerHTML = `¿"${k} - ${PGC[k]}" es de ACTIVO?`;
+                area.innerHTML = `<button class="btn-val" onclick="validarMini('V')">SÍ</button><button class="btn-val" style="background:#999" onclick="validarMini('F')">NO</button>`;
+                break;
+            default:
+                let kr = keys[Math.floor(Math.random()*keys.length)]; currentAns = kr;
+                cont.innerHTML = `Código de la cuenta:<br>"${PGC[kr]}"`;
+                area.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarMini(this.value)">`;
         }
         setTimeout(() => { if(document.getElementById('m-ans')) document.getElementById('m-ans').focus(); }, 50);
     }
 
-    function validarReto(val) {
-        const fb = document.getElementById('mini-feedback');
-        if (parseFloat(val) == parseFloat(currentMiniAnswer) || val.toString().toUpperCase() == currentMiniAnswer) {
+    function validarMini(val) {
+        const fb = document.getElementById('m-feedback');
+        if (parseFloat(val) == parseFloat(currentAns) || val.toString().toUpperCase() == currentAns) {
             fb.innerHTML = "<span style='color:green'>✔ ¡CORRECTO!</span>";
-            setTimeout(lanzarReto, 800);
+            setTimeout(generarNuevoMiniReto, 800);
         } else {
-            fb.innerHTML = "<span style='color:red'>✘ ERROR. Revisa el cálculo e intenta de nuevo.</span>";
+            fb.innerHTML = "<span style='color:red'>✘ Reinténtalo</span>";
         }
     }
 
     function generarAsientoAleatorio() {
-        const ejercicios = [
-            {q:"COMPRA de Mercaderías pagada mediante transferencia bancaria", cd:600, ch:572},
+        const ej = [
+            {q:"COMPRA de Mercaderías por banco", cd:600, ch:572},
             {q:"VENTA de Mercaderías cobrada por banco", cd:572, ch:700},
-            {q:"PAGO de factura de Suministros (Electricidad) por banco", cd:628, ch:572},
-            {q:"PAGO de nóminas de trabajadores por banco", cd:640, ch:572},
-            {q:"COBRO de deuda de un Cliente por banco", cd:572, ch:430},
+            {q:"PAGO de factura de Electricidad (Suministros)", cd:628, ch:572},
+            {q:"COBRO de un Cliente por banco", cd:572, ch:430},
             {q:"PAGO a un Proveedor por transferencia", cd:400, ch:572}
         ];
-        let sel = ejercicios[Math.floor(Math.random()*ejercicios.length)];
-        let monto = (Math.floor(Math.random()*30)+1)*100;
-        ejActual = { cd:sel.cd, ch:sel.ch, v:monto };
-        
+        let s = ej[Math.floor(Math.random()*ej.length)];
+        let v = (Math.floor(Math.random()*20)+1)*100;
+        ejActual = { cd:s.cd, ch:s.ch, v:v };
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerHTML = `<b>ENUNCIADO DE LA OPERACIÓN:</b><br><span style="font-size: 1.3em;">${sel.q} por valor de <u style="color:var(--fucsia)">${monto}€</u>.</span>`;
+        document.getElementById('quest').innerHTML = `<b>ENUNCIADO:</b><br>${s.q} por <b>${v}€</b>.`;
         document.getElementById('msg').style.display = 'none';
         clearInp();
     }
 
-    function check() {
+    function checkAsiento() {
         const m = document.getElementById('msg');
         const c1 = document.getElementById('cd').value, c2 = document.getElementById('ch').value;
         const v1 = document.getElementById('id').value, v2 = document.getElementById('ih').value;
         if(c1==ejActual.cd && c2==ejActual.ch && v1==ejActual.v && v2==ejActual.v) {
-            m.innerText = "⭐ ¡ASIENTO PERFECTO! Cargando siguiente reto..."; m.style.color="green"; m.style.display="block";
+            m.innerText = "⭐ ¡CORRECTO! Cargando siguiente..."; m.style.color="green"; m.style.display="block";
             setTimeout(generarAsientoAleatorio, 1500);
-        } else { m.innerText = "❌ Datos incorrectos. Asegúrate de que el Debe y el Haber sumen lo mismo y los códigos sean correctos."; m.style.color="red"; m.style.display="block"; }
+        } else { m.innerText = "❌ Revisa códigos e importes."; m.style.color="red"; m.style.display="block"; }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = PGC[el.value] || ""; }
