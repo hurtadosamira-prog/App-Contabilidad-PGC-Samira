@@ -56,11 +56,11 @@
     <div id="pantalla-juego">
         <div class="header">
             <button class="btn-esc" onclick="cerrarJuego()">✖️ SALIR</button>
-            <div id="game-title" style="font-weight:bold; color:var(--fucsia); font-size: 1.6em;">EXAMEN FINAL</div>
+            <div style="font-weight:bold; color:var(--fucsia); font-size: 1.6em;">MODO: EXAMEN ASIENTOS</div>
             <div id="timer" style="font-weight:bold; font-size: 2.5em; color: var(--fucsia);">00:00</div>
         </div>
         <div class="box">
-            <div id="quest"></div>
+            <div id="quest" style="line-height: 1.4;"></div>
         </div>
         <div id="area">
             <div class="row">
@@ -74,33 +74,42 @@
                 <input type="text" id="nh" class="cta-name" readonly placeholder="Cuenta...">
                 <input type="number" id="ih" placeholder="€ Haber">
             </div>
-            <button class="btn-val" onclick="check()">🚀 VALIDAR ASIENTO</button>
+            <button class="btn-val" onclick="check()">🚀 VALIDAR RESPUESTA</button>
         </div>
         <div id="msg"></div>
     </div>
 </div>
 
-<div id="game-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; color: white;">
-    <div style="background: white; color: #333; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; text-align: center;">
-        <h2 id="mini-g-title" style="color: var(--fucsia); margin-top:0;"></h2>
-        <div id="mini-g-instr" style="font-style: italic; color: #666; margin-bottom: 15px; font-size: 0.9em; border-bottom: 1px solid #EEE; padding-bottom: 10px;"></div>
-        <div id="mini-g-content" style="font-size: 1.3em; margin-bottom: 20px;"></div>
-        <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 30px; font-size: 1.2em;"></div>
-        <button id="btn-start-mini" style="background: var(--verde); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; display:none;" onclick="startLoop()">EMPEZAR</button>
-        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold;">SALIR</button>
+<div id="game-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; color: white;">
+    <div style="background: white; color: #333; padding: 40px; border-radius: 25px; width: 90%; max-width: 600px; text-align: center; box-shadow: 0 0 50px var(--fucsia);">
+        <h2 id="mini-g-title" style="color: var(--fucsia); margin-top:0; font-size: 2em;"></h2>
+        
+        <div id="mini-g-setup" style="margin-bottom: 20px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 2px dashed #ddd;">
+            <p style="font-weight: bold; color: #555; margin-bottom: 10px;">INSTRUCCIONES:</p>
+            <p id="mini-g-instr" style="color: #666; font-size: 1.1em;"></p>
+            <button id="btn-start-mini" style="background: var(--verde); color: white; border: none; padding: 15px 40px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.2em; margin-top: 15px;" onclick="iniciarCiclo()">¡ENTENDIDO, EMPEZAR!</button>
+        </div>
+
+        <div id="mini-g-play" style="display: none;">
+            <div id="mini-g-content" style="font-size: 1.4em; margin-bottom: 25px; font-weight: bold; color: #222;"></div>
+            <div id="mini-feedback" style="margin: 15px 0; font-weight: bold; min-height: 40px; font-size: 1.3em;"></div>
+            <div id="input-container"></div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+        <button onclick="document.getElementById('game-overlay').style.display='none'" style="background: #999; color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer; font-weight: bold;">ABANDONAR MODO</button>
     </div>
 </div>
 
 <script>
     const PGC = { 100:"Capital Social", 129:"Rtdo. Ejercicio", 210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 300:"Mercaderías", 400:"Proveedores", 430:"Clientes", 472:"IVA Sop.", 477:"IVA Rep.", 572:"Bancos", 600:"Compras", 700:"Ventas", 628:"Suministros", 640:"Sueldos" };
-    const INFO_MODOS = {
-        balance: "Calcula la suma total de las partidas del Debe para equilibrar el Haber.",
-        pgc: "Escribe el código numérico exacto de la cuenta contable que se muestra.",
-        salto: "Identifica rápidamente el código del PGC para esta cuenta.",
-        iva: "Calcula el 21% de IVA de la base imponible indicada.",
-        auditor: "Responde si la cuenta mostrada pertenece al grupo de Activo (Bienes y Derechos).",
-        sopa: "Localiza el código correcto para la cuenta descrita.",
-        examen: "Registra el asiento contable completo (códigos e importes) de la operación."
+    
+    const TEXTOS_AYUDA = {
+        balance: "Debes sumar los importes del DEBE y escribir el total exacto que debe ir en el HABER para cuadrar el asiento.",
+        pgc: "Se te mostrará el nombre de una cuenta. Debes escribir su código numérico de 3 dígitos según el PGC.",
+        iva: "Calcula el importe del IVA (21%) sobre la Base Imponible que te proporcionamos.",
+        auditor: "Determina si la cuenta mostrada es una cuenta de ACTIVO (clase 1, 2, 3, 430, 572). Pulsa SÍ o NO.",
+        sopa: "Encuentra el código correspondiente a la cuenta contable indicada."
     };
 
     let ejActual = null, currentMiniAnswer = "", lastMode = "";
@@ -111,88 +120,83 @@
         document.getElementById('txt-trimestre').innerText = (tIdx + 1) + "º TRIMESTRE";
         const r = document.getElementById('render-botones');
         r.innerHTML = "";
-        const mList = [
-            {id:"balance", i:"⚖️", t:"Balance"}, {id:"pgc", i:"🎯", t:"PGC"}, {id:"iva", i:"🔢", t:"IVA"}, 
-            {id:"auditor", i:"⚡", t:"Auditor"}, {id:"sopa", i:"🔍", t:"Sopa"}, {id:"examen", i:"🏆", t:"Examen"}
-        ];
-        mList.forEach(m => {
-            r.innerHTML += `<button class="btn-j" onclick="prepararJuego('${m.id}', '${m.t}')"><span>${m.i}</span><small>${m.t}</small></button>`;
-        });
+        const mList = [{id:"balance", i:"⚖️", t:"Equilibrar"}, {id:"pgc", i:"🎯", t:"Códigos"}, {id:"iva", i:"🔢", t:"IVA 21%"}, {id:"auditor", i:"⚡", t:"Auditor"}, {id:"examen", i:"🏆", t:"Asientos"}];
+        mList.forEach(m => r.innerHTML += `<button class="btn-j" onclick="configurarModo('${m.id}', '${m.t}')"><span>${m.i}</span><small>${m.t}</small></button>`);
     }
 
-    function prepararJuego(id, titulo) {
+    function configurarModo(id, titulo) {
+        lastMode = id;
         if(id === 'examen') {
-            alert("INSTRUCCIÓN: " + INFO_MODOS.examen);
             generarAsientoAleatorio();
         } else {
-            lastMode = id;
-            const overlay = document.getElementById('game-overlay');
-            document.getElementById('mini-g-title').innerText = titulo;
-            document.getElementById('mini-g-instr').innerText = INFO_MODOS[id];
-            document.getElementById('mini-g-content').innerHTML = "Pulsa empezar para generar el primer ejercicio.";
-            document.getElementById('mini-feedback').innerText = "";
-            document.getElementById('btn-start-mini').style.display = "inline-block";
-            overlay.style.display = 'flex';
+            document.getElementById('mini-g-title').innerText = "Modo: " + titulo;
+            document.getElementById('mini-g-instr').innerText = TEXTOS_AYUDA[id];
+            document.getElementById('mini-g-setup').style.display = "block";
+            document.getElementById('mini-g-play').style.display = "none";
+            document.getElementById('game-overlay').style.display = 'flex';
         }
     }
 
-    function startLoop() {
-        document.getElementById('btn-start-mini').style.display = "none";
-        launchMini(lastMode);
+    function iniciarCiclo() {
+        document.getElementById('mini-g-setup').style.display = "none";
+        document.getElementById('mini-g-play').style.display = "block";
+        lanzarReto();
     }
 
-    function launchMini(gameId) {
-        const content = document.getElementById('mini-g-content');
-        const fb = document.getElementById('mini-feedback');
-        fb.innerText = "";
+    function lanzarReto() {
+        const cont = document.getElementById('mini-g-content');
+        const inpCont = document.getElementById('input-container');
+        document.getElementById('mini-feedback').innerText = "";
         
-        const rVal = () => Math.floor(Math.random() * 5000) + 100;
+        const rVal = () => Math.floor(Math.random() * 8000) + 200;
         const keys = Object.keys(PGC);
 
-        switch(gameId) {
-            case 'balance':
-                let v1 = rVal(), v2 = rVal(); currentMiniAnswer = v1 + v2;
-                content.innerHTML = `<p style="font-size:0.8em; color:var(--fucsia)">EQUILIBRA EL ASIENTO</p><p>Debe: ${v1}€ y ${v2}€</p><p><b>¿Cuál es el importe total del Haber?</b></p><input type="number" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">`;
-                break;
-            case 'iva':
-                let base = (Math.floor(Math.random()*30)+1)*10; currentMiniAnswer = (base * 0.21).toFixed(1);
-                content.innerHTML = `<p style="font-size:0.8em; color:var(--fucsia)">CÁLCULO IMPOSITIVO (21%)</p><p>Base Imponible: ${base}€</p><p><b>¿Cuánto es el IVA Soportado?</b></p><input type="number" step="0.1" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">`;
-                break;
-            case 'auditor':
-                let kAudit = keys[Math.floor(Math.random()*keys.length)];
-                let isAct = kAudit < 400 ? "V" : "F"; currentMiniAnswer = isAct;
-                content.innerHTML = `<p style="font-size:0.8em; color:var(--fucsia)">CLASIFICACIÓN DE CUENTAS</p><p>¿Es la cuenta <b>${kAudit} - ${PGC[kAudit]}</b> de Activo?</p><button class="btn-check" onclick="checkMini('V')">SÍ (Verdadero)</button><button class="btn-check" onclick="checkMini('F')">NO (Falso)</button>`;
-                break;
-            default:
-                let kr = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = kr;
-                content.innerHTML = `<p style="font-size:0.8em; color:var(--fucsia)">BUSCA EN EL PGC</p><p><b>¿Cuál es el código de "${PGC[kr]}"?</b></p><input type="number" id="mini-ans" autofocus onkeydown="if(event.key==='Enter') checkMini(this.value)">`;
+        if(lastMode === 'balance') {
+            let a = rVal(), b = rVal(); currentMiniAnswer = a + b;
+            cont.innerHTML = `Asiento: [Cuenta A: ${a}€] + [Cuenta B: ${b}€]<br><span style='color:var(--fucsia)'>¿Qué importe cuadra el HABER?</span>`;
+            inpCont.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
+        } else if(lastMode === 'iva') {
+            let base = (Math.floor(Math.random()*50)+1)*10; currentMiniAnswer = (base * 0.21).toFixed(1);
+            cont.innerHTML = `Operación: Base Imponible de ${base}€.<br><span style='color:var(--fucsia)'>Calcula el IVA (21%)</span>`;
+            inpCont.innerHTML = `<input type="number" step="0.1" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
+        } else if(lastMode === 'auditor') {
+            let k = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = (k < 400 || k == 430 || k == 572) ? "V" : "F";
+            cont.innerHTML = `¿La cuenta <br>"${k} - ${PGC[k]}"<br> es de ACTIVO?`;
+            inpCont.innerHTML = `<button class="btn-check" onclick="validarReto('V')">SÍ</button><button class="btn-check" onclick="validarReto('F')">NO</button>`;
+        } else {
+            let k = keys[Math.floor(Math.random()*keys.length)]; currentMiniAnswer = k;
+            cont.innerHTML = `Escribe el código de:<br>"${PGC[k]}"`;
+            inpCont.innerHTML = `<input type="number" id="m-ans" autofocus onkeydown="if(event.key==='Enter') validarReto(this.value)">`;
         }
-        setTimeout(() => { if(document.getElementById('mini-ans')) document.getElementById('mini-ans').focus(); }, 100);
+        setTimeout(() => { if(document.getElementById('m-ans')) document.getElementById('m-ans').focus(); }, 50);
     }
 
-    function checkMini(val) {
+    function validarReto(val) {
         const fb = document.getElementById('mini-feedback');
         if (parseFloat(val) == parseFloat(currentMiniAnswer) || val.toString().toUpperCase() == currentMiniAnswer) {
-            fb.innerHTML = "<span style='color:green'>✔ ¡CORRECTO! Generando siguiente...</span>";
-            setTimeout(() => { launchMini(lastMode); }, 800);
+            fb.innerHTML = "<span style='color:green'>✔ ¡CORRECTO!</span>";
+            setTimeout(lanzarReto, 800);
         } else {
-            fb.innerHTML = "<span style='color:red'>✘ Respuesta incorrecta. Inténtalo de nuevo.</span>";
+            fb.innerHTML = "<span style='color:red'>✘ ERROR. Revisa el cálculo e intenta de nuevo.</span>";
         }
     }
 
     function generarAsientoAleatorio() {
-        const tipos = [
-            {e:"COMPRA de mercaderías al contado",cd:600,ch:572},
-            {e:"VENTA de mercaderías cobrada por banco",cd:572,ch:700},
-            {e:"PAGO de factura de suministros (Luz)",cd:628,ch:572},
-            {e:"PAGO de nóminas de empleados",cd:640,ch:572}
+        const ejercicios = [
+            {q:"COMPRA de Mercaderías pagada mediante transferencia bancaria", cd:600, ch:572},
+            {q:"VENTA de Mercaderías cobrada por banco", cd:572, ch:700},
+            {q:"PAGO de factura de Suministros (Electricidad) por banco", cd:628, ch:572},
+            {q:"PAGO de nóminas de trabajadores por banco", cd:640, ch:572},
+            {q:"COBRO de deuda de un Cliente por banco", cd:572, ch:430},
+            {q:"PAGO a un Proveedor por transferencia", cd:400, ch:572}
         ];
-        let sel = tipos[Math.floor(Math.random()*tipos.length)];
-        let monto = (Math.floor(Math.random()*20)+1)*50;
+        let sel = ejercicios[Math.floor(Math.random()*ejercicios.length)];
+        let monto = (Math.floor(Math.random()*30)+1)*100;
         ejActual = { cd:sel.cd, ch:sel.ch, v:monto };
+        
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerHTML = `<b style="color:var(--fucsia)">ENUNCIADO:</b><br>${sel.e} por un valor de <b>${monto}€</b>.`;
+        document.getElementById('quest').innerHTML = `<b>ENUNCIADO DE LA OPERACIÓN:</b><br><span style="font-size: 1.3em;">${sel.q} por valor de <u style="color:var(--fucsia)">${monto}€</u>.</span>`;
         document.getElementById('msg').style.display = 'none';
         clearInp();
     }
@@ -202,9 +206,9 @@
         const c1 = document.getElementById('cd').value, c2 = document.getElementById('ch').value;
         const v1 = document.getElementById('id').value, v2 = document.getElementById('ih').value;
         if(c1==ejActual.cd && c2==ejActual.ch && v1==ejActual.v && v2==ejActual.v) {
-            m.innerText = "⭐ ¡ASIENTO CORRECTO! Preparando el próximo reto..."; m.style.color="green"; m.style.display="block";
+            m.innerText = "⭐ ¡ASIENTO PERFECTO! Cargando siguiente reto..."; m.style.color="green"; m.style.display="block";
             setTimeout(generarAsientoAleatorio, 1500);
-        } else { m.innerText = "❌ Error en el asiento. Revisa códigos e importes."; m.style.color="red"; m.style.display="block"; }
+        } else { m.innerText = "❌ Datos incorrectos. Asegúrate de que el Debe y el Haber sumen lo mismo y los códigos sean correctos."; m.style.color="red"; m.style.display="block"; }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = PGC[el.value] || ""; }
