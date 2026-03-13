@@ -106,11 +106,12 @@
 </div>
 
 <script>
+    // PGC Oficial basado en plangeneralcontable.com
     const PGC_DATA = {
-        1: {572:"Bancos", 570:"Caja", 430:"Clientes", 400:"Proveedores", 600:"Compras Mercad.", 700:"Ventas Mercad.", 472:"IVA Sop.", 477:"IVA Rep."},
-        2: {216:"Mobiliario", 640:"Sueldos", 4751:"Hda. Retenc.", 4720:"IVA Sop. Intra.", 4770:"IVA Rep. Intra.", 4721:"IVA Sop. Import. (DUA)"},
-        3: {300:"Mercaderías", 610:"Var. Existencias", 480:"Gastos Antic.", 485:"Ingresos Antic.", 129:"Rtdo. Ejercicio", 628:"Suministros"},
-        4: {281:"Amort. Acum. Inm.", 681:"Amort. Inmovilizado", 4700:"H.P. Deudora por IVA", 4750:"H.P. Acreedora por IVA", 490:"Deterioro Créditos", 794:"Reversión Deterioro"}
+        1: {572:"Bancos c/c", 570:"Caja, €", 430:"Clientes", 400:"Proveedores", 600:"Compras de mercaderías", 700:"Ventas de mercaderías", 472:"H.P., IVA soportado", 477:"H.P., IVA repercutido"},
+        2: {216:"Mobiliario", 640:"Sueldos y salarios", 4751:"H.P., acreedora por retenciones practicadas", 4720:"H.P., IVA soportado (Intracom.)", 4770:"H.P., IVA repercutido (Intracom.)", 4721:"H.P., IVA soportado (Importaciones)"},
+        3: {300:"Mercaderías", 610:"Variación de existencias de mercaderías", 480:"Gastos anticipados", 485:"Ingresos anticipados", 129:"Resultado del ejercicio", 628:"Suministros"},
+        4: {281:"Amort. acumulada del inmovilizado material", 681:"Amortización del inmovilizado material", 4700:"H.P., deudora por IVA", 4750:"H.P., acreedora por IVA", 490:"Deterioro de valor de créditos comerciales", 794:"Reversión del deterioro de créditos comerciales"}
     };
 
     let triActual = 1, lastId = "", currentAns = "", targetAsiento = null;
@@ -123,7 +124,7 @@
 
     const MODOS = [
         {id:"balance", i:"⚖️", t:"Liquidación"}, {id:"pgc", i:"🎯", t:"Especiales"}, {id:"salto", i:"🏃", t:"Ext / Intra"},
-        {id:"iva", i:"🔢", t:"Prorratas"}, {id:"memoria", i:"🧩", t:"Contrapartida"}, {id:"fuga", i:"🕳️", t:"Existencias"},
+        {id:"iva", i:"🔢", t:"Valoración"}, {id:"memoria", i:"🧩", t:"Contrapartida"}, {id:"fuga", i:"🕳️", t:"Existencias"},
         {id:"puzle", i:"🖼️", t:"Valor Neto"}, {id:"auditor", i:"⚡", t:"Cierres"}, {id:"escalera", i:"🪜", t:"Periodificar"},
         {id:"sopa", i:"🔍", t:"Retenciones"}, {id:"examen", i:"🏆", t:"Diario Complejo"}
     ];
@@ -156,100 +157,100 @@
         
         let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;"';
 
-        // LÓGICAS INFINITAS CON CÁLCULOS DINÁMICOS
+        // Lógicas ajustadas estrictamente a las Normas de Registro y Valoración del PGC
         switch(lastId) {
-            case 'balance': // Liquidación de IVA Infinita
+            case 'balance': // Liquidación de IVA 
                 let sop = Math.floor(Math.random() * 5000) + 1000;
                 let rep = sop + Math.floor(Math.random() * 3000) + 100;
                 currentAns = rep - sop;
-                p.innerText = `Liquidación de IVA: Repercutido = ${rep}€ | Soportado = ${sop}€`;
-                a.innerHTML = `<p>¿Importe a pagar a Hacienda (4750)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                p.innerText = `Liquidación IVA: Repercutido = ${rep}€ | Soportado = ${sop}€`;
+                a.innerHTML = `<p>¿Importe de la deuda con Hacienda (4750 H.P. acreedora por IVA)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'pgc': // Cuentas PGC infinitas adaptadas al trimestre
+            case 'pgc': // Exactitud en cuentas clave
                 currentAns = k;
-                p.innerText = `¿Cuál es el CÓDIGO exacto de: ${pgc[k]}?`;
+                p.innerText = `¿Cuál es el CÓDIGO exacto en el PGC de: ${pgc[k]}?`;
                 a.innerHTML = `<input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'salto': // Aleatoriedad de países
-                let intraArr = ['Francia', 'Italia', 'Alemania', 'Portugal', 'Bélgica'];
-                let extraArr = ['Japón', 'EEUU', 'China', 'Canadá', 'Brasil'];
+            case 'salto': // DUA / Intracomunitaria
+                let intraArr = ['Francia', 'Italia', 'Alemania'];
+                let extraArr = ['Japón', 'EEUU', 'China'];
                 let isIntra = Math.random() > 0.5;
                 let pais = isIntra ? intraArr[Math.floor(Math.random()*intraArr.length)] : extraArr[Math.floor(Math.random()*extraArr.length)];
                 currentAns = isIntra ? "I" : "E";
-                p.innerText = `Compra de mercaderías a ${pais}.`;
-                a.innerHTML = `<p>¿Operación (I)ntracomunitaria o (E)xtracomunitaria/Aduana?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
+                p.innerText = `Adquisición de mercaderías provenientes de ${pais}.`;
+                a.innerHTML = `<p>¿Operación (I)ntracomunitaria o (E)xtracomunitaria/DUA?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
                 break;
                 
-            case 'iva': // Bases Imponibles complejas infinitas
-                let base_iva = Math.floor(Math.random()*8000) + 1000;
-                let desc = Math.floor(Math.random()*800) + 50;
-                let portes = Math.floor(Math.random()*300) + 20;
-                currentAns = base_iva - desc + portes;
-                p.innerText = `Factura: ${base_iva}€. Descuento en factura: ${desc}€. Portes: ${portes}€.`;
-                a.innerHTML = `<p>Calcula la BASE IMPONIBLE total para el IVA:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 'iva': // Valoración PGC: Descuentos disminuyen, transportes aumentan la Base
+                let importe_bruto = Math.floor(Math.random()*8000) + 1000;
+                let desc_factura = Math.floor(Math.random()*800) + 50;
+                let transporte = Math.floor(Math.random()*300) + 20;
+                currentAns = importe_bruto - desc_factura + transporte;
+                p.innerText = `Factura: Importe bruto ${importe_bruto}€. Descuento comercial ${desc_factura}€. Transportes ${transporte}€.`;
+                a.innerHTML = `<p>Según PGC, ¿Cuál es la BASE IMPONIBLE para aplicar el IVA?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'memoria': // Contrapartidas Dinámicas
+            case 'memoria': // Relación natural Debe/Haber
                 let pares = [
-                    {q:"Variación de Existencias (610)", a:"300"}, {q:"Amort. Inmovilizado (681)", a:"281"},
-                    {q:"H.P. Acreedora por IVA (4750)", a:"477"}, {q:"H.P. Deudora por IVA (4700)", a:"472"},
-                    {q:"Reversión Deterioro (794)", a:"490"}, {q:"Gastos Anticipados (480)", a:"628"}
+                    {q:"Variación de existencias de mercaderías (610)", a:"300"}, {q:"Amortización del inmovilizado material (681)", a:"281"},
+                    {q:"H.P., acreedora por IVA (4750)", a:"477"}, {q:"H.P., deudora por IVA (4700)", a:"472"},
+                    {q:"Reversión del deterioro de créditos comerciales (794)", a:"490"}, {q:"Gastos anticipados (480)", a:"628"}
                 ];
                 let par = pares[Math.floor(Math.random()*pares.length)];
                 currentAns = par.a;
-                p.innerText = `¿Qué cuenta es la CONTRAPARTIDA habitual de: ${par.q}?`;
+                p.innerText = `¿Qué cuenta de BALANCE interactúa directamente con: ${par.q}?`;
                 a.innerHTML = `<p>Escribe su código:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'fuga': // Variación de existencias infinita
+            case 'fuga': // Norma de valoración Existencias
                 let ei = Math.floor(Math.random()*10000) + 2000;
                 let ef = ei + (Math.floor(Math.random()*4000) - 2000); 
                 currentAns = ef;
-                p.innerText = `Cierre. Existencias Iniciales: ${ei}€. Recuento físico final: ${ef}€.`;
-                a.innerHTML = `<p>Tras regularizar, ¿cuál es el SALDO FINAL de Mercaderías (300)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                p.innerText = `Inventario físico: Existencias Iniciales ${ei}€. Existencias Finales ${ef}€.`;
+                a.innerHTML = `<p>Tras regularizar (asiento 610/300 y 300/610), ¿qué SALDO queda en la (300)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'puzle': // Valor Contable Neto Infinito
-                let coste = Math.floor(Math.random()*50000) + 10000;
-                let amortA = Math.floor(Math.random()*8000) + 2000;
-                let det = Math.floor(Math.random()*1000);
-                currentAns = coste - amortA - det;
-                p.innerText = `Adquisición: ${coste}€ | Amortización Acum: ${amortA}€ | Deterioro: ${det}€`;
-                a.innerHTML = `<p>Calcula el VALOR CONTABLE NETO del Inmovilizado:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 'puzle': // Valor Contable (Valor en Libros)
+                let precioAdq = Math.floor(Math.random()*50000) + 10000;
+                let amortAcum = Math.floor(Math.random()*8000) + 2000;
+                let deterioro = Math.floor(Math.random()*1000);
+                currentAns = precioAdq - amortAcum - deterioro;
+                p.innerText = `Precio de Adquisición: ${precioAdq}€ | Amortización Acum: ${amortAcum}€ | Deterioro: ${deterioro}€`;
+                a.innerHTML = `<p>Calcula el VALOR CONTABLE del inmovilizado (Valor Neto):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'auditor': // Cierres dinámicos (Gasto/Ingreso)
+            case 'auditor': // Mecánica del Asiento de Regularización (Cierre)
                 let cuentasCierre = keys.filter(x => x.startsWith('6') || x.startsWith('7'));
                 if(cuentasCierre.length === 0) cuentasCierre = ['600'];
                 let k_cierre = cuentasCierre[Math.floor(Math.random()*cuentasCierre.length)];
                 currentAns = k_cierre.startsWith('6') ? "H" : "D";
-                p.innerText = `Para saldar y cerrar la cuenta ${pgc[k_cierre]} al final del ejercicio...`;
-                a.innerHTML = `<p>¿La anotas en el (D)ebe o (H)aber?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
+                p.innerText = `Para saldar/cerrar la cuenta ${pgc[k_cierre]} contra la (129) Resultado del ejercicio...`;
+                a.innerHTML = `<p>¿Anotas la ${k_cierre} en el (D)ebe o en el (H)aber?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
                 break;
                 
-            case 'escalera': // Periodificación infinita de meses y cuotas
+            case 'escalera': // Principio de Devengo / Periodificación
                 let cuota_mes = Math.floor(Math.random()*20)*10 + 50; 
                 let meses_sig = Math.floor(Math.random()*10) + 1;
                 let prima_anual = cuota_mes * 12;
                 currentAns = cuota_mes * meses_sig;
-                p.innerText = `Pagas seguro anual por ${prima_anual}€. Pertenece al año siguiente un total de ${meses_sig} meses.`;
-                a.innerHTML = `<p>¿Importe a traspasar a (480) Gastos Anticipados a 31/12?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                p.innerText = `Abonas seguro anual por ${prima_anual}€. ${meses_sig} meses corresponden al ejercicio siguiente.`;
+                a.innerHTML = `<p>A 31/12, ¿qué importe cargas a la (480) Gastos Anticipados?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'sopa': // Retenciones dinámicas
+            case 'sopa': // IRPF Profesionales / Alquileres
                 let base_ret = Math.floor(Math.random()*4000) + 500;
                 let retRate = [19, 15, 7][Math.floor(Math.random()*3)];
                 currentAns = Math.round(base_ret * (retRate/100));
-                p.innerText = `Factura de servicios profesionales. Base Imponible: ${base_ret}€. Retención IRPF: ${retRate}%.`;
-                a.innerHTML = `<p>¿Importe para la (4751) H.P. Acreedora por retenciones?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                p.innerText = `Factura recibida de un asesor. Base: ${base_ret}€. Retención IRPF en factura: ${retRate}%.`;
+                a.innerHTML = `<p>¿Qué importe abonas a la (4751) H.P., acreedora por retenciones?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
         }
     }
 
     function darPista() { alert("Pista: Empieza o contiene un " + currentAns.toString()[0]); }
-    function noDado() { alert("Siguiente..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
+    function noDado() { alert("Saltando al siguiente..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
 
     function verSolucion() {
         if(lastId === 'examen') {
@@ -265,36 +266,36 @@
     }
 
     function generarExamen() {
-        // Generador infinito de Diario Complejo con combinaciones aleatorias
+        // Operaciones de diario estructuradas estrictamente a 2 cuentas para no inducir a error en el modelo Debe/Haber simple
         const operaciones = [
             {q:"Autorrepercusión de IVA por Adquisición Intracomunitaria", cd:4720, ch:4770},
-            {q:"Dotación anual a la amortización del inmovilizado", cd:681, ch:281},
-            {q:"Imputación a resultados de Gastos Anticipados del año anterior", cd:628, ch:480},
-            {q:"Asiento de Cierre: Saldar cuenta de Ventas contra Rtdo. Ejercicio", cd:700, ch:129},
-            {q:"Asiento de Cierre: Saldar cuenta de Compras contra Rtdo. Ejercicio", cd:129, ch:600},
-            {q:"Regularización: Dar de baja existencias iniciales", cd:610, ch:300},
-            {q:"Regularización: Dar de alta existencias finales", cd:300, ch:610},
-            {q:"Reversión del deterioro de créditos comerciales", cd:490, ch:794},
-            {q:"Liquidación IVA a pagar (Hacienda Acreedora)", cd:477, ch:4750},
-            {q:"Liquidación IVA a devolver (Hacienda Deudora)", cd:4700, ch:472},
-            {q:"Cobro a Clientes mediante cuenta bancaria", cd:572, ch:430},
-            {q:"Pago a Proveedores mediante transferencia", cd:400, ch:572},
-            {q:"El ingreso anticipado se imputa al resultado del ejercicio actual", cd:485, ch:700}
+            {q:"Dotación anual a la amortización del inmovilizado material", cd:681, ch:281},
+            {q:"Imputación a resultados de Gastos anticipados del ejercicio anterior", cd:628, ch:480},
+            {q:"Asiento de Regularización: Cierre de la cuenta de Ventas contra Rtdo. Ejercicio", cd:700, ch:129},
+            {q:"Asiento de Regularización: Cierre de la cuenta de Compras contra Rtdo. Ejercicio", cd:129, ch:600},
+            {q:"Variación Existencias: Dar de baja las existencias iniciales", cd:610, ch:300},
+            {q:"Variación Existencias: Reconocer las existencias finales", cd:300, ch:610},
+            {q:"Reconocimiento de la reversión del deterioro de créditos comerciales", cd:490, ch:794},
+            {q:"Pago de la liquidación del IVA a Hacienda mediante banco", cd:4750, ch:572},
+            {q:"Cobro de la devolución del IVA por parte de Hacienda mediante banco", cd:572, ch:4700},
+            {q:"Cobro de factura pendiente a clientes por banco", cd:572, ch:430},
+            {q:"Pago de deuda a proveedores por transferencia", cd:400, ch:572},
+            {q:"Imputación a resultados de Ingresos anticipados del ejercicio anterior", cd:485, ch:700}
         ];
         
         let s = operaciones[Math.floor(Math.random()*operaciones.length)];
-        let v = Math.floor(Math.random()*9500)+500; // Importes aleatorios entre 500 y 10000
+        let v = Math.floor(Math.random()*9500)+500;
         targetAsiento = { cd:s.cd, ch:s.ch, v:v };
         
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = `Asiento T${triActual}: ${s.q} por ${targetAsiento.v}€`;
+        document.getElementById('quest').innerText = `Diario T${triActual}: ${s.q} por ${targetAsiento.v}€`;
         clearInp();
     }
 
     function checkAsiento() {
         if(document.getElementById('cd').value == targetAsiento.cd && document.getElementById('ch').value == targetAsiento.ch && document.getElementById('id').value == targetAsiento.v) {
-            alert("¡Asiento correcto y cuadrado!"); generarExamen();
+            alert("¡Asiento correcto y cuadrado según PGC!"); generarExamen();
         } else { alert("Error en los códigos del asiento o en los importes."); }
     }
 
