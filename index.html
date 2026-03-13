@@ -122,12 +122,13 @@
         return p;
     }
 
-    const MODOS = [
-        {id:"balance", i:"⚖️", t:"Liquidación"}, {id:"pgc", i:"🎯", t:"Especiales"}, {id:"salto", i:"🏃", t:"Ext / Intra"},
-        {id:"iva", i:"🔢", t:"Valoración"}, {id:"memoria", i:"🧩", t:"Contrapartida"}, {id:"fuga", i:"🕳️", t:"Existencias"},
-        {id:"puzle", i:"🖼️", t:"Valor Neto"}, {id:"auditor", i:"⚡", t:"Cierres"}, {id:"escalera", i:"🪜", t:"Periodificar"},
-        {id:"sopa", i:"🔍", t:"Retenciones"}, {id:"examen", i:"🏆", t:"Diario Complejo"}
-    ];
+    // Juegos distribuidos por trimestre del año natural
+    const MODOS = {
+        1: [{id:"balance", i:"⚖️", t:"Liquidación"}, {id:"pgc", i:"🎯", t:"Especiales"}, {id:"salto", i:"🏃", t:"Ext / Intra"}],
+        2: [{id:"iva", i:"🔢", t:"Valoración"}, {id:"memoria", i:"🧩", t:"Contrapartida"}, {id:"fuga", i:"🕳️", t:"Existencias"}],
+        3: [{id:"puzle", i:"🖼️", t:"Valor Neto"}, {id:"auditor", i:"⚡", t:"Cierres"}, {id:"escalera", i:"🪜", t:"Periodificar"}],
+        4: [{id:"sopa", i:"🔍", t:"Retenciones"}, {id:"examen", i:"🏆", t:"Diario Complejo"}]
+    };
 
     function abrirTrimestre(n) {
         triActual = n;
@@ -136,7 +137,7 @@
         document.getElementById('txt-trimestre').innerText = n + "º TRIMESTRE";
         const grid = document.getElementById('render-botones');
         grid.innerHTML = "";
-        MODOS.forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+        MODOS[n].forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
     }
 
     function lanzar(id) {
