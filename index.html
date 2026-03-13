@@ -59,6 +59,7 @@
             <button class="btn-trimestre" onclick="abrirTrimestre(2)">2º TRIMESTRE</button>
             <button class="btn-trimestre" onclick="abrirTrimestre(3)">3º TRIMESTRE</button>
             <button class="btn-trimestre" onclick="abrirTrimestre(4)">4º TRIMESTRE</button>
+            <button class="btn-trimestre" onclick="volverAInicio()" style="background: #999; color: white; font-size: 1.5em; border-color: #999;">⬅ VOLVER</button>
         </div>
 
         <div id="vista-juegos">
@@ -131,7 +132,7 @@
         return p;
     }
 
-    // Estructura de navegación reorganizada por Asignaturas y Trimestres (sólo para conta)
+    // Estructura de navegación
     const ASIGNATURAS = {
         'rrhh': { titulo: "GESTIÓN DE RRHH", juegos: [{id:"finiquito", i:"🤝", t:"Finiquitos"}, {id:"embargo", i:"💼", t:"Embargos"}] },
         'logistica': { titulo: "GESTIÓN LOGÍSTICA", juegos: [{id:"pmp", i:"📦", t:"PMP"}] },
@@ -146,7 +147,7 @@
     };
 
     function abrirAsignatura(asig) {
-        triActual = 4; // Para que en otras asignaturas el PGC esté completamente disponible si hiciese falta
+        triActual = 4; // Aseguramos PGC completo
         document.getElementById('selector-asignaturas').style.display = 'none';
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'block';
@@ -159,7 +160,7 @@
 
     function abrirContabilidad() {
         document.getElementById('selector-asignaturas').style.display = 'none';
-        document.getElementById('selector-trimestres').style.display = 'grid';
+        document.getElementById('selector-trimestres').style.display = 'grid'; // Aquí se revelan los trimestres
         document.getElementById('vista-juegos').style.display = 'none';
     }
 
@@ -175,7 +176,7 @@
     }
 
     function volverAInicio() {
-        document.getElementById('selector-asignaturas').style.display = 'grid';
+        document.getElementById('selector-asignaturas').style.display = 'grid'; // Vuelve a mostrar solo asignaturas
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'none';
     }
