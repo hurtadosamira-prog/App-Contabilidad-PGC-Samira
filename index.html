@@ -106,7 +106,7 @@
 </div>
 
 <script>
-    const PGC_POR_TRIMESTRE = {
+    const PGC_DATA = {
         1: {572:"Bancos", 570:"Caja", 430:"Clientes", 400:"Proveedores", 600:"Compras Mercad.", 700:"Ventas Mercad.", 472:"IVA Sop.", 477:"IVA Rep."},
         2: {210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 640:"Sueldos y Sal.", 642:"S.S. Empresa", 4751:"Hda. Retenc."},
         3: {100:"Capital Social", 170:"Deudas L/P", 520:"Deudas C/P", 410:"Acreedores Serv.", 628:"Suministros", 129:"Rtdo. Ejerc."},
@@ -117,7 +117,7 @@
 
     function getPGCActual() {
         let p = {};
-        for(let i=1; i<=triActual; i++) Object.assign(p, PGC_POR_TRIMESTRE[i]);
+        for(let i=1; i<=triActual; i++) Object.assign(p, PGC_DATA[i]);
         return p;
     }
 
@@ -153,39 +153,75 @@
         const pgc = getPGCActual();
         const keys = Object.keys(pgc);
         let k = keys[Math.floor(Math.random()*keys.length)];
-        currentAns = k;
-        p.innerText = "¿Cuál es el código de " + pgc[k] + "?";
-        a.innerHTML = `<input type="number" id="ans" autofocus style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;">`;
+        let base = Math.floor(Math.random() * 1000) + 100;
+
+        switch(lastId) {
+            case 'balance':
+                let activo = base + 500; let neto = 500; currentAns = activo - neto;
+                p.innerText = `Activo: ${activo}€ | Neto: ${neto}€`;
+                a.innerHTML = `<p>¿Cual es el Pasivo?</p><input type="number" id="ans" autofocus>`;
+                break;
+            case 'salto':
+                currentAns = (k < 300) ? "A" : (k < 600 ? "P" : (k < 700 ? "G" : "I"));
+                p.innerText = `Cuenta: ${pgc[k]}`;
+                a.innerHTML = `<p>(A)ctivo, (P)asivo/Neto, (G)asto, (I)ngreso</p><input type="text" id="ans" maxlength="1" autofocus>`;
+                break;
+            case 'iva':
+                currentAns = Math.round(base * 0.21);
+                p.innerText = `Base Imponible: ${base}€`;
+                a.innerHTML = `<p>Calcula el IVA (21%)</p><input type="number" id="ans" autofocus>`;
+                break;
+            case 'fuga':
+                currentAns = k.slice(0, 2);
+                p.innerText = `Nombre: ${pgc[k]}`;
+                a.innerHTML = `<p>¿A qué SUBGRUPO (2 dígitos) pertenece?</p><input type="number" id="ans" autofocus>`;
+                break;
+            case 'auditor':
+                currentAns = (k < 600 || k == 706) ? "D" : "H";
+                p.innerText = `¿Por donde aumenta ${pgc[k]}?`;
+                a.innerHTML = `<p>(D)ebe o (H)aber</p><input type="text" id="ans" maxlength="1" autofocus>`;
+                break;
+            case 'sopa':
+                currentAns = k.charAt(0);
+                p.innerText = `Nombre: ${pgc[k]}`;
+                a.innerHTML = `<p>¿A qué GRUPO (1 dígito) pertenece?</p><input type="number" id="ans" autofocus>`;
+                break;
+            default: // pgc, memoria, puzle, escalera
+                currentAns = k;
+                p.innerText = `¿Código de la cuenta: ${pgc[k]}?`;
+                a.innerHTML = `<input type="number" id="ans" autofocus>`;
+        }
     }
 
-    function darPista() { alert("Pista: El código empieza por " + currentAns.toString()[0]); }
-    function noDado() { alert("Saltando..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
+    function darPista() { alert("Pista: Empieza por " + currentAns.toString()[0]); }
+    function noDado() { alert("Siguiente..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
 
     function verSolucion() {
         if(lastId === 'examen') {
-            alert(`Solución Asiento:\nDebe: ${targetAsiento.cd} por ${targetAsiento.v}€\nHaber: ${targetAsiento.ch} por ${targetAsiento.v}€`);
+            alert(`Solución Asiento:\nDebe: ${targetAsiento.cd} (${targetAsiento.v}€)\nHaber: ${targetAsiento.ch} (${targetAsiento.v}€)`);
         } else {
             alert(`La respuesta correcta es: ${currentAns}`);
         }
     }
 
     function validarMini(v) {
-        if(v == currentAns) { alert("¡Correcto!"); generarPregunta(); }
-        else { alert("Código incorrecto, inténtalo de nuevo."); }
+        if(v.toString().toUpperCase() == currentAns.toString().toUpperCase()) { alert("¡Correcto!"); generarPregunta(); }
+        else { alert("Incorrecto, vuelve a intentarlo."); }
     }
 
     function generarExamen() {
         const pgc = getPGCActual();
-        const k = Object.keys(pgc)[0];
-        targetAsiento = { cd:k, ch:572, v:500 };
+        const k = Object.keys(pgc)[Math.floor(Math.random() * Object.keys(pgc).length)];
+        targetAsiento = { cd:k, ch:572, v:Math.floor(Math.random()*900)+100 };
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = "Trimestre " + triActual + ": Registro de " + pgc[k] + " por 500€";
+        document.getElementById('quest').innerText = `Asiento T${triActual}: Registro de ${pgc[k]} por ${targetAsiento.v}€ mediante Banco.`;
     }
 
     function checkAsiento() {
-        if(document.getElementById('cd').value == targetAsiento.cd) { alert("¡Asiento correcto!"); generarExamen(); }
-        else { alert("Error en el asiento."); }
+        if(document.getElementById('cd').value == targetAsiento.cd && document.getElementById('ch').value == targetAsiento.ch) {
+            alert("¡Asiento correcto!"); generarExamen();
+        } else { alert("Error en los códigos del asiento."); }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = getPGCActual()[el.value] || ""; }
