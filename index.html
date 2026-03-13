@@ -154,46 +154,86 @@
         const keys = Object.keys(pgc);
         let k = keys[Math.floor(Math.random()*keys.length)];
         let base = Math.floor(Math.random() * 1000) + 100;
+        
+        let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;"';
 
+        // Lógicas 100% distintas para cada minijuego
         switch(lastId) {
-            case 'balance':
-                let activo = base + 500; let neto = 500; currentAns = activo - neto;
-                p.innerText = `Activo: ${activo}€ | Neto: ${neto}€`;
-                a.innerHTML = `<p>¿Cual es el Pasivo?</p><input type="number" id="ans" autofocus>`;
+            case 'balance': // Matemáticas de masas
+                let activo = base + 500; let pasivo = Math.floor(base/2); 
+                currentAns = activo - pasivo;
+                p.innerText = `Activo: ${activo}€ | Pasivo: ${pasivo}€`;
+                a.innerHTML = `<p>Calcula el PATRIMONIO NETO:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'salto':
-                currentAns = (k < 300) ? "A" : (k < 600 ? "P" : (k < 700 ? "G" : "I"));
-                p.innerText = `Cuenta: ${pgc[k]}`;
-                a.innerHTML = `<p>(A)ctivo, (P)asivo/Neto, (G)asto, (I)ngreso</p><input type="text" id="ans" maxlength="1" autofocus>`;
-                break;
-            case 'iva':
-                currentAns = Math.round(base * 0.21);
-                p.innerText = `Base Imponible: ${base}€`;
-                a.innerHTML = `<p>Calcula el IVA (21%)</p><input type="number" id="ans" autofocus>`;
-                break;
-            case 'fuga':
-                currentAns = k.slice(0, 2);
-                p.innerText = `Nombre: ${pgc[k]}`;
-                a.innerHTML = `<p>¿A qué SUBGRUPO (2 dígitos) pertenece?</p><input type="number" id="ans" autofocus>`;
-                break;
-            case 'auditor':
-                currentAns = (k < 600 || k == 706) ? "D" : "H";
-                p.innerText = `¿Por donde aumenta ${pgc[k]}?`;
-                a.innerHTML = `<p>(D)ebe o (H)aber</p><input type="text" id="ans" maxlength="1" autofocus>`;
-                break;
-            case 'sopa':
-                currentAns = k.charAt(0);
-                p.innerText = `Nombre: ${pgc[k]}`;
-                a.innerHTML = `<p>¿A qué GRUPO (1 dígito) pertenece?</p><input type="number" id="ans" autofocus>`;
-                break;
-            default: // pgc, memoria, puzle, escalera
+                
+            case 'pgc': // Clásico Nombre -> Código
                 currentAns = k;
-                p.innerText = `¿Código de la cuenta: ${pgc[k]}?`;
-                a.innerHTML = `<input type="number" id="ans" autofocus>`;
+                p.innerText = `¿Cuál es el CÓDIGO de: ${pgc[k]}?`;
+                a.innerHTML = `<input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'salto': // Clasificación de masas
+                currentAns = (k < 300 || k == 430 || k == 472 || k == 570 || k == 572) ? "1" : (k >= 600 && k < 700) ? "3" : (k >= 700 && k < 800) ? "4" : "2";
+                p.innerText = `Cuenta: ${pgc[k]}`;
+                a.innerHTML = `<p>(1) Activo | (2) Pasivo/Neto | (3) Gasto | (4) Ingreso</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'iva': // Cálculo Fiscal
+                currentAns = Math.round(base * 0.21);
+                p.innerText = `Si la Base Imponible es ${base}€...`;
+                a.innerHTML = `<p>Calcula la cuota de IVA (21%)</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'memoria': // Memorización temporal
+                currentAns = k;
+                p.innerText = `Memoriza rápido: ${pgc[k]} es la cuenta ${k}`;
+                a.innerHTML = `<p id="memo-txt" style="color:var(--rojo);">Ocultando en 3 segundos...</p><input type="number" id="ans" ${styleInp} style="display:none;">`;
+                setTimeout(() => {
+                    p.innerText = `¿Qué código era ${pgc[k]}?`;
+                    document.getElementById('memo-txt').style.display = 'none';
+                    let inp = document.getElementById('ans');
+                    inp.style.display = 'block'; inp.focus();
+                }, 3000);
+                break;
+                
+            case 'fuga': // Adivina el dígito faltante
+                let codStr = k.toString();
+                let missingIdx = 1; // Quitamos el del medio
+                currentAns = codStr[missingIdx];
+                let codFuga = codStr.substring(0, missingIdx) + "_" + codStr.substring(missingIdx + 1);
+                p.innerText = `${pgc[k]} empieza por ${codFuga}`;
+                a.innerHTML = `<p>¿Qué NÚMERO va en el hueco?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'puzle': // Anagrama del nombre de la cuenta
+                let scrambled = pgc[k].split('').sort(() => 0.5 - Math.random()).join('').toUpperCase();
+                currentAns = k;
+                p.innerText = `Descifra la cuenta: ${scrambled}`;
+                a.innerHTML = `<p>¿Cuál es su CÓDIGO contable?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'auditor': // Naturaleza (Debe/Haber)
+                let cuentasHaber = ['400','477','4751','100','170','520','410','129','281','112','490','794','700'];
+                currentAns = cuentasHaber.includes(k.toString()) ? "H" : "D";
+                p.innerText = `Cuenta: ${pgc[k]}`;
+                a.innerHTML = `<p>¿Por dónde NACE (aumenta)? (D)ebe o (H)aber</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
+                break;
+                
+            case 'escalera': // Nivel de subgrupo
+                currentAns = k.toString().substring(0, 2);
+                p.innerText = `Cuenta: ${pgc[k]} (${k})`;
+                a.innerHTML = `<p>¿A qué SUBGRUPO (2 primeros dígitos) pertenece?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'sopa': // Nivel de grupo principal
+                currentAns = k.toString().charAt(0);
+                p.innerText = `Cuenta: ${pgc[k]} (${k})`;
+                a.innerHTML = `<p>¿A qué GRUPO principal (1er dígito) pertenece?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
         }
     }
 
-    function darPista() { alert("Pista: Empieza por " + currentAns.toString()[0]); }
+    function darPista() { alert("Pista: Empieza o contiene un " + currentAns.toString()[0]); }
     function noDado() { alert("Siguiente..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
 
     function verSolucion() {
