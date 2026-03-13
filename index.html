@@ -21,10 +21,11 @@
         .titulo-seccion { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 8px solid var(--fucsia); padding-left: 15px; margin-bottom: 25px; font-size: 1.8em; display: flex; justify-content: space-between; align-items: center; }
         
         .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
-        .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 18px; padding: 15px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+        .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 18px; padding: 15px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); transform: scale(1.05); }
-        .btn-j span { font-size: 2em; }
-        .btn-j small { font-size: 0.8em; font-weight: bold; color: #777; margin-top: 10px; text-align: center; }
+        .btn-j span { font-size: 3.5em; }
+        .btn-j small { font-size: 0.9em; font-weight: bold; color: #333; margin-top: 10px; text-align: center; }
+        .desc-mini { font-size: 0.75em; color: #777; margin-top: 5px; text-align: center; line-height: 1.2; padding: 0 5px; }
 
         #pantalla-juego { display: none; background: #FFF; padding: 40px; border-radius: 40px; border: 5px solid var(--fucsia); }
         .box { background: var(--rosa); padding: 30px; border-radius: 25px; margin-bottom: 30px; font-size: 1.5em; font-weight: bold; text-align: center; position: relative; }
@@ -134,56 +135,91 @@
 
     const ASIGNATURAS = {
         'rrhh': { titulo: "GESTIÓN DE RRHH", juegos: [
-            {id:"finiquito", i:"🤝", t:"Finiquito"}, {id:"embargo", i:"💼", t:"Embargo"},
-            {id:"ss_obrera", i:"📉", t:"SS Obrera"}, {id:"ss_empresa", i:"🏢", t:"SS Empresa"},
-            {id:"irpf", i:"🏛️", t:"IRPF Base"}, {id:"horas_extra", i:"⏱️", t:"Horas Ext."},
-            {id:"despido_imp", i:"⚖️", t:"D. Improc."}, {id:"it_enferm", i:"🤒", t:"Baja IT"},
-            {id:"sal_neto", i:"💶", t:"Salario Neto"}, {id:"prorrata_extra", i:"🎁", t:"Paga Extra"}
+            {id:"finiquito", i:"🤝", t:"Finiquito", d:"Cálculo por despido"}, 
+            {id:"embargo", i:"💼", t:"Embargo", d:"Retención salarial"},
+            {id:"ss_obrera", i:"📉", t:"SS Obrera", d:"Cuota del trabajador"}, 
+            {id:"ss_empresa", i:"🏢", t:"SS Empresa", d:"Coste del empleador"},
+            {id:"irpf", i:"🏛️", t:"IRPF Base", d:"Retención a Hacienda"}, 
+            {id:"horas_extra", i:"⏱️", t:"Horas Ext.", d:"Abono extra bruto"},
+            {id:"despido_imp", i:"⚖️", t:"D. Improc.", d:"Indemnización máxima"}, 
+            {id:"it_enferm", i:"🤒", t:"Baja IT", d:"Baja por enfermedad"},
+            {id:"sal_neto", i:"💶", t:"Salario Neto", d:"Líquido a percibir"}, 
+            {id:"prorrata_extra", i:"🎁", t:"Paga Extra", d:"Prorrata mensual"}
         ]},
         'logistica': { titulo: "GESTIÓN LOGÍSTICA", juegos: [
-            {id:"pmp", i:"📦", t:"PMP"}, {id:"fifo", i:"🛒", t:"FIFO"},
-            {id:"pto_pedido", i:"📐", t:"Pto. Pedido"}, {id:"stock_seg", i:"🛡️", t:"Stock Seg."},
-            {id:"lote_wilson", i:"🎯", t:"Lote Wilson"}, {id:"almacenaje", i:"🏭", t:"Coste Alm."},
-            {id:"rotacion", i:"🔄", t:"Rotación"}, {id:"rotura", i:"⚠️", t:"Coste Rotura"},
-            {id:"pedidos_ano", i:"🚚", t:"Nº Pedidos"}, {id:"stock_medio", i:"📊", t:"Stock Medio"}
+            {id:"pmp", i:"📦", t:"PMP", d:"Valoración mixta"}, 
+            {id:"fifo", i:"🛒", t:"FIFO", d:"Primera entrada/salida"},
+            {id:"pto_pedido", i:"📐", t:"Pto. Pedido", d:"Cuándo pedir más"}, 
+            {id:"stock_seg", i:"🛡️", t:"Stock Seg.", d:"Colchón de seguridad"},
+            {id:"lote_wilson", i:"🎯", t:"Lote Wilson", d:"Pedido óptimo"}, 
+            {id:"almacenaje", i:"🏭", t:"Coste Alm.", d:"Coste de posesión"},
+            {id:"rotacion", i:"🔄", t:"Rotación", d:"Veces que se renueva"}, 
+            {id:"rotura", i:"⚠️", t:"Coste Rotura", d:"Pérdida por no tener"},
+            {id:"pedidos_ano", i:"🚚", t:"Nº Pedidos", d:"Frecuencia anual"}, 
+            {id:"stock_medio", i:"📊", t:"Stock Medio", d:"Volumen habitual"}
         ]},
         'financiera': { titulo: "GESTIÓN FINANCIERA", juegos: [
-            {id:"interes", i:"📈", t:"Int. Simple"}, {id:"int_comp", i:"📊", t:"Int. Comp."},
-            {id:"remesa", i:"🏦", t:"Dto. Comerc."}, {id:"tae", i:"% ", t:"Cálculo TAE"},
-            {id:"prestamo", i:"💳", t:"Coste Prést."}, {id:"factoring", i:"🧾", t:"Factoring"},
-            {id:"renting", i:"🚗", t:"Renting"}, {id:"van", i:"⚖️", t:"VAN (VPN)"},
-            {id:"tir", i:"🎯", t:"TIR Concepto"}, {id:"rentabilidad", i:"💰", t:"Rentabilidad"}
+            {id:"interes", i:"📈", t:"Int. Simple", d:"Rendimiento lineal"}, 
+            {id:"int_comp", i:"📊", t:"Int. Comp.", d:"Interés acumulado"},
+            {id:"remesa", i:"🏦", t:"Dto. Comerc.", d:"Anticipo de pagarés"}, 
+            {id:"tae", i:"% ", t:"Cálculo TAE", d:"Coste real anual"},
+            {id:"prestamo", i:"💳", t:"Coste Prést.", d:"Cuota de intereses"}, 
+            {id:"factoring", i:"🧾", t:"Factoring", d:"Cesión de cobros"},
+            {id:"renting", i:"🚗", t:"Renting", d:"Alquiler operativo"}, 
+            {id:"van", i:"⚖️", t:"VAN (VPN)", d:"Valor actual neto"},
+            {id:"tir", i:"🎯", t:"TIR Concepto", d:"Tasa de retorno"}, 
+            {id:"rentabilidad", i:"💰", t:"Rentabilidad", d:"Retorno vs Inversión"}
         ]}
     };
 
     const CONTA_TRIMESTRES = {
         1: [
-            {id:"t1_iva_liq", i:"🏛️", t:"Liquid. IVA"}, {id:"t1_dto_fra", i:"🏷️", t:"Dto. Factura"},
-            {id:"t1_anticipo", i:"💵", t:"Anticipo Cli."}, {id:"t1_vta_merc", i:"🛒", t:"Vta. Mercad."},
-            {id:"t1_nomina", i:"👷", t:"Gasto Nómina"}, {id:"t1_seg_soc", i:"🏢", t:"Gasto SS"},
-            {id:"t1_letra_cli", i:"✒️", t:"Giro Letras"}, {id:"t1_arqueo", i:"🗄️", t:"Arqueo Caja"},
-            {id:"t1_suplido", i:"🚚", t:"Suplidos"}, {id:"t1_rappels", i:"🎁", t:"Rappels Vta."}
+            {id:"t1_iva_liq", i:"🏛️", t:"Liquid. IVA", d:"Modelo 303"}, 
+            {id:"t1_dto_fra", i:"🏷️", t:"Dto. Factura", d:"Descuento comercial"},
+            {id:"t1_anticipo", i:"💵", t:"Anticipo Cli.", d:"Cobro adelantado"}, 
+            {id:"t1_vta_merc", i:"🛒", t:"Vta. Mercad.", d:"Ingreso comercial"},
+            {id:"t1_nomina", i:"👷", t:"Gasto Nómina", d:"Salario base"}, 
+            {id:"t1_seg_soc", i:"🏢", t:"Gasto SS", d:"Cargo a empresa"},
+            {id:"t1_letra_cli", i:"✒️", t:"Giro Letras", d:"Derecho de cobro"}, 
+            {id:"t1_arqueo", i:"🗄️", t:"Arqueo Caja", d:"Ajuste de efectivo"},
+            {id:"t1_suplido", i:"🚚", t:"Suplidos", d:"Gastos del cliente"}, 
+            {id:"t1_rappels", i:"🎁", t:"Rappels Vta.", d:"Premio por volumen"}
         ],
         2: [
-            {id:"t2_adq_inmov", i:"🏗️", t:"Alta Inmovil."}, {id:"t2_amort", i:"⏳", t:"Amortización"},
-            {id:"t2_vta_inmov", i:"🏷️", t:"Vta. Inmovil."}, {id:"t2_permuta", i:"🔄", t:"Permuta"},
-            {id:"t2_deterioro", i:"📉", t:"Deterioro Ex."}, {id:"t2_var_ex", i:"📦", t:"Variación Ex."},
-            {id:"t2_trab_prop", i:"🛠️", t:"Trab. Propios"}, {id:"t2_me_compra", i:"💱", t:"Divisa Compra"},
-            {id:"t2_me_cierre", i:"🌎", t:"Divisa Cierre"}, {id:"t2_acciones", i:"📊", t:"Acciones C/P"}
+            {id:"t2_adq_inmov", i:"🏗️", t:"Alta Inmovil.", d:"Compra de activo"}, 
+            {id:"t2_amort", i:"⏳", t:"Amortización", d:"Depreciación anual"},
+            {id:"t2_vta_inmov", i:"🏷️", t:"Vta. Inmovil.", d:"Baja de maquinaria"}, 
+            {id:"t2_permuta", i:"🔄", t:"Permuta", d:"Intercambio de bienes"},
+            {id:"t2_deterioro", i:"📉", t:"Deterioro Ex.", d:"Pérdida de valor"}, 
+            {id:"t2_var_ex", i:"📦", t:"Variación Ex.", d:"Ajuste de inventario"},
+            {id:"t2_trab_prop", i:"🛠️", t:"Trab. Propios", d:"Autoconstrucción"}, 
+            {id:"t2_me_compra", i:"💱", t:"Divisa Compra", d:"Deuda extranjera"},
+            {id:"t2_me_cierre", i:"🌎", t:"Divisa Cierre", d:"Ajuste fin de año"}, 
+            {id:"t2_acciones", i:"📊", t:"Acciones C/P", d:"Inversión financiera"}
         ],
         3: [
-            {id:"t3_prestamo", i:"🏦", t:"Alta Préstamo"}, {id:"t3_int_prest", i:"📈", t:"Devengo Int."},
-            {id:"t3_reclasif", i:"📅", t:"Reclasificar"}, {id:"t3_leasing", i:"🚗", t:"Leasing Activo"},
-            {id:"t3_subvencion", i:"🏛️", t:"Subvención"}, {id:"t3_provision", i:"🛡️", t:"Provisión"},
-            {id:"t3_fianza", i:"🔑", t:"Fianza Arrend."}, {id:"t3_dividendos", i:"💰", t:"Cobro Divid."},
-            {id:"t3_efecto_imp", i:"❌", t:"Ef. Impagado"}, {id:"t3_prorrata", i:"⚖️", t:"Prorrata IVA"}
+            {id:"t3_prestamo", i:"🏦", t:"Alta Préstamo", d:"Concesión bancaria"}, 
+            {id:"t3_int_prest", i:"📈", t:"Devengo Int.", d:"Gasto financiero"},
+            {id:"t3_reclasif", i:"📅", t:"Reclasificar", d:"Paso L/P a C/P"}, 
+            {id:"t3_leasing", i:"🚗", t:"Leasing Activo", d:"Arrendamiento financ."},
+            {id:"t3_subvencion", i:"🏛️", t:"Subvención", d:"Ayuda de capital"}, 
+            {id:"t3_provision", i:"🛡️", t:"Provisión", d:"Cobertura de riesgos"},
+            {id:"t3_fianza", i:"🔑", t:"Fianza Arrend.", d:"Depósito de alquiler"}, 
+            {id:"t3_dividendos", i:"💰", t:"Cobro Divid.", d:"Ingreso por acciones"},
+            {id:"t3_efecto_imp", i:"❌", t:"Ef. Impagado", d:"Morosidad cliente"}, 
+            {id:"t3_prorrata", i:"⚖️", t:"Prorrata IVA", d:"Ajuste de deducción"}
         ],
         4: [
-            {id:"t4_devengo_seg", i:"📆", t:"Periodif. Gst."}, {id:"t4_ing_antic", i:"📥", t:"Periodif. Ing."},
-            {id:"t4_isoc_ajuste", i:"⚙️", t:"Ajuste ISOC"}, {id:"t4_isoc_cuota", i:"🏢", t:"Cuota Difer."},
-            {id:"t4_pago_frac", i:"🧾", t:"Pago Fracc."}, {id:"t4_rtdo_ejer", i:"⚖️", t:"Saldo Previo"},
-            {id:"t4_cierre_g", i:"📉", t:"Cierre Gastos"}, {id:"t4_cierre_i", i:"📈", t:"Cierre Ingresos"},
-            {id:"t4_rva_legal", i:"🧱", t:"Reserva Legal"}, {id:"t4_examen", i:"🏆", t:"Examen Diario"}
+            {id:"t4_devengo_seg", i:"📆", t:"Periodif. Gst.", d:"Ajuste de seguro"}, 
+            {id:"t4_ing_antic", i:"📥", t:"Periodif. Ing.", d:"Ingreso por adelantado"},
+            {id:"t4_isoc_ajuste", i:"⚙️", t:"Ajuste ISOC", d:"Diferencia fiscal"}, 
+            {id:"t4_isoc_cuota", i:"🏢", t:"Cuota Difer.", d:"Pago del impuesto"},
+            {id:"t4_pago_frac", i:"🧾", t:"Pago Fracc.", d:"Anticipo a Hacienda"}, 
+            {id:"t4_rtdo_ejer", i:"⚖️", t:"Saldo Previo", d:"Cálculo de Bº o Pª"},
+            {id:"t4_cierre_g", i:"📉", t:"Cierre Gastos", d:"Saldar grupo 6"}, 
+            {id:"t4_cierre_i", i:"📈", t:"Cierre Ingresos", d:"Saldar grupo 7"},
+            {id:"t4_rva_legal", i:"🧱", t:"Reserva Legal", d:"Fondo obligatorio"}, 
+            {id:"t4_examen", i:"🏆", t:"Examen Diario", d:"Simulador completo PGC"}
         ]
     };
 
@@ -196,7 +232,7 @@
         
         const grid = document.getElementById('render-botones');
         grid.innerHTML = "";
-        ASIGNATURAS[asig].juegos.forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+        ASIGNATURAS[asig].juegos.forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small><div class="desc-mini">${m.d}</div></button>`);
     }
 
     function abrirContabilidad() {
@@ -213,7 +249,7 @@
         
         const grid = document.getElementById('render-botones');
         grid.innerHTML = "";
-        (CONTA_TRIMESTRES[n] || []).forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+        (CONTA_TRIMESTRES[n] || []).forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small><div class="desc-mini">${m.d}</div></button>`);
     }
 
     function volverAInicio() {
