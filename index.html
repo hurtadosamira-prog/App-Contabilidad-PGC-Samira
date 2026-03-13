@@ -106,11 +106,12 @@
 </div>
 
 <script>
+    // PGC ampliado con cuentas complejas para el examen final
     const PGC_DATA = {
         1: {572:"Bancos", 570:"Caja", 430:"Clientes", 400:"Proveedores", 600:"Compras Mercad.", 700:"Ventas Mercad.", 472:"IVA Sop.", 477:"IVA Rep."},
-        2: {210:"Terrenos", 216:"Mobiliario", 217:"Equipos Info", 640:"Sueldos y Sal.", 642:"S.S. Empresa", 4751:"Hda. Retenc."},
-        3: {100:"Capital Social", 170:"Deudas L/P", 520:"Deudas C/P", 410:"Acreedores Serv.", 628:"Suministros", 129:"Rtdo. Ejerc."},
-        4: {281:"Amort. Acum.", 681:"Amort. Inm.", 112:"Reserva Legal", 431:"Efectos Com.", 490:"Deterioro", 794:"Reversión Det."}
+        2: {216:"Mobiliario", 640:"Sueldos", 4751:"Hda. Retenc.", 4720:"IVA Sop. Intra.", 4770:"IVA Rep. Intra.", 4721:"IVA Sop. Import. (DUA)"},
+        3: {300:"Mercaderías", 610:"Var. Existencias", 480:"Gastos Antic.", 485:"Ingresos Antic.", 129:"Rtdo. Ejercicio", 628:"Suministros"},
+        4: {281:"Amort. Acum. Inm.", 681:"Amort. Inmovilizado", 4700:"H.P. Deudora por IVA", 4750:"H.P. Acreedora por IVA", 490:"Deterioro Créditos", 794:"Reversión Deterioro"}
     };
 
     let triActual = 1, lastId = "", currentAns = "", targetAsiento = null;
@@ -122,10 +123,10 @@
     }
 
     const MODOS = [
-        {id:"balance", i:"⚖️", t:"Balance"}, {id:"pgc", i:"🎯", t:"PGC"}, {id:"salto", i:"🏃", t:"Salto"},
-        {id:"iva", i:"🔢", t:"IVA"}, {id:"memoria", i:"🧩", t:"Memoria"}, {id:"fuga", i:"🕳️", t:"Fuga"},
-        {id:"puzle", i:"🖼️", t:"Puzle"}, {id:"auditor", i:"⚡", t:"Auditor"}, {id:"escalera", i:"🪜", t:"Escalera"},
-        {id:"sopa", i:"🔍", t:"Sopa"}, {id:"examen", i:"🏆", t:"Examen"}
+        {id:"balance", i:"⚖️", t:"Liquidación"}, {id:"pgc", i:"🎯", t:"Especiales"}, {id:"salto", i:"🏃", t:"Ext / Intra"},
+        {id:"iva", i:"🔢", t:"Prorratas"}, {id:"memoria", i:"🧩", t:"Contrapartida"}, {id:"fuga", i:"🕳️", t:"Existencias"},
+        {id:"puzle", i:"🖼️", t:"Valor Neto"}, {id:"auditor", i:"⚡", t:"Cierres"}, {id:"escalera", i:"🪜", t:"Periodificar"},
+        {id:"sopa", i:"🔍", t:"Retenciones"}, {id:"examen", i:"🏆", t:"Diario Complejo"}
     ];
 
     function abrirTrimestre(n) {
@@ -153,83 +154,84 @@
         const pgc = getPGCActual();
         const keys = Object.keys(pgc);
         let k = keys[Math.floor(Math.random()*keys.length)];
-        let base = Math.floor(Math.random() * 1000) + 100;
+        let base = Math.floor(Math.random() * 2000) + 500;
         
         let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;"';
 
-        // Lógicas 100% distintas para cada minijuego
+        // MECÁNICAS DE CONTABILIDAD AVANZADA
         switch(lastId) {
-            case 'balance': // Matemáticas de masas
-                let activo = base + 500; let pasivo = Math.floor(base/2); 
-                currentAns = activo - pasivo;
-                p.innerText = `Activo: ${activo}€ | Pasivo: ${pasivo}€`;
-                a.innerHTML = `<p>Calcula el PATRIMONIO NETO:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 'balance': // Liquidación de IVA
+                let rep = base + 400; let sop = base; currentAns = rep - sop;
+                p.innerText = `Liquidación IVA: Repercutido = ${rep}€ | Soportado = ${sop}€`;
+                a.innerHTML = `<p>¿Importe a pagar a Hacienda Pública Acreedora (4750)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'pgc': // Clásico Nombre -> Código
-                currentAns = k;
-                p.innerText = `¿Cuál es el CÓDIGO de: ${pgc[k]}?`;
+            case 'pgc': // Búsqueda de cuentas especiales
+                let avanzadas = {4721:"IVA Soportado en Importaciones (DUA)", 4770:"IVA Repercutido Intracomunitario", 480:"Gastos Anticipados (Periodificación)", 610:"Variación de Existencias"};
+                let kAv = Object.keys(avanzadas)[Math.floor(Math.random()*4)];
+                currentAns = kAv;
+                p.innerText = `¿Cuál es el CÓDIGO de: ${avanzadas[kAv]}?`;
                 a.innerHTML = `<input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'salto': // Clasificación de masas
-                currentAns = (k < 300 || k == 430 || k == 472 || k == 570 || k == 572) ? "1" : (k >= 600 && k < 700) ? "3" : (k >= 700 && k < 800) ? "4" : "2";
-                p.innerText = `Cuenta: ${pgc[k]}`;
-                a.innerHTML = `<p>(1) Activo | (2) Pasivo/Neto | (3) Gasto | (4) Ingreso</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 'salto': // Intracomunitaria vs Extracomunitaria (Aduana)
+                let isIntra = Math.random() > 0.5;
+                currentAns = isIntra ? "I" : "E";
+                p.innerText = isIntra ? "Compra de mercaderías a Francia (UE)." : "Compra de mercaderías a Japón.";
+                a.innerHTML = `<p>¿Operación (I)ntracomunitaria o (E)xtracomunitaria/Importación?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
                 break;
                 
-            case 'iva': // Cálculo Fiscal
-                currentAns = Math.round(base * 0.21);
-                p.innerText = `Si la Base Imponible es ${base}€...`;
-                a.innerHTML = `<p>Calcula la cuota de IVA (21%)</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 'iva': // Base Imponible con descuentos en factura
+                let descuento = 150; currentAns = base - descuento;
+                p.innerText = `Factura de compra: ${base}€. Descuento comercial incluido en factura: ${descuento}€.`;
+                a.innerHTML = `<p>¿Cuál es la BASE IMPONIBLE para calcular el IVA?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
-            case 'memoria': // Memorización temporal
+            case 'memoria': // Parejas Contables (La contrapartida)
+                let parejas = [{q:"Variación de Existencias (610)", a:"300"}, {q:"Amortización del Inmovilizado (681)", a:"281"}, {q:"Pérdidas por Deterioro (694)", a:"490"}];
+                let par = parejas[Math.floor(Math.random()*parejas.length)];
+                currentAns = par.a;
+                p.innerText = `¿Qué cuenta de BALANCE es la contrapartida habitual de: ${par.q}?`;
+                a.innerHTML = `<p>Escribe su código:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'fuga': // Variación de existencias
+                let ei = base; let ef = base + 300; currentAns = ef - ei;
+                p.innerText = `Cierre de ejercicio. Existencias Iniciales: ${ei}€ | Existencias Finales: ${ef}€`;
+                a.innerHTML = `<p>¿A cuánto asciende el SALDO FINAL de Mercaderías (300)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'puzle': // Valor Contable Neto
+                let coste = base + 5000; let amortA = 1200; let det = 300; currentAns = coste - amortA - det;
+                p.innerText = `Precio Adquisición: ${coste}€ | Amortización Acumulada: ${amortA}€ | Deterioro: ${det}€`;
+                a.innerHTML = `<p>Calcula el VALOR CONTABLE NETO de la máquina:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'auditor': // Asientos de Cierre y Regularización
+                let cuentasCierre = [{c:"700 (Ventas)", a:"D"}, {c:"600 (Compras)", a:"H"}, {c:"129 (Rtdo. Ejercicio) con Beneficios", a:"H"}];
+                let ci = cuentasCierre[Math.floor(Math.random()*cuentasCierre.length)];
+                currentAns = ci.a;
+                p.innerText = `En el Asiento de Regularización/Cierre para saldar la cuenta ${ci.c}...`;
+                a.innerHTML = `<p>¿La anotas en el (D)ebe o (H)aber?</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
+                break;
+                
+            case 'escalera': // Periodificación de Gastos
+                let prima = 1200; // 100€ al mes
+                currentAns = 900; // 9 meses del año siguiente
+                p.innerText = `El 1 de Octubre pagas la prima anual del seguro por ${prima}€.`;
+                a.innerHTML = `<p>A 31/12, ¿qué importe traspasas a la (480) Gastos Anticipados?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            case 'sopa': // Retenciones de Profesionales o Alquileres
+                let ret = Math.round(base * 0.19); currentAns = ret;
+                p.innerText = `Alquilas una oficina. Base: ${base}€. Retención IRPF: 19%.`;
+                a.innerHTML = `<p>¿Qué importe anotas en la (4751) H.P. Acreedora por retenciones?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+                
+            default:
                 currentAns = k;
-                p.innerText = `Memoriza rápido: ${pgc[k]} es la cuenta ${k}`;
-                a.innerHTML = `<p id="memo-txt" style="color:var(--rojo);">Ocultando en 3 segundos...</p><input type="number" id="ans" ${styleInp} style="display:none;">`;
-                setTimeout(() => {
-                    p.innerText = `¿Qué código era ${pgc[k]}?`;
-                    document.getElementById('memo-txt').style.display = 'none';
-                    let inp = document.getElementById('ans');
-                    inp.style.display = 'block'; inp.focus();
-                }, 3000);
-                break;
-                
-            case 'fuga': // Adivina el dígito faltante
-                let codStr = k.toString();
-                let missingIdx = 1; // Quitamos el del medio
-                currentAns = codStr[missingIdx];
-                let codFuga = codStr.substring(0, missingIdx) + "_" + codStr.substring(missingIdx + 1);
-                p.innerText = `${pgc[k]} empieza por ${codFuga}`;
-                a.innerHTML = `<p>¿Qué NÚMERO va en el hueco?</p><input type="number" id="ans" autofocus ${styleInp}>`;
-                break;
-                
-            case 'puzle': // Anagrama del nombre de la cuenta
-                let scrambled = pgc[k].split('').sort(() => 0.5 - Math.random()).join('').toUpperCase();
-                currentAns = k;
-                p.innerText = `Descifra la cuenta: ${scrambled}`;
-                a.innerHTML = `<p>¿Cuál es su CÓDIGO contable?</p><input type="number" id="ans" autofocus ${styleInp}>`;
-                break;
-                
-            case 'auditor': // Naturaleza (Debe/Haber)
-                let cuentasHaber = ['400','477','4751','100','170','520','410','129','281','112','490','794','700'];
-                currentAns = cuentasHaber.includes(k.toString()) ? "H" : "D";
-                p.innerText = `Cuenta: ${pgc[k]}`;
-                a.innerHTML = `<p>¿Por dónde NACE (aumenta)? (D)ebe o (H)aber</p><input type="text" id="ans" maxlength="1" autofocus ${styleInp}>`;
-                break;
-                
-            case 'escalera': // Nivel de subgrupo
-                currentAns = k.toString().substring(0, 2);
-                p.innerText = `Cuenta: ${pgc[k]} (${k})`;
-                a.innerHTML = `<p>¿A qué SUBGRUPO (2 primeros dígitos) pertenece?</p><input type="number" id="ans" autofocus ${styleInp}>`;
-                break;
-                
-            case 'sopa': // Nivel de grupo principal
-                currentAns = k.toString().charAt(0);
-                p.innerText = `Cuenta: ${pgc[k]} (${k})`;
-                a.innerHTML = `<p>¿A qué GRUPO principal (1er dígito) pertenece?</p><input type="number" id="ans" autofocus ${styleInp}>`;
-                break;
+                p.innerText = `¿Código de la cuenta: ${pgc[k]}?`;
+                a.innerHTML = `<input type="number" id="ans" autofocus ${styleInp}>`;
         }
     }
 
@@ -250,23 +252,35 @@
     }
 
     function generarExamen() {
-        const pgc = getPGCActual();
-        const k = Object.keys(pgc)[Math.floor(Math.random() * Object.keys(pgc).length)];
-        targetAsiento = { cd:k, ch:572, v:Math.floor(Math.random()*900)+100 };
+        // Operaciones complejas adaptadas para asientos simples (1 cuenta D, 1 cuenta H)
+        const operaciones = [
+            {q:"Autorrepercusión de IVA por Adquisición Intracomunitaria", cd:4720, ch:4770},
+            {q:"Dotación anual a la amortización del inmovilizado material", cd:681, ch:281},
+            {q:"Periodificación: Imputación a resultados de Gastos Anticipados del año anterior", cd:628, ch:480},
+            {q:"Asiento de Cierre: Saldar cuenta de Ventas contra Rtdo. del Ejercicio", cd:700, ch:129},
+            {q:"Regularización Existencias: Dar de baja las existencias iniciales", cd:610, ch:300},
+            {q:"Reconocimiento de una pérdida por deterioro de créditos comerciales", cd:694, ch:490}
+        ];
+        let s = operaciones[Math.floor(Math.random()*operaciones.length)];
+        let v = (Math.floor(Math.random()*5)+2)*1000;
+        targetAsiento = { cd:s.cd, ch:s.ch, v:v };
+        
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = `Asiento T${triActual}: Registro de ${pgc[k]} por ${targetAsiento.v}€ mediante Banco.`;
+        document.getElementById('quest').innerText = `Asiento T${triActual}: ${s.q} por ${targetAsiento.v}€`;
+        clearInp();
     }
 
     function checkAsiento() {
-        if(document.getElementById('cd').value == targetAsiento.cd && document.getElementById('ch').value == targetAsiento.ch) {
-            alert("¡Asiento correcto!"); generarExamen();
-        } else { alert("Error en los códigos del asiento."); }
+        if(document.getElementById('cd').value == targetAsiento.cd && document.getElementById('ch').value == targetAsiento.ch && document.getElementById('id').value == targetAsiento.v) {
+            alert("¡Asiento correcto y cuadrado!"); generarExamen();
+        } else { alert("Error en los códigos del asiento o importes."); }
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = getPGCActual()[el.value] || ""; }
     function volverAInicio() { document.getElementById('selector-trimestres').style.display = 'grid'; document.getElementById('vista-juegos').style.display = 'none'; }
     function cerrarJuego() { document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; }
+    function clearInp() { document.querySelectorAll('#pantalla-juego input').forEach(i => i.value = ""); }
 </script>
 </body>
 </html>
