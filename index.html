@@ -155,11 +155,36 @@
         ]}
     };
 
+    // NUEVOS: 10 Minijuegos exactos por cada trimestre de Contabilidad y Fiscalidad
     const CONTA_TRIMESTRES = {
-        1: [{id:"iva_liq", i:"⚖️", t:"Liquid. IVA"}, {id:"dto_fra", i:"🧾", t:"Dto. Fra."}],
-        2: [{id:"prorrata", i:"% ", t:"Prorrata"}, {id:"deterioro", i:"📉", t:"Deterioro"}, {id:"amort", i:"⏳", t:"Amortiz."}],
-        3: [{id:"subvencion", i:"🏛️", t:"Subvención"}, {id:"vta_inmov", i:"🏗️", t:"Vta. Inmov."}, {id:"efecto_imp", i:"❌", t:"Efecto Imp."}],
-        4: [{id:"isoc_avanzado", i:"🏢", t:"ISOC"}, {id:"examen", i:"🏆", t:"Diario"}]
+        1: [
+            {id:"t1_iva_liq", i:"⚖️", t:"Liquid. IVA"}, {id:"t1_dto_fra", i:"🧾", t:"Dto. Factura"},
+            {id:"t1_coste_comp", i:"📦", t:"Coste Compra"}, {id:"t1_anticipo", i:"💵", t:"Anticipo Cli."},
+            {id:"t1_retencion", i:"🏢", t:"Ret. Alquiler"}, {id:"t1_pago_prov", i:"💸", t:"Pago c/Dto."},
+            {id:"t1_letra_cli", i:"✒️", t:"Giro Letras"}, {id:"t1_arqueo", i:"🗄️", t:"Arqueo Caja"},
+            {id:"t1_vta_merc", i:"🛒", t:"Vta. Mercad."}, {id:"t1_anticipo_nom", i:"👷", t:"Antic. Nómina"}
+        ],
+        2: [
+            {id:"t2_prorrata", i:"% ", t:"Prorrata"}, {id:"t2_deterioro", i:"📉", t:"Deterioro Ex."},
+            {id:"t2_amort", i:"⏳", t:"Amort. Lineal"}, {id:"t2_adq_inmov", i:"🏗️", t:"Alta Inmovil."},
+            {id:"t2_var_ex", i:"🔄", t:"Variación Ex."}, {id:"t2_me_compra", i:"💱", t:"Divisa Compra"},
+            {id:"t2_me_cierre", i:"🌎", t:"Divisa Cierre"}, {id:"t2_iva_intra", i:"🇪🇺", t:"IVA Intra."},
+            {id:"t2_permuta", i:"🔄", t:"Permuta Com."}, {id:"t2_act_curso", i:"🛠️", t:"Trab. Prop. Act."}
+        ],
+        3: [
+            {id:"t3_subvencion", i:"🏛️", t:"Subvención"}, {id:"t3_vta_inmov", i:"🏷️", t:"Bº/Pª Inmov."},
+            {id:"t3_efecto_imp", i:"❌", t:"Ef. Impagado"}, {id:"t3_reclasif", i:"📅", t:"Reclasif. Deuda"},
+            {id:"t3_int_prest", i:"📈", t:"Devengo Int."}, {id:"t3_provision", i:"🛡️", t:"Provisión"},
+            {id:"t3_leasing", i:"🚗", t:"Leasing Cuota"}, {id:"t3_fianza", i:"🔑", t:"Fianza Arrend."},
+            {id:"t3_dividendos", i:"💰", t:"Cobro Divid."}, {id:"t3_acciones", i:"📊", t:"Compra Acciones"}
+        ],
+        4: [
+            {id:"t4_isoc_cuota", i:"🏢", t:"Cuota Difer."}, {id:"t4_isoc_ajuste", i:"⚙️", t:"Ajuste ISOC"},
+            {id:"t4_devengo_seg", i:"📆", t:"Periodif. Seg."}, {id:"t4_ing_antic", i:"📥", t:"Ing. Anticip."},
+            {id:"t4_rtdo_ejer", i:"⚖️", t:"Saldo 129"}, {id:"t4_pago_frac", i:"🧾", t:"Pago Fracc."},
+            {id:"t4_rva_legal", i:"🧱", t:"Reserva Legal"}, {id:"t4_cierre_g", i:"📉", t:"Cierre Gasto"},
+            {id:"t4_cierre_i", i:"📈", t:"Cierre Ingreso"}, {id:"t4_examen", i:"🏆", t:"Examen Diario"}
+        ]
     };
 
     function abrirAsignatura(asig) {
@@ -199,10 +224,10 @@
 
     function lanzar(id) {
         lastId = id;
-        if(id === 'examen') return generarExamen();
+        if(id === 't4_examen') return generarExamen();
         
-        let esConta = ['iva_liq', 'dto_fra', 'prorrata', 'deterioro', 'amort', 'subvencion', 'vta_inmov', 'efecto_imp', 'isoc_avanzado'].includes(id);
-        document.getElementById('m-titulo').innerText = (esConta ? "T" + triActual + " - " : "") + "CASO: " + id.toUpperCase();
+        let esConta = id.startsWith('t1_') || id.startsWith('t2_') || id.startsWith('t3_') || id.startsWith('t4_');
+        document.getElementById('m-titulo').innerText = (esConta ? "T" + triActual + " - " : "") + "CASO: " + id.toUpperCase().replace(/T[1-4]_/g, '');
         
         document.getElementById('game-overlay').style.display = 'flex';
         document.getElementById('m-btn-validar').onclick = () => validarMini(document.getElementById('ans').value);
@@ -214,260 +239,444 @@
         const a = document.getElementById('m-input-area');
         let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;"';
 
-        // Variables globales para evitar colapsos de scope en el switch
-        let salDia, anos, smi, exceso, base, tipo, horas, precio, baseDia, meses, bruto, ssEmp;
-        let q1, p1, q2, p2, ent1, ent2, demDia, plazo, ss, demMax, demMedia, coste, medio, rot, q, cu, dto, perdidas, margen, k, s_val, h;
-        let nom, gas, cap, i_val, dias, bdi, pn, baii, act, ac, pc, rep, sop, com, fin, opConDed, opSinDed, vnr, vAdq, vRes, vida, subTotal, vidaU, vVenta, amort, gastos, bi, retenciones;
+        // Declaración de variables genéricas a usar en los bloques para no generar errores de scope
+        let v1, v2, v3, v4, res;
 
         switch(lastId) {
-            // --- GESTIÓN RRHH ---
+            /* =================== GESTIÓN DE RRHH =================== */
             case 'finiquito': 
-                salDia = Math.floor(Math.random()*40) + 40; anos = Math.floor(Math.random()*5) + 1;
-                currentAns = salDia * 20 * anos;
-                p.innerText = `Despido objetivo (20 días/año). Antigüedad: ${anos} años. Salario diario: ${salDia}€.`;
+                v1 = Math.floor(Math.random()*40) + 40; v2 = Math.floor(Math.random()*5) + 1;
+                currentAns = v1 * 20 * v2;
+                p.innerText = `Despido objetivo (20 días/año). Antigüedad: ${v2} años. Salario diario: ${v1}€.`;
                 a.innerHTML = `<p>Indemnización a abonar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'embargo': 
-                smi = 1134; exceso = Math.floor(Math.random()*400) + 100;
-                currentAns = Math.round(exceso * 0.30);
-                p.innerText = `Trabajador cobra ${smi + exceso}€ netos. SMI (${smi}€) es inembargable. Embargo del 30% sobre el exceso.`;
+                v1 = 1134; v2 = Math.floor(Math.random()*400) + 100;
+                currentAns = Math.round(v2 * 0.30);
+                p.innerText = `Trabajador cobra ${v1 + v2}€ netos. SMI (${v1}€) es inembargable. Embargo del 30% sobre el exceso.`;
                 a.innerHTML = `<p>Retención en euros:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'ss_obrera': 
-                base = Math.floor(Math.random()*10)*100 + 1000;
-                currentAns = Math.round(base * 0.0635);
-                p.innerText = `Base Cotización (BCCC y BCCP): ${base}€. Tipos: CC(4.7%), Desempleo(1.55%), FP(0.1%).`;
+                v1 = Math.floor(Math.random()*10)*100 + 1000;
+                currentAns = Math.round(v1 * 0.0635);
+                p.innerText = `Base Cotización (BCCC y BCCP): ${v1}€. Tipos: CC(4.7%), Desempleo(1.55%), FP(0.1%).`;
                 a.innerHTML = `<p>Total deducción Seguridad Social del trabajador:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'ss_empresa': 
-                base = Math.floor(Math.random()*10)*100 + 1000;
-                currentAns = Math.round(base * 0.314);
-                p.innerText = `Base Cotización: ${base}€. Tipo global empresa aprox: 31.4%.`;
+                v1 = Math.floor(Math.random()*10)*100 + 1000;
+                currentAns = Math.round(v1 * 0.314);
+                p.innerText = `Base Cotización: ${v1}€. Tipo global empresa aprox: 31.4%.`;
                 a.innerHTML = `<p>Coste Seg. Social a cargo de la empresa (aprox):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'irpf': 
-                base = Math.floor(Math.random()*10)*100 + 1000; tipo = Math.floor(Math.random()*10) + 5;
-                currentAns = Math.round(base * (tipo/100));
-                p.innerText = `Salario Bruto sujeto a retención: ${base}€. Tipo IRPF: ${tipo}%.`;
+                v1 = Math.floor(Math.random()*10)*100 + 1000; v2 = Math.floor(Math.random()*10) + 5;
+                currentAns = Math.round(v1 * (v2/100));
+                p.innerText = `Salario Bruto sujeto a retención: ${v1}€. Tipo IRPF: ${v2}%.`;
                 a.innerHTML = `<p>Importe a retener por IRPF:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'horas_extra': 
-                horas = Math.floor(Math.random()*10) + 2; precio = Math.floor(Math.random()*10) + 10;
-                currentAns = horas * precio;
-                p.innerText = `El empleado realiza ${horas} horas extras de fuerza mayor a ${precio}€/hora.`;
+                v1 = Math.floor(Math.random()*10) + 2; v2 = Math.floor(Math.random()*10) + 10;
+                currentAns = v1 * v2;
+                p.innerText = `El empleado realiza ${v1} horas extras de fuerza mayor a ${v2}€/hora.`;
                 a.innerHTML = `<p>Importe bruto de las horas extra:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'despido_imp': 
-                salDia = Math.floor(Math.random()*30) + 50; anos = Math.floor(Math.random()*5) + 1;
-                currentAns = salDia * 33 * anos;
-                p.innerText = `Despido improcedente actual (33 días/año). Antigüedad exacta: ${anos} años. Salario diario: ${salDia}€.`;
+                v1 = Math.floor(Math.random()*30) + 50; v2 = Math.floor(Math.random()*5) + 1;
+                currentAns = v1 * 33 * v2;
+                p.innerText = `Despido improcedente actual (33 días/año). Antigüedad exacta: ${v2} años. Salario diario: ${v1}€.`;
                 a.innerHTML = `<p>Indemnización a abonar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'it_enferm': 
-                baseDia = Math.floor(Math.random()*20) + 40;
-                currentAns = Math.round(baseDia * 0.60 * 12); 
-                p.innerText = `Baja por enfermedad común de 15 días exactos. Base Reguladora: ${baseDia}€/día. (Días 1-3 al 0%, Días 4-15 al 60%).`;
-                a.innerHTML = `<p>Importe total de la prestación a abonar en esos 15 días:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                v1 = Math.floor(Math.random()*20) + 40;
+                currentAns = Math.round(v1 * 0.60 * 12); 
+                p.innerText = `Baja por enfermedad común de 15 días exactos. Base Reguladora: ${v1}€/día. (Días 1-3 al 0%, Días 4-15 al 60%).`;
+                a.innerHTML = `<p>Importe de la prestación a abonar en esos 15 días:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'vacaciones': 
-                meses = Math.floor(Math.random()*8) + 1;
-                currentAns = Math.floor(meses * 2.5);
-                p.innerText = `Generación de 2.5 días/mes. El trabajador lleva en la empresa ${meses} meses.`;
+                v1 = Math.floor(Math.random()*8) + 1;
+                currentAns = Math.floor(v1 * 2.5);
+                p.innerText = `Generación de 2.5 días/mes. El trabajador lleva en la empresa ${v1} meses.`;
                 a.innerHTML = `<p>Días de vacaciones generados (sin decimales):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'coste_emp': 
-                bruto = Math.floor(Math.random()*10)*100 + 1000; ssEmp = Math.floor(Math.random()*100) + 400;
-                currentAns = bruto + ssEmp;
-                p.innerText = `Salario Bruto (Devengos): ${bruto}€. Seg. Social a cargo de la Empresa: ${ssEmp}€.`;
+                v1 = Math.floor(Math.random()*10)*100 + 1000; v2 = Math.floor(Math.random()*100) + 400;
+                currentAns = v1 + v2;
+                p.innerText = `Salario Bruto (Devengos): ${v1}€. Seg. Social a cargo de la Empresa: ${v2}€.`;
                 a.innerHTML = `<p>Coste total del trabajador para la empresa:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
 
-            // --- GESTIÓN LOGÍSTICA ---
+            /* =================== GESTIÓN LOGÍSTICA =================== */
             case 'pmp': 
-                q1 = 100; p1 = 10; q2 = 100; p2 = 15;
-                currentAns = ((q1 * p1) + (q2 * p2)) / (q1 + q2);
-                p.innerText = `Stock inicial: ${q1} uds a ${p1}€. Entrada: ${q2} uds a ${p2}€.`;
+                v1 = 100; v2 = 10; v3 = 100; v4 = 15;
+                currentAns = ((v1 * v2) + (v3 * v4)) / (v1 + v3);
+                p.innerText = `Stock inicial: ${v1} uds a ${v2}€. Entrada: ${v3} uds a ${v4}€.`;
                 a.innerHTML = `<p>Calcula el PMP:</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'fifo': 
-                ent1 = 10; p1 = 10; ent2 = 20; p2 = 12;
-                currentAns = (ent1+ent2-25)*p2; 
-                p.innerText = `Entrada 1: ${ent1}uds a ${p1}€. Entrada 2: ${ent2}uds a ${p2}€. Se venden 25 uds (Método FIFO).`;
+                v1 = 10; v2 = 10; v3 = 20; v4 = 12;
+                currentAns = (v1+v3-25)*v4; 
+                p.innerText = `Entrada 1: ${v1}uds a ${v2}€. Entrada 2: ${v3}uds a ${v4}€. Se venden 25 uds (Método FIFO).`;
                 a.innerHTML = `<p>Valor del stock final restante:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'pto_pedido': 
-                demDia = Math.floor(Math.random()*5) + 5; plazo = Math.floor(Math.random()*5) + 2; ss = Math.floor(Math.random()*10) + 10;
-                currentAns = (demDia * plazo) + ss;
-                p.innerText = `Demanda diaria: ${demDia} uds. Plazo de entrega: ${plazo} días. Stock de Seguridad: ${ss} uds.`;
+                v1 = Math.floor(Math.random()*5) + 5; v2 = Math.floor(Math.random()*5) + 2; v3 = Math.floor(Math.random()*10) + 10;
+                currentAns = (v1 * v2) + v3;
+                p.innerText = `Demanda diaria: ${v1} uds. Plazo de entrega: ${v2} días. Stock de Seguridad: ${v3} uds.`;
                 a.innerHTML = `<p>Punto de Pedido (Volumen en el que hay que pedir):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'stock_seg': 
-                demMax = Math.floor(Math.random()*5) + 15; demMedia = demMax - 5; plazo = 3;
-                currentAns = (demMax - demMedia) * plazo;
-                p.innerText = `Demanda máxima: ${demMax} uds/día. Demanda normal: ${demMedia} uds/día. Retraso o plazo entrega: ${plazo} días.`;
+                v1 = Math.floor(Math.random()*5) + 15; v2 = v1 - 5; v3 = 3;
+                currentAns = (v1 - v2) * v3;
+                p.innerText = `Demanda máxima: ${v1} uds/día. Demanda normal: ${v2} uds/día. Retraso de entrega: ${v3} días.`;
                 a.innerHTML = `<p>Stock de Seguridad recomendado:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'rotacion': 
-                coste = Math.floor(Math.random()*5)*1000 + 5000; medio = Math.floor(Math.random()*2)*500 + 1000;
-                currentAns = coste / medio;
-                p.innerText = `Coste de las ventas anuales: ${coste}€. Valor medio del inventario: ${medio}€.`;
+                v1 = Math.floor(Math.random()*5)*1000 + 5000; v2 = Math.floor(Math.random()*2)*500 + 1000;
+                currentAns = v1 / v2;
+                p.innerText = `Coste de las ventas anuales: ${v1}€. Valor medio del inventario: ${v2}€.`;
                 a.innerHTML = `<p>Índice de Rotación (veces):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'dias_vta': 
-                rot = Math.floor(Math.random()*5) + 2;
-                currentAns = Math.round(365 / rot);
-                p.innerText = `El índice de rotación de tu almacén es de ${rot} veces al año.`;
+                v1 = Math.floor(Math.random()*5) + 2;
+                currentAns = Math.round(365 / v1);
+                p.innerText = `El índice de rotación de tu almacén es de ${v1} veces al año.`;
                 a.innerHTML = `<p>Periodo Medio de Venta en días (redondeado):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'almacenaje': 
-                q = Math.floor(Math.random()*100) + 100; ss = 20; cu = Math.floor(Math.random()*5) + 2;
-                currentAns = ((q/2) + ss) * cu;
-                p.innerText = `Volumen de pedido (Q): ${q}. Stock Seguridad: ${ss}. Coste unitario almacenaje: ${cu}€. Fórmula: (Q/2 + SS)*Cu.`;
+                v1 = Math.floor(Math.random()*100) + 100; v2 = 20; v3 = Math.floor(Math.random()*5) + 2;
+                currentAns = ((v1/2) + v2) * v3;
+                p.innerText = `Pedido (Q): ${v1}. Stock Seguridad: ${v2}. Coste unitario almacenaje: ${v3}€. Fórm: (Q/2 + SS)*Cu.`;
                 a.innerHTML = `<p>Coste total de almacenaje:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'dto_com': 
-                bruto = Math.floor(Math.random()*5)*1000 + 2000; dto = Math.floor(Math.random()*10) + 5;
-                currentAns = bruto * (1 - (dto/100));
-                p.innerText = `Importe bruto del pedido: ${bruto}€. Descuento comercial en factura: ${dto}%.`;
+                v1 = Math.floor(Math.random()*5)*1000 + 2000; v2 = Math.floor(Math.random()*10) + 5;
+                currentAns = v1 * (1 - (v2/100));
+                p.innerText = `Importe bruto del pedido: ${v1}€. Descuento comercial en factura: ${v2}%.`;
                 a.innerHTML = `<p>Importe neto a pagar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'rotura': 
-                perdidas = Math.floor(Math.random()*50) + 20; margen = Math.floor(Math.random()*10) + 5;
-                currentAns = perdidas * margen;
-                p.innerText = `Por no tener stock se pierden ${perdidas} ventas. Margen de beneficio unitario: ${margen}€.`;
+                v1 = Math.floor(Math.random()*50) + 20; v2 = Math.floor(Math.random()*10) + 5;
+                currentAns = v1 * v2;
+                p.innerText = `Por no tener stock se pierden ${v1} ventas. Margen de beneficio unitario: ${v2}€.`;
                 a.innerHTML = `<p>Coste total de rotura de stock:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'lote_wilson': 
-                k = 1000; s_val = 10; h = 5; 
-                currentAns = Math.round(Math.sqrt((2 * k * s_val) / h));
-                p.innerText = `Demanda(D): ${k}. Coste Emisión Pedido(S): ${s_val}€. Coste Posesión unit(H): ${h}€. Fórmula Raíz Cuadrada(2*D*S / H).`;
+                v1 = 1000; v2 = 10; v3 = 5; 
+                currentAns = Math.round(Math.sqrt((2 * v1 * v2) / v3));
+                p.innerText = `Demanda(D): ${v1}. Coste Emisión(S): ${v2}€. Coste Posesión(H): ${v3}€. Fórm: Raíz(2*D*S / H).`;
                 a.innerHTML = `<p>Lote Económico de Pedido (Q óptima redondeada):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
 
-            // --- GESTIÓN FINANCIERA ---
+            /* =================== GESTIÓN FINANCIERA =================== */
             case 'remesa': 
-                nom = 3000; gas = 50; dto = 100;
-                currentAns = nom - dto - gas;
-                p.innerText = `Pagaré al descuento. Nominal: ${nom}€. Intereses Dto: ${dto}€. Comisiones: ${gas}€.`;
-                a.innerHTML = `<p>Efectivo líquido a ingresar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                v1 = 3000; v2 = 50; v3 = 100;
+                currentAns = v1 - v3 - v2;
+                p.innerText = `Pagaré al descuento. Nominal: ${v1}€. Intereses Dto: ${v3}€. Comisiones: ${v2}€.`;
+                a.innerHTML = `<p>Efectivo líquido a ingresar en el Banco:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'interes': 
-                cap = 5000; i_val = 5;
-                currentAns = cap * (i_val/100);
-                p.innerText = `Inversión: ${cap}€. Interés simple anual: ${i_val}%. 1 año.`;
+                v1 = 5000; v2 = 5;
+                currentAns = v1 * (v2/100);
+                p.innerText = `Inversión: ${v1}€. Interés simple anual: ${v2}%. 1 año.`;
                 a.innerHTML = `<p>Beneficio por intereses (euros):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'int_comp': 
-                cap = 1000; i_val = 10; 
-                currentAns = Math.round(cap * 1.10 * 1.10); 
-                p.innerText = `Capital inicial: ${cap}€. Interés compuesto anual: ${i_val}%. Periodo: 2 años.`;
+                v1 = 1000; v2 = 10; 
+                currentAns = Math.round(v1 * 1.10 * 1.10); 
+                p.innerText = `Capital inicial: ${v1}€. Interés compuesto anual: ${v2}%. Periodo: 2 años.`;
                 a.innerHTML = `<p>Capital final (Montante):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'dto_efect': 
-                nom = 10000; dto = 5; dias = 72; 
-                currentAns = nom * (dto/100) * (dias/360);
-                p.innerText = `Efecto comercial. Nominal: ${nom}€. Dto: ${dto}%. Días anticipo: ${dias} (Año 360).`;
+                v1 = 10000; v2 = 5; v3 = 72; 
+                currentAns = v1 * (v2/100) * (v3/360);
+                p.innerText = `Efecto comercial. Nominal: ${v1}€. Dto: ${v2}%. Días anticipo: ${v3} (Año 360).`;
                 a.innerHTML = `<p>Importe del descuento comercial (euros):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'roe': 
-                bdi = Math.floor(Math.random()*10)*1000 + 5000; pn = bdi * 4;
-                currentAns = Math.round((bdi / pn) * 100);
-                p.innerText = `Beneficio Neto (BDI): ${bdi}€. Patrimonio Neto (Recursos Propios): ${pn}€.`;
+                v1 = Math.floor(Math.random()*10)*1000 + 5000; v2 = v1 * 4;
+                currentAns = Math.round((v1 / v2) * 100);
+                p.innerText = `Beneficio Neto (BDI): ${v1}€. Patrimonio Neto (Recursos Propios): ${v2}€.`;
                 a.innerHTML = `<p>Rentabilidad Financiera (ROE en %):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'roa': 
-                baii = Math.floor(Math.random()*10)*1000 + 5000; act = baii * 10;
-                currentAns = Math.round((baii / act) * 100);
-                p.innerText = `Beneficio Antes de Intereses e Impuestos (BAII): ${baii}€. Activo Total: ${act}€.`;
+                v1 = Math.floor(Math.random()*10)*1000 + 5000; v2 = v1 * 10;
+                currentAns = Math.round((v1 / v2) * 100);
+                p.innerText = `Beneficio Antes de Intereses e Impuestos (BAII): ${v1}€. Activo Total: ${v2}€.`;
                 a.innerHTML = `<p>Rentabilidad Económica (ROA en %):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'liquidez': 
-                ac = 4000; pc = 2000;
-                currentAns = ac / pc;
-                p.innerText = `Activo Corriente: ${ac}€. Pasivo Corriente: ${pc}€.`;
+                v1 = 4000; v2 = 2000;
+                currentAns = v1 / v2;
+                p.innerText = `Activo Corriente: ${v1}€. Pasivo Corriente: ${v2}€.`;
                 a.innerHTML = `<p>Ratio de Liquidez General:</p><input type="number" id="ans" step="0.01" autofocus ${styleInp}>`;
                 break;
             case 'fm': 
-                ac = Math.floor(Math.random()*5)*1000 + 5000; pc = ac - 2000;
-                currentAns = ac - pc;
-                p.innerText = `Activo Corriente: ${ac}€. Pasivo Corriente: ${pc}€.`;
+                v1 = Math.floor(Math.random()*5)*1000 + 5000; v2 = v1 - 2000;
+                currentAns = v1 - v2;
+                p.innerText = `Activo Corriente: ${v1}€. Pasivo Corriente: ${v2}€.`;
                 a.innerHTML = `<p>Fondo de Maniobra:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'tae': 
                 currentAns = 10.25; 
-                p.innerText = `Préstamo con interés nominal (TIN) del 10% capitalizable semestralmente (2 periodos/año). Fórm: (1+i/k)^k - 1`;
+                p.innerText = `Préstamo TIN 10% capitalizable semestralmente (2 periodos/año). Fórm: (1+0.05)^2 - 1`;
                 a.innerHTML = `<p>Calcula la TAE en % (Ej: 10.25):</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}>`;
                 break;
             case 'prestamo': 
-                cap = 10000; i_val = 5;
-                currentAns = cap + (cap*(i_val/100));
-                p.innerText = `Préstamo de ${cap}€ a devolver en 1 solo pago anual al ${i_val}% de interés.`;
+                v1 = 10000; v2 = 5;
+                currentAns = v1 + (v1*(v2/100));
+                p.innerText = `Préstamo de ${v1}€ a devolver en 1 solo pago anual al ${v2}% de interés.`;
                 a.innerHTML = `<p>Cuota única a devolver (Principal + Intereses):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
 
-            // --- CONTABILIDAD ---
-            case 'iva_liq': 
-                rep = Math.floor(Math.random()*1000) + 2000; sop = Math.floor(Math.random()*1000) + 500;
-                currentAns = rep - sop;
-                p.innerText = `Trimestre 1. IVA Repercutido (Devengado): ${rep}€. IVA Soportado (Deducible): ${sop}€.`;
+            /* =================== CONTABILIDAD - T1 =================== */
+            case 't1_iva_liq': 
+                v1 = Math.floor(Math.random()*1000) + 2000; v2 = Math.floor(Math.random()*1000) + 500;
+                currentAns = v1 - v2;
+                p.innerText = `IVA Repercutido (Devengado): ${v1}€. IVA Soportado (Deducible): ${v2}€.`;
                 a.innerHTML = `<p>Resultado Liquidación (A ingresar H.P.):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'dto_fra': 
-                base = 1000; com = 10; fin = 5;
-                currentAns = (base * (1 - com/100)) * (1 - fin/100);
-                p.innerText = `Importe bruto mercancía: ${base}€. Dto comercial: ${com}%. Dto por pronto pago: ${fin}%. (Casada).`;
-                a.innerHTML = `<p>Base Imponible final en Factura:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't1_dto_fra': 
+                v1 = 1000; v2 = 10; v3 = 5;
+                currentAns = (v1 * (1 - v2/100)) * (1 - v3/100);
+                p.innerText = `Importe bruto mercancía: ${v1}€. Dto comercial: ${v2}%. Dto pronto pago en Fra: ${v3}%.`;
+                a.innerHTML = `<p>Base Imponible final de la Factura:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'prorrata': 
-                opConDed = 20000; opSinDed = 10000;
-                currentAns = Math.round((opConDed / (opConDed+opSinDed)) * 100);
-                p.innerText = `Operaciones con derecho deducción: ${opConDed}€. Sin derecho: ${opSinDed}€.`;
-                a.innerHTML = `<p>Prorrata General de IVA (%):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't1_coste_comp': 
+                v1 = 2000; v2 = 200; v3 = 100;
+                currentAns = v1 - v2 + v3;
+                p.innerText = `Compra mercancía: ${v1}€. Dto comercial Fra: ${v2}€. Portes a tu cargo Fra: ${v3}€.`;
+                a.innerHTML = `<p>Coste total a registrar en cuenta (600):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'deterioro': 
-                coste = 5000; vnr = 4000;
-                currentAns = coste - vnr;
-                p.innerText = `Mercaderías. Valor contable: ${coste}€. Valor Neto Realizable (Mercado): ${vnr}€.`;
-                a.innerHTML = `<p>Dotación por deterioro a registrar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't1_anticipo': 
+                v1 = 1210; 
+                currentAns = 1000;
+                p.innerText = `Cobras un anticipo de cliente por banco de ${v1}€ (IVA 21% INCLUIDO en el cobro).`;
+                a.innerHTML = `<p>¿Qué importe registras en la (438) Anticipo de clientes?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'amort': 
-                vAdq = 12000; vRes = 2000; vida = 5;
-                currentAns = (vAdq - vRes) / vida;
-                p.innerText = `Vehículo. Precio adq: ${vAdq}€. Valor residual: ${vRes}€. Vida útil: ${vida} años.`;
-                a.innerHTML = `<p>Cuota de Amortización Lineal anual:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't1_retencion': 
+                v1 = 1000; v2 = 19;
+                currentAns = v1 * (v2/100);
+                p.innerText = `Pagas alquiler oficina. Base Imponible: ${v1}€. Retención IRPF en factura: ${v2}%.`;
+                a.innerHTML = `<p>¿Importe a abonar a Hacienda por la retención (4751)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'subvencion': 
-                subTotal = 10000; vidaU = 5;
-                currentAns = subTotal / vidaU;
-                p.innerText = `Subvención de capital de ${subTotal}€ para máquina que se amortiza en ${vidaU} años.`;
-                a.innerHTML = `<p>Importe a traspasar a resultados (cuenta 746) este año:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't1_pago_prov': 
+                v1 = 5000; v2 = 200;
+                currentAns = v1 - v2 - (v2 * 0.21);
+                p.innerText = `Debes ${v1}€ al proveedor. Te concede un descuento por pronto pago fuera de factura de ${v2}€ (Base). IVA 21%.`;
+                a.innerHTML = `<p>¿Cuánto dinero pagarás realmente por el Banco (572)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'vta_inmov': 
-                vVenta = 5000; vAdq = 10000; amort = 6000;
-                currentAns = vVenta - (vAdq - amort);
-                p.innerText = `Venta maquinaria por ${vVenta}€. Valor de adquisición era ${vAdq}€ y su Amortización Acumulada ${amort}€.`;
+            case 't1_letra_cli': 
+                v1 = 2500; 
+                currentAns = v1;
+                p.innerText = `El cliente te acepta una letra de cambio por el total de su deuda de ${v1}€.`;
+                a.innerHTML = `<p>¿Por qué importe das de alta la cuenta (431) Efectos comerciales en cartera?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't1_arqueo': 
+                v1 = 1500; v2 = 1450;
+                currentAns = v1 - v2;
+                p.innerText = `El saldo de tu mayor de Caja (570) es ${v1}€. Al contar los billetes reales (Arqueo) hay ${v2}€.`;
+                a.innerHTML = `<p>¿Cuál es la pérdida a contabilizar en la cuenta (659)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't1_vta_merc': 
+                v1 = 3000; 
+                currentAns = v1 * 1.21;
+                p.innerText = `Vendes mercaderías por valor bruto de ${v1}€ más 21% de IVA.`;
+                a.innerHTML = `<p>¿Qué importe total adeudas en la cuenta de (430) Clientes?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't1_anticipo_nom': 
+                v1 = 500; 
+                currentAns = v1;
+                p.innerText = `Entregas a un trabajador un anticipo a cuenta de su nómina de este mes por valor de ${v1}€.`;
+                a.innerHTML = `<p>¿Importe a cargar en la cuenta (460) Anticipo de remuneraciones?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+
+            /* =================== CONTABILIDAD - T2 =================== */
+            case 't2_prorrata': 
+                v1 = 20000; v2 = 10000;
+                currentAns = Math.round((v1 / (v1+v2)) * 100);
+                p.innerText = `Operaciones con derecho deducción: ${v1}€. Sin derecho (exentas): ${v2}€.`;
+                a.innerHTML = `<p>Prorrata General de IVA (% redondeado):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_deterioro': 
+                v1 = 5000; v2 = 4000;
+                currentAns = v1 - v2;
+                p.innerText = `Mercaderías. Valor contable: ${v1}€. Valor Neto Realizable en Mercado: ${v2}€.`;
+                a.innerHTML = `<p>Dotación por deterioro a registrar (690):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_amort': 
+                v1 = 12000; v2 = 2000; v3 = 5;
+                currentAns = (v1 - v2) / v3;
+                p.innerText = `Vehículo. Precio adquisición: ${v1}€. Valor residual: ${v2}€. Vida útil: ${v3} años.`;
+                a.innerHTML = `<p>Cuota de Amortización Lineal Anual (681):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_adq_inmov': 
+                v1 = 20000; v2 = 1000;
+                currentAns = v1 + v2;
+                p.innerText = `Compra máquina por ${v1}€. Gastos montaje necesarios para funcionar: ${v2}€.`;
+                a.innerHTML = `<p>Por qué importe das de alta la máquina en la cuenta (213)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_var_ex': 
+                v1 = 3000; v2 = 5000; // Ei, Ef
+                currentAns = v2 - v1;
+                p.innerText = `Existencias Iniciales al cierre: ${v1}€. Existencias Finales según inventario: ${v2}€.`;
+                a.innerHTML = `<p>Calcula el saldo que quedará en la Variación de Existencias (610). Positivo=Haber, Neg=Debe.</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_me_compra': 
+                v1 = 10000; v2 = 0.90; // dolares, Tipo cambio compra
+                currentAns = v1 * v2;
+                p.innerText = `Compra a USA por ${v1} $. Tipo de Cambio HOY: 1$ = ${v2}€.`;
+                a.innerHTML = `<p>Importe en euros a registrar en la deuda con el proveedor:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_me_cierre': 
+                v1 = 10000; v2 = 0.90; v3 = 0.95; // deuda$, TCcompra, TCcierre
+                currentAns = Math.round(v1 * (v3 - v2));
+                p.innerText = `Deudas por ${v1} $. Registradas a 1$=${v2}€. A cierre de año, 1$=${v3}€.`;
+                a.innerHTML = `<p>¿Pérdida por diferencia de cambio a registrar (668)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_iva_intra': 
+                v1 = 5000;
+                currentAns = v1 * 0.21;
+                p.innerText = `Compra a Alemania por ${v1}€. IVA español aplicable 21%. Haces Autorrepercusión.`;
+                a.innerHTML = `<p>Importe del IVA a anotar simultáneamente en Debe y Haber:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_permuta': 
+                v1 = 15000; v2 = 5000; // VR entregado, efectivo pago
+                currentAns = v1 + v2;
+                p.innerText = `Permuta Comercial. Das un camión (Valor Razonable ${v1}€) + Pagas ${v2}€ por banco.`;
+                a.innerHTML = `<p>Valor de adquisición por el que entra el Nuevo Camión:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't2_act_curso': 
+                v1 = 2000; v2 = 3000;
+                currentAns = v1 + v2;
+                p.innerText = `Tus obreros fabrican un almacén. Gastas en ellos ${v1}€ de nóminas y ${v2}€ en materiales.`;
+                a.innerHTML = `<p>Capitalización del gasto: Importe a la cuenta (732) Trabajos inmovilizado:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+
+            /* =================== CONTABILIDAD - T3 =================== */
+            case 't3_subvencion': 
+                v1 = 10000; v2 = 5;
+                currentAns = v1 / v2;
+                p.innerText = `Subvención de capital de ${v1}€ para máquina. La máquina se amortiza linealmente en ${v2} años.`;
+                a.innerHTML = `<p>Importe a traspasar a resultados (cuenta 746) anualmente:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_vta_inmov': 
+                v1 = 5000; v2 = 10000; v3 = 6000; // Vta, VAdq, AmortAcum
+                currentAns = v1 - (v2 - v3);
+                p.innerText = `Venta máquina por ${v1}€. Valor Adquisición ${v2}€. Amortización Acumulada ${v3}€.`;
                 a.innerHTML = `<p>Beneficio contable de la venta (cuenta 771):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'efecto_imp': 
-                nom = 2000; gastos = 75;
-                currentAns = nom + gastos;
-                p.innerText = `El cliente no paga su letra de ${nom}€. El banco te cobra ${gastos}€ de gastos de protesto.`;
-                a.innerHTML = `<p>Deuda total que le reclamarás al cliente:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't3_efecto_imp': 
+                v1 = 2000; v2 = 75;
+                currentAns = v1 + v2;
+                p.innerText = `El cliente no paga su letra de ${v1}€. El banco te cobra ${v2}€ de gastos de protesto.`;
+                a.innerHTML = `<p>Deuda total final a reclamar (Efecto impagado 4315):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
-            case 'isoc_avanzado': 
-                bi = 20000; retenciones = 1500;
-                currentAns = (bi * 0.25) - retenciones;
-                p.innerText = `Base Imponible Impuesto Sociedades: ${bi}€ (Tipo 25%). Retenciones soportadas: ${retenciones}€.`;
-                a.innerHTML = `<p>Cuota Diferencial a ingresar:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+            case 't3_reclasif': 
+                v1 = 50000; v2 = 5;
+                currentAns = v1 / v2;
+                p.innerText = `Préstamo de ${v1}€ a devolver en ${v2} cuotas anuales idénticas del principal. Llega el 31 de Dic.`;
+                a.innerHTML = `<p>¿Qué importe de la deuda reclasificas del Largo al Corto Plazo (520)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_int_prest': 
+                v1 = 10000; v2 = 6; v3 = 3; // Principal, Interes, Meses
+                currentAns = v1 * (v2/100) * (v3/12);
+                p.innerText = `Te dan un préstamo de ${v1}€ el 1 de Octubre. Interés Anual 6%. Pagas intereses el año próximo.`;
+                a.innerHTML = `<p>A 31/12: Gasto por intereses a periodificar (meses Oct, Nov, Dic):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_provision': 
+                v1 = 10000; 
+                currentAns = v1;
+                p.innerText = `Un cliente te demanda por ${v1}€. El abogado dice que es muy probable perder el juicio este año.`;
+                a.innerHTML = `<p>¿Qué importe dotas a la Provisión para Responsabilidades (142)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_leasing': 
+                v1 = 500; v2 = 450; // Cuota total sin iva, Recup coste
+                currentAns = v1 - v2;
+                p.innerText = `Recibo Leasing. Total neto ${v1}€. Recuperación del principal ${v2}€.`;
+                a.innerHTML = `<p>Importe que registrarás como Gasto Financiero (662):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_fianza': 
+                v1 = 2; v2 = 1000; // Meses, Alquiler
+                currentAns = v1 * v2;
+                p.innerText = `Alquilas tu local a un tercero. Te entrega ${v1} meses de fianza en efectivo. Mensualidad: ${v2}€.`;
+                a.innerHTML = `<p>¿Qué importe anotas en Fianzas recibidas (260/560)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_dividendos': 
+                v1 = 1000; v2 = 19;
+                currentAns = v1 - (v1 * (v2/100));
+                p.innerText = `Tienes acciones de Iberdrola y te pagan ${v1}€ brutos de dividendos. Retención Hacienda: ${v2}%.`;
+                a.innerHTML = `<p>Líquido ingresado en el Banco (572):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't3_acciones': 
+                v1 = 100; v2 = 10; v3 = 20; // Acciones, precio, gastos
+                currentAns = (v1 * v2) + v3;
+                p.innerText = `Compras ${v1} acciones a ${v2}€/acción para L/P (No cotizadas). El banco cobra ${v3}€ de comisiones por la compra.`;
+                a.innerHTML = `<p>Importe de activación de Inversiones en Patrimonio (250):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+
+            /* =================== CONTABILIDAD - T4 =================== */
+            case 't4_isoc_cuota': 
+                v1 = 20000; v2 = 1500;
+                currentAns = (v1 * 0.25) - v2;
+                p.innerText = `Base Imponible ISOC: ${v1}€ (Tipo 25%). Durante el año Hacienda te retuvo ${v2}€.`;
+                a.innerHTML = `<p>Cuota Diferencial a Pagar a H.P (4752):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_isoc_ajuste': 
+                v1 = 50000; v2 = 1000;
+                currentAns = v1 + v2;
+                p.innerText = `Resultado Contable: Beneficio de ${v1}€. Tienes multas fiscales contabilizadas por ${v2}€ (No deducibles).`;
+                a.innerHTML = `<p>Base Imponible Previa (Ajuste Positivo):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_devengo_seg': 
+                v1 = 1200; v2 = 3; // Prima, Meses anticipados
+                currentAns = (v1 / 12) * v2;
+                p.innerText = `Pagas póliza anual el 1 Octubre: ${v1}€. Cubre Oct-Nov-Dic y 9 meses del año que viene.`;
+                a.innerHTML = `<p>A 31/12, traspaso a Gastos Anticipados (480) por los 9 meses no consumidos:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_ing_antic': 
+                v1 = 6000; // Cobro anual 1 Dic
+                currentAns = (v1 / 12) * 11;
+                p.innerText = `Cobras un alquiler anual por adelantado el 1 Diciembre: ${v1}€. Pertenecen al año siguiente 11 meses.`;
+                a.innerHTML = `<p>A 31/12, importe a apartar a Ingresos Anticipados (485):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_rtdo_ejer': 
+                v1 = 100000; v2 = 80000; // Ingresos (7), Gastos (6)
+                currentAns = v1 - v2;
+                p.innerText = `Total saldo cuenta grupo 7: ${v1}€. Total saldo cuenta grupo 6: ${v2}€.`;
+                a.innerHTML = `<p>Beneficio final en la cuenta (129):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_pago_frac': 
+                v1 = 10000; v2 = 18; // Cuota anterior, % pago
+                currentAns = v1 * (v2/100);
+                p.innerText = `La cuota íntegra de tu último ISOC fue de ${v1}€. Haces el Pago Fraccionado de Octubre (Art. 40.2 al ${v2}%).`;
+                a.innerHTML = `<p>Importe que pagas a H.P (473):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_rva_legal': 
+                v1 = 20000; v2 = 10;
+                currentAns = v1 * (v2/100);
+                p.innerText = `Tu Beneficio este año es ${v1}€. El Capital Social es elevado y la Reserva Legal aún no alcanza el límite.`;
+                a.innerHTML = `<p>Dotación obligatoria a Reserva Legal (${v2}% del Bº):</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_cierre_g': 
+                v1 = 4000; v2 = 1000;
+                currentAns = v1 + v2;
+                p.innerText = `Al cierre, la cuenta 600 tiene saldo Deudor de ${v1}€ y la 628 de ${v2}€.`;
+                a.innerHTML = `<p>Importe total por el que abonarás estas cuentas contra la 129:</p><input type="number" id="ans" autofocus ${styleInp}>`;
+                break;
+            case 't4_cierre_i': 
+                v1 = 8000; v2 = 2000;
+                currentAns = v1 + v2;
+                p.innerText = `Al cierre, la 700 tiene saldo Acreedor de ${v1}€ y la 762 de ${v2}€.`;
+                a.innerHTML = `<p>Importe total por el que cargarás estas cuentas contra la 129:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
         }
     }
 
-    function darPista() { alert("Pista: Empieza o contiene un " + currentAns.toString()[0]); }
-    function noDado() { alert("Saltando al siguiente..."); if(lastId === 'examen') generarExamen(); else generarPregunta(); }
+    function darPista() { alert("Pista: El resultado empieza por " + currentAns.toString()[0]); }
+    function noDado() { alert("Saltando al siguiente..."); if(lastId === 't4_examen') generarExamen(); else generarPregunta(); }
 
     function verSolucion() {
-        if(lastId === 'examen') {
+        if(lastId === 't4_examen') {
             alert(`Solución Asiento:\nDebe: ${targetAsiento.cd} (${targetAsiento.v}€)\nHaber: ${targetAsiento.ch} (${targetAsiento.v}€)`);
         } else {
             alert(`La respuesta correcta es: ${currentAns}`);
@@ -484,16 +693,13 @@
             {q:"Autorrepercusión de IVA por Adquisición Intracomunitaria", cd:4720, ch:4770},
             {q:"Dotación anual a la amortización del inmovilizado material", cd:681, ch:281},
             {q:"Imputación a resultados de Gastos anticipados del ejercicio anterior", cd:628, ch:480},
-            {q:"Asiento de Regularización: Cierre de la cuenta de Ventas contra Rtdo. Ejercicio", cd:700, ch:129},
-            {q:"Asiento de Regularización: Cierre de la cuenta de Compras contra Rtdo. Ejercicio", cd:129, ch:600},
-            {q:"Variación Existencias: Dar de baja las existencias iniciales", cd:610, ch:300},
-            {q:"Variación Existencias: Reconocer las existencias finales", cd:300, ch:610},
+            {q:"Asiento de Regularización: Cierre de Ventas contra Rtdo. Ejercicio", cd:700, ch:129},
+            {q:"Asiento de Regularización: Cierre de Compras contra Rtdo. Ejercicio", cd:129, ch:600},
+            {q:"Variación Existencias: Dar de baja existencias iniciales", cd:610, ch:300},
+            {q:"Variación Existencias: Reconocer existencias finales", cd:300, ch:610},
             {q:"Reconocimiento de reversión deterioro de créditos", cd:490, ch:794},
             {q:"Pago de la liquidación del IVA a Hacienda por banco", cd:4750, ch:572},
-            {q:"Cobro de la devolución del IVA de Hacienda por banco", cd:572, ch:4700},
-            {q:"Cobro de factura a clientes por banco", cd:572, ch:430},
-            {q:"Pago de deuda a proveedores por banco", cd:400, ch:572},
-            {q:"Imputación de Ingresos anticipados del ejercicio anterior", cd:485, ch:700}
+            {q:"Cobro de la devolución del IVA de Hacienda por banco", cd:572, ch:4700}
         ];
         
         let s = operaciones[Math.floor(Math.random()*operaciones.length)];
@@ -502,7 +708,7 @@
         
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = `Diario T${triActual}:\n${s.q} por ${targetAsiento.v}€`;
+        document.getElementById('quest').innerText = `Diario General Final:\n${s.q} por ${targetAsiento.v}€`;
         clearInp();
     }
 
