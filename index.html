@@ -11,19 +11,17 @@
         body { font-family: 'Segoe UI', sans-serif; background: #F5F5F5; margin: 0; padding: 40px; color: #333; font-size: 20px; }
         .container { max-width: 1400px; margin: auto; }
         #menu { display: block; text-align: center; }
-        .tri-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-top: 40px; }
+        .tri-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; margin-top: 50px; }
         
-        /* Botones principales ajustados y proporcionales */
-        .btn-trimestre { background: #FFF; border: 4px solid var(--fucsia); border-radius: 25px; padding: 30px 15px; font-size: 1.5em; font-weight: bold; color: var(--fucsia); cursor: pointer; transition: 0.3s; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .btn-trimestre:hover { background: var(--fucsia); color: #FFF; transform: translateY(-5px); }
+        .btn-trimestre { background: #FFF; border: 4px solid var(--fucsia); border-radius: 40px; padding: 40px 20px; font-size: 1.6em; font-weight: bold; color: var(--fucsia); cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .btn-trimestre:hover { background: var(--fucsia); color: #FFF; transform: translateY(-10px); }
         
         #vista-juegos { display: none; }
         .card { background: #FFF; border: 3px solid #EEE; border-radius: 30px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-top: 20px; }
         .titulo-seccion { color: var(--fucsia); font-weight: bold; text-align: left; border-left: 8px solid var(--fucsia); padding-left: 15px; margin-bottom: 25px; font-size: 1.8em; display: flex; justify-content: space-between; align-items: center; }
         
         .grid-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
-        /* Botones de minijuegos ajustados */
-        .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 15px; padding: 15px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
+        .btn-j { background: #FFF; border: 2px solid #DDD; border-radius: 18px; padding: 15px 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; }
         .btn-j:hover { background: var(--rosa); border-color: var(--fucsia); transform: scale(1.05); }
         .btn-j span { font-size: 2em; }
         .btn-j small { font-size: 0.8em; font-weight: bold; color: #777; margin-top: 10px; text-align: center; }
@@ -33,13 +31,12 @@
         
         .btn-hint { background: #FFEB3B; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.2em; cursor: pointer; position: absolute; right: 20px; top: 20px; }
         .row { display: grid; grid-template-columns: 140px 1fr 200px; gap: 20px; margin-bottom: 15px; width: 100%; max-width: 900px; margin: auto; }
-        input { padding: 15px; border: 3px solid #DDD; border-radius: 15px; text-align: center; font-size: 20px; width: 100%; box-sizing: border-box; }
+        input { padding: 20px; border: 3px solid #DDD; border-radius: 15px; text-align: center; font-size: 22px; width: 100%; box-sizing: border-box; }
         
         .footer-actions { display: flex; justify-content: center; gap: 10px; max-width: 900px; margin: 20px auto; flex-wrap: wrap; }
-        /* Botones de acción ajustados y proporcionales */
         .btn-validar { background: var(--fucsia); color: white; border: none; padding: 15px; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; flex: 2; min-width: 200px; }
-        .btn-nodado { background: #eee; color: #666; border: none; padding: 15px 25px; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; }
-        .btn-solucion { background: var(--teal); color: white; border: none; padding: 15px 25px; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; }
+        .btn-nodado { background: #eee; color: #666; border: none; padding: 10px 20px; border-radius: 10px; font-size: 0.9em; font-weight: bold; cursor: pointer; }
+        .btn-solucion { background: var(--teal); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 0.9em; font-weight: bold; cursor: pointer; }
 
         #game-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
         .modal { background: white; padding: 40px; border-radius: 30px; width: 90%; max-width: 600px; text-align: center; border: 10px solid var(--fucsia); position: relative; }
@@ -99,7 +96,7 @@
                 <button class="btn-solucion" onclick="verSolucion()">SOLUCIÓN</button>
                 <button class="btn-validar" onclick="checkAsiento()">🚀 VALIDAR ASIENTO</button>
             </div>
-            <button class="btn-nodado" style="width:100%; background:var(--rojo); color:white; margin-top:10px;" onclick="cerrarJuego()">SALIR AL MENÚ</button>
+            <button class="btn-nodado" style="width:100%; background:var(--rojo); color:white; margin-top:10px;" onclick="cerrarJuego()">SALIR</button>
         </div>
     </div>
 </div>
@@ -241,373 +238,373 @@
         const p = document.getElementById('m-pregunta');
         const a = document.getElementById('m-input-area');
         
-        let styleInp = 'style="width:100%; padding:15px; border-radius:10px; border:2px solid #ddd; font-size:1.2em; text-align:center; font-weight:bold; color:var(--fucsia); outline:none;"';
-        let tAlerta = 'background:#ffebee; padding:20px; border-radius:15px; border:3px dashed #f44336; margin-top:15px;';
-        let tExito = 'background:#e8f5e9; padding:20px; border-radius:15px; border:3px dashed #4caf50; margin-top:15px;';
-        let tInfo = 'background:#e3f2fd; padding:20px; border-radius:15px; border:3px dashed #2196f3; margin-top:15px;';
-        let tDinero = 'background:#fff8e1; padding:20px; border-radius:15px; border:3px dashed #ffb300; margin-top:15px;';
-        let tOscuro = 'background:#f3e5f5; padding:20px; border-radius:15px; border:3px dashed #9c27b0; margin-top:15px;';
+        let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center; font-weight:bold; color:var(--fucsia); outline:none;"';
+        let tAlerta = 'background:#ffebee; padding:20px; border-radius:20px; border:3px dashed #f44336; margin-top:15px;';
+        let tExito = 'background:#e8f5e9; padding:20px; border-radius:20px; border:3px dashed #4caf50; margin-top:15px;';
+        let tInfo = 'background:#e3f2fd; padding:20px; border-radius:20px; border:3px dashed #2196f3; margin-top:15px;';
+        let tDinero = 'background:#fff8e1; padding:20px; border-radius:20px; border:3px dashed #ffb300; margin-top:15px;';
+        let tOscuro = 'background:#f3e5f5; padding:20px; border-radius:20px; border:3px dashed #9c27b0; margin-top:15px;';
 
         let v1, v2, v3, v4;
 
         switch(lastId) {
             /* === RRHH === */
             case 'finiquito': 
-                v1 = Math.floor(Math.random()*40) + 40; v2 = Math.floor(Math.random()*5) + 1; currentAns = v1 * 20 * v2;
-                p.innerHTML = `💔 <b>¡DESPEDIDO OBJETIVO!</b><br>Salida de empleado (20 días/año). Lleva <b>${v2} años</b> y cobra <b>${v1}€/día</b>.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Indemnización a pagar:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*40)+40; v2=Math.floor(Math.random()*5)+1; currentAns=v1*20*v2;
+                p.innerHTML=`💔 <b>¡DESPEDIDO OBJETIVO!</b><br>Salida de empleado (20 días/año). Lleva <b>${v2} años</b> y cobra <b>${v1}€/día</b>.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Indemnización a pagar:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'embargo': 
-                v1 = 1134; v2 = Math.floor(Math.random()*400) + 100; currentAns = Math.round(v2 * 0.30);
-                p.innerHTML = `⚖️ <b>¡AUTO JUDICIAL!</b><br>Sueldo neto: ${v1 + v2}€. El SMI (${v1}€) es inembargable. Embargamos el <b>30% del sobrante</b>.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔒 Retención en nómina (euros):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1134; v2=Math.floor(Math.random()*400)+100; currentAns=Math.round(v2*0.30);
+                p.innerHTML=`⚖️ <b>¡AUTO JUDICIAL!</b><br>Sueldo neto: ${v1+v2}€. El SMI (${v1}€) es inembargable. Embargamos el <b>30% del sobrante</b>.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔒 Retención en nómina (euros):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'ss_obrera': 
-                v1 = Math.floor(Math.random()*10)*100 + 1000; currentAns = Math.round(v1 * 0.0635);
-                p.innerHTML = `🛡️ <b>¡CUOTA DEL TRABAJADOR!</b><br>Base Cotización: <b>${v1}€</b>. Tipos: CC(4.7%), Desempleo(1.55%), FP(0.1%).`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📉 Deducción total SS trabajador:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)*100+1000; currentAns=Math.round(v1*0.0635);
+                p.innerHTML=`🛡️ <b>¡CUOTA DEL TRABAJADOR!</b><br>Base Cotización: <b>${v1}€</b>. Tipos: CC(4.7%), Desempleo(1.55%), FP(0.1%).`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📉 Deducción total SS trabajador:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'ss_empresa': 
-                v1 = Math.floor(Math.random()*10)*100 + 1000; currentAns = Math.round(v1 * 0.314);
-                p.innerHTML = `🏢 <b>¡COSTE DE LA EMPRESA!</b><br>La nómina tiene base <b>${v1}€</b>. ¿Cuánto pagará la empresa de SS? (Aplica un 31.4% aprox).`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💼 Cargo de empresa (SS):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)*100+1000; currentAns=Math.round(v1*0.314);
+                p.innerHTML=`🏢 <b>¡COSTE DE LA EMPRESA!</b><br>La nómina tiene base <b>${v1}€</b>. ¿Cuánto pagará la empresa de SS? (Aplica un 31.4% aprox).`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💼 Cargo de empresa (SS):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'irpf': 
-                v1 = Math.floor(Math.random()*10)*100 + 1000; v2 = Math.floor(Math.random()*10) + 5; currentAns = Math.round(v1 * (v2/100));
-                p.innerHTML = `🏛️ <b>¡HACIENDA SOMOS TODOS!</b><br>Salario Bruto (Base retención): <b>${v1}€</b>. Tipo a aplicar: <b>${v2}%</b>.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">✂️ Importe a retener por IRPF:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)*100+1000; v2=Math.floor(Math.random()*10)+5; currentAns=Math.round(v1*(v2/100));
+                p.innerHTML=`🏛️ <b>¡HACIENDA SOMOS TODOS!</b><br>Salario Bruto (Base retención): <b>${v1}€</b>. Tipo a aplicar: <b>${v2}%</b>.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">✂️ Importe a retener por IRPF:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'horas_extra': 
-                v1 = Math.floor(Math.random()*10) + 2; v2 = Math.floor(Math.random()*10) + 10; currentAns = v1 * v2;
-                p.innerHTML = `💪 <b>¡ESFUERZO EXTRA!</b><br>Realiza <b>${v1} horas</b> por fuerza mayor a <b>${v2}€/hora</b>.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">💵 Bruto a sumar en nómina:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)+2; v2=Math.floor(Math.random()*10)+10; currentAns=v1*v2;
+                p.innerHTML=`💪 <b>¡ESFUERZO EXTRA!</b><br>Realiza <b>${v1} horas</b> por fuerza mayor a <b>${v2}€/hora</b>.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">💵 Bruto a sumar en nómina:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'despido_imp': 
-                v1 = Math.floor(Math.random()*30) + 50; v2 = Math.floor(Math.random()*5) + 1; currentAns = v1 * 33 * v2;
-                p.innerHTML = `🧑‍⚖️ <b>¡JUICIO PERDIDO!</b><br>Despido improcedente (33 días/año). Antigüedad: <b>${v2} años</b>. Salario: <b>${v1}€/día</b>.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Indemnización total:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*30)+50; v2=Math.floor(Math.random()*5)+1; currentAns=v1*33*v2;
+                p.innerHTML=`🧑‍⚖️ <b>¡JUICIO PERDIDO!</b><br>Despido improcedente (33 días/año). Antigüedad: <b>${v2} años</b>. Salario: <b>${v1}€/día</b>.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Indemnización total:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'it_enferm': 
-                v1 = Math.floor(Math.random()*20) + 40; currentAns = Math.round(v1 * 0.60 * 12); 
-                p.innerHTML = `🤒 <b>¡EMPLEADO EN CAMA!</b><br>Baja común de 15 días. Base: <b>${v1}€/día</b>. <small>(Días 1-3: 0%, Días 4-15: 60%)</small>`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💊 Prestación de los 15 días:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*20)+40; currentAns=Math.round(v1*0.60*12); 
+                p.innerHTML=`🤒 <b>¡EMPLEADO EN CAMA!</b><br>Baja común de 15 días. Base: <b>${v1}€/día</b>. <small>(Días 1-3: 0%, Días 4-15: 60%)</small>`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💊 Prestación de los 15 días:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'sal_neto': 
-                v1 = Math.floor(Math.random()*10)*100 + 1500; v2 = 100; v3 = Math.floor(Math.random()*100) + 100; currentAns = v1 - v2 - v3;
-                p.innerHTML = `💶 <b>¡DÍA DE PAGO!</b><br>Salario Bruto: <b>${v1}€</b>. Deducción SegSoc: <b>${v2}€</b>. Retención IRPF: <b>${v3}€</b>.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">✈️ Líquido a percibir (Neto):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)*100+1500; v2=100; v3=Math.floor(Math.random()*100)+100; currentAns=v1-v2-v3;
+                p.innerHTML=`💶 <b>¡DÍA DE PAGO!</b><br>Salario Bruto: <b>${v1}€</b>. Deducción SegSoc: <b>${v2}€</b>. Retención IRPF: <b>${v3}€</b>.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">✈️ Líquido a percibir (Neto):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'prorrata_extra': 
-                v1 = 1000; v2 = 200; currentAns = (v1 + v2) * 2 / 12;
-                p.innerHTML = `🎁 <b>¡REPARTO DE PAGAS!</b><br>Salario Base: ${v1}€. Plus Convenio: ${v2}€. Tiene 2 pagas extras iguales a Base+Plus.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📊 Prorrata mensual de pagas extras:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=200; currentAns=(v1+v2)*2/12;
+                p.innerHTML=`🎁 <b>¡REPARTO DE PAGAS!</b><br>Salario Base: ${v1}€. Plus Convenio: ${v2}€. Tiene 2 pagas extras iguales a Base+Plus.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📊 Prorrata mensual de pagas extras:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === LOGISTICA === */
             case 'pmp': 
-                v1 = 100; v2 = 10; v3 = 100; v4 = 15; currentAns = ((v1 * v2) + (v3 * v4)) / (v1 + v3);
-                p.innerHTML = `📦 <b>¡MEZCLA EN ALMACÉN!</b><br>Teníamos ${v1} uds a ${v2}€. Entran ${v3} uds a ${v4}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Precio Medio Ponderado:</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}></div>`;
+                v1=100; v2=10; v3=100; v4=15; currentAns=((v1*v2)+(v3*v4))/(v1+v3);
+                p.innerHTML=`📦 <b>¡MEZCLA EN ALMACÉN!</b><br>Teníamos ${v1} uds a ${v2}€. Entran ${v3} uds a ${v4}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Precio Medio Ponderado:</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'fifo': 
-                v1 = 10; v2 = 10; v3 = 20; v4 = 12; currentAns = (v1+v3-25)*v4; 
-                p.innerHTML = `🛒 <b>¡MÉTODO FIFO!</b><br>Lote 1: ${v1}uds a ${v2}€. Lote 2: ${v3}uds a ${v4}€. Se venden 25 uds en total.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💵 Valor de las existencias finales:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10; v2=10; v3=20; v4=12; currentAns=(v1+v3-25)*v4; 
+                p.innerHTML=`🛒 <b>¡MÉTODO FIFO!</b><br>Lote 1: ${v1}uds a ${v2}€. Lote 2: ${v3}uds a ${v4}€. Se venden 25 uds en total.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💵 Valor de las existencias finales:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'pto_pedido': 
-                v1 = 5; v2 = 2; v3 = 10; currentAns = (v1 * v2) + v3;
-                p.innerHTML = `🚨 <b>¡QUE NO FALTE ESTOCK!</b><br>Demanda: ${v1} uds/día. Plazo prov: ${v2} días. Stock Seg: ${v3} uds.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">📞 Punto de Pedido (uds):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5; v2=2; v3=10; currentAns=(v1*v2)+v3;
+                p.innerHTML=`🚨 <b>¡QUE NO FALTE ESTOCK!</b><br>Demanda: ${v1} uds/día. Plazo prov: ${v2} días. Stock Seg: ${v3} uds.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">📞 Punto de Pedido (uds):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'stock_seg': 
-                v1 = 15; v2 = 10; v3 = 3; currentAns = (v1 - v2) * v3;
-                p.innerHTML = `🛡️ <b>¡RETRASOS DEL PROVEEDOR!</b><br>Demanda tope: ${v1} uds/d. Normal: ${v2} uds/d. Retraso máx: ${v3} días.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🧱 Stock de Seguridad recomendado:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=15; v2=10; v3=3; currentAns=(v1-v2)*v3;
+                p.innerHTML=`🛡️ <b>¡RETRASOS DEL PROVEEDOR!</b><br>Demanda tope: ${v1} uds/d. Normal: ${v2} uds/d. Retraso máx: ${v3} días.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🧱 Stock de Seguridad recomendado:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'lote_wilson': 
-                v1 = 1000; v2 = 10; v3 = 5; currentAns = Math.round(Math.sqrt((2 * v1 * v2) / v3));
-                p.innerHTML = `🎯 <b>¡PEDIDO ÓPTIMO (WILSON)!</b><br>Demanda(D): ${v1}. Coste Pedido(S): ${v2}€. Coste Mantener(H): ${v3}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📦 Tamaño óptimo del pedido:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=10; v3=5; currentAns=Math.round(Math.sqrt((2*v1*v2)/v3));
+                p.innerHTML=`🎯 <b>¡PEDIDO ÓPTIMO (WILSON)!</b><br>Demanda(D): ${v1}. Coste Pedido(S): ${v2}€. Coste Mantener(H): ${v3}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📦 Tamaño óptimo del pedido:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'almacenaje': 
-                v1 = 100; v2 = 20; v3 = 2; currentAns = ((v1/2) + v2) * v3;
-                p.innerHTML = `🏭 <b>¡GASTO DE ESPACIO!</b><br>Pedido(Q): ${v1}uds. Stock Seg(SS): ${v2}uds. Coste unitario(Cu): ${v3}€.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💸 Coste total posesión:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=100; v2=20; v3=2; currentAns=((v1/2)+v2)*v3;
+                p.innerHTML=`🏭 <b>¡GASTO DE ESPACIO!</b><br>Pedido(Q): ${v1}uds. Stock Seg(SS): ${v2}uds. Coste unitario(Cu): ${v3}€.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💸 Coste total posesión:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'rotacion': 
-                v1 = 5000; v2 = 1000; currentAns = v1 / v2;
-                p.innerHTML = `🔄 <b>¡MUEVE ESA MERCANCÍA!</b><br>Coste ventas anuales: ${v1}€. Valor de stock medio: ${v2}€.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">🌪️ Índice de Rotación (veces):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5000; v2=1000; currentAns=v1/v2;
+                p.innerHTML=`🔄 <b>¡MUEVE ESA MERCANCÍA!</b><br>Coste ventas anuales: ${v1}€. Valor de stock medio: ${v2}€.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">🌪️ Índice de Rotación (veces):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'rotura': 
-                v1 = 20; v2 = 5; currentAns = v1 * v2;
-                p.innerHTML = `⚠️ <b>¡ROTURA DE STOCK!</b><br>Nos quedamos a cero y perdimos ${v1} ventas. Margen por unidad: ${v2}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Coste total por rotura:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=20; v2=5; currentAns=v1*v2;
+                p.innerHTML=`⚠️ <b>¡ROTURA DE STOCK!</b><br>Nos quedamos a cero y perdimos ${v1} ventas. Margen por unidad: ${v2}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Coste total por rotura:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'pedidos_ano': 
-                v1 = 1000; v2 = 200; currentAns = v1 / v2;
-                p.innerHTML = `🚚 <b>¡NÚMERO DE PEDIDOS!</b><br>Demanda anual: ${v1} uds. Lote óptimo (Q): ${v2} uds/pedido.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📅 Pedidos al año (N):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=200; currentAns=v1/v2;
+                p.innerHTML=`🚚 <b>¡NÚMERO DE PEDIDOS!</b><br>Demanda anual: ${v1} uds. Lote óptimo (Q): ${v2} uds/pedido.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📅 Pedidos al año (N):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'stock_medio': 
-                v1 = 200; v2 = 50; currentAns = (v1/2) + v2;
-                p.innerHTML = `📊 <b>¡VOLUMEN REGULAR!</b><br>Lote normal Q=${v1} uds. Stock de Seguridad: ${v2} uds.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📦 Volumen Medio de Almacén:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=200; v2=50; currentAns=(v1/2)+v2;
+                p.innerHTML=`📊 <b>¡VOLUMEN REGULAR!</b><br>Lote normal Q=${v1} uds. Stock de Seguridad: ${v2} uds.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📦 Volumen Medio de Almacén:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === FINANCIERA === */
             case 'interes': 
-                v1 = 5000; v2 = 5; currentAns = v1 * (v2/100);
-                p.innerHTML = `📈 <b>¡RENTABILIDAD BÁSICA!</b><br>Inviertes <b>${v1}€</b> al <b>${v2}%</b> de interés simple anual durante 1 año.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">✨ Beneficio en euros por intereses:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5000; v2=5; currentAns=v1*(v2/100);
+                p.innerHTML=`📈 <b>¡RENTABILIDAD BÁSICA!</b><br>Inviertes <b>${v1}€</b> al <b>${v2}%</b> de interés simple anual durante 1 año.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">✨ Beneficio en euros por intereses:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'int_comp': 
-                v1 = 1000; v2 = 10; currentAns = Math.round(v1 * 1.10 * 1.10); 
-                p.innerHTML = `📊 <b>¡LA BOLA DE NIEVE!</b><br>Capital: <b>${v1}€</b> al <b>${v2}%</b> interés compuesto anual. Inversión a 2 años.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💰 Montante final (Capital + Int):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=10; currentAns=Math.round(v1*1.10*1.10); 
+                p.innerHTML=`📊 <b>¡LA BOLA DE NIEVE!</b><br>Capital: <b>${v1}€</b> al <b>${v2}%</b> interés compuesto anual. Inversión a 2 años.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">💰 Montante final (Capital + Int):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'remesa': 
-                v1 = 10000; v2 = 200; v3 = 50; currentAns = v1 - v2 - v3;
-                p.innerHTML = `🏦 <b>¡EFECTO AL DESCUENTO!</b><br>Pagaré de ${v1}€. Nos quitan ${v2}€ por interés y ${v3}€ de comisiones.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Efectivo líquido que te ingresan:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=200; v3=50; currentAns=v1-v2-v3;
+                p.innerHTML=`🏦 <b>¡EFECTO AL DESCUENTO!</b><br>Pagaré de ${v1}€. Nos quitan ${v2}€ por interés y ${v3}€ de comisiones.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Efectivo líquido que te ingresan:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'tae': 
-                currentAns = 10.25; 
-                p.innerHTML = `🔍 <b>¡LA LETRA PEQUEÑA!</b><br>Préstamo TIN 10% cobrado semestralmente (k=2). <small>TAE = (1 + 0.05)^2 - 1</small>`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">% TAE real a pagar (Ej: 10.25):</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}></div>`;
+                currentAns=10.25; 
+                p.innerHTML=`🔍 <b>¡LA LETRA PEQUEÑA!</b><br>Préstamo TIN 10% cobrado semestralmente (k=2). <small>TAE = (1 + 0.05)^2 - 1</small>`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">% TAE real a pagar (Ej: 10.25):</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'prestamo': 
-                v1 = 10000; v2 = 5; currentAns = v1 * (v2/100);
-                p.innerHTML = `💳 <b>¡CUOTA FRANCESA (AÑO 1)!</b><br>Préstamo de ${v1}€. Interés anual ${v2}%.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Sólo la parte de INTERESES del primer año:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=5; currentAns=v1*(v2/100);
+                p.innerHTML=`💳 <b>¡CUOTA FRANCESA (AÑO 1)!</b><br>Préstamo de ${v1}€. Interés anual ${v2}%.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Sólo la parte de INTERESES del primer año:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'factoring': 
-                v1 = 5000; v2 = 100; v3 = 50; currentAns = v1 - v2 - v3;
-                p.innerHTML = `🧾 <b>¡FACTORING!</b><br>Cedemos ${v1}€ al Factor. Comisión fija ${v2}€ y coste de anticipo ${v3}€.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💼 Efectivo a percibir:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5000; v2=100; v3=50; currentAns=v1-v2-v3;
+                p.innerHTML=`🧾 <b>¡FACTORING!</b><br>Cedemos ${v1}€ al Factor. Comisión fija ${v2}€ y coste de anticipo ${v3}€.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💼 Efectivo a percibir:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'renting': 
-                v1 = 400; currentAns = v1 * 12;
-                p.innerHTML = `🚗 <b>¡RENTING!</b><br>Coche comercial. Cuota: ${v1}€/mes (todo incluido).`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💰 Coste anual de renting:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=400; currentAns=v1*12;
+                p.innerHTML=`🚗 <b>¡RENTING!</b><br>Coche comercial. Cuota: ${v1}€/mes (todo incluido).`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">💰 Coste anual de renting:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'van': 
-                v1 = 1000; v2 = 550; v3 = 605; currentAns = Math.round(-v1 + (v2/1.1) + (v3/1.21));
-                p.innerHTML = `⚖️ <b>¡VALOR ACTUAL NETO!</b><br>Inversión: ${v1}€. Flujo 1: ${v2}€. Flujo 2: ${v3}€. Descuento: 10%.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📈 VAN resultante del proyecto:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=550; v3=605; currentAns=Math.round(-v1+(v2/1.1)+(v3/1.21));
+                p.innerHTML=`⚖️ <b>¡VALOR ACTUAL NETO!</b><br>Inversión: ${v1}€. Flujo 1: ${v2}€. Flujo 2: ${v3}€. Descuento: 10%.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📈 VAN resultante del proyecto:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'tir': 
-                v1 = 100; v2 = 110; currentAns = 10;
-                p.innerHTML = `🎯 <b>¡BUSCANDO LA T.I.R!</b><br>Inviertes ${v1}€ hoy y recibes EXACTAMENTE ${v2}€ el año que viene.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">% T.I.R (Sin decimales):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=100; v2=110; currentAns=10;
+                p.innerHTML=`🎯 <b>¡BUSCANDO LA T.I.R!</b><br>Inviertes ${v1}€ hoy y recibes EXACTAMENTE ${v2}€ el año que viene.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">% T.I.R (Sin decimales):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 'rentabilidad': 
-                v1 = 2000; v2 = 10000; currentAns = (v1/v2)*100;
-                p.innerHTML = `💰 <b>¡EL RETORNO!</b><br>Beneficio limpio de ${v1}€ tras invertir ${v2}€.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">% Rentabilidad simple obtenida:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2000; v2=10000; currentAns=(v1/v2)*100;
+                p.innerHTML=`💰 <b>¡EL RETORNO!</b><br>Beneficio limpio de ${v1}€ tras invertir ${v2}€.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">% Rentabilidad simple obtenida:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === CONTABILIDAD T1 === */
             case 't1_iva_liq': 
-                v1 = Math.floor(Math.random()*10)*100 + 2000; v2 = Math.floor(Math.random()*10)*100 + 500; currentAns = v1 - v2;
-                p.innerHTML = `🏛️ <b>¡MOD. 303 (T1)!</b><br>Mayor (477) Repercutido: ${v1}€. Mayor (472) Soportado: ${v2}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Saldo a ingresar (4750):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=Math.floor(Math.random()*10)*100+2000; v2=Math.floor(Math.random()*10)*100+500; currentAns=v1-v2;
+                p.innerHTML=`🏛️ <b>¡MOD. 303 (T1)!</b><br>Mayor (477) Repercutido: ${v1}€. Mayor (472) Soportado: ${v2}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Saldo a ingresar (4750):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_dto_fra': 
-                v1 = 1000; v2 = 10; v3 = 5; currentAns = (v1 * (1 - v2/100)) * (1 - v3/100);
-                p.innerHTML = `🏷️ <b>¡FACTURA CON DTO!</b><br>Bruto: ${v1}€. Dto comercial: ${v2}%. Dto pronto pago: ${v3}%. (Ambos en Fra).`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📉 Base Imponible final:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=10; v3=5; currentAns=(v1*(1-v2/100))*(1-v3/100);
+                p.innerHTML=`🏷️ <b>¡FACTURA CON DTO!</b><br>Bruto: ${v1}€. Dto comercial: ${v2}%. Dto pronto pago: ${v3}%. (Ambos en Fra).`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📉 Base Imponible final:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_anticipo': 
-                v1 = 1000; currentAns = v1 * 0.21;
-                p.innerHTML = `💵 <b>¡COBRO ADELANTADO!</b><br>El cliente ingresa ${v1}€ (Base) para un futuro pedido. ¡Devenga IVA!`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">⚖️ IVA Repercutido a contabilizar (477):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; currentAns=v1*0.21;
+                p.innerHTML=`💵 <b>¡COBRO ADELANTADO!</b><br>El cliente ingresa ${v1}€ (Base) para un futuro pedido. ¡Devenga IVA!`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">⚖️ IVA Repercutido a contabilizar (477):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_vta_merc': 
-                v1 = 2000; currentAns = v1 * 1.21;
-                p.innerHTML = `🛒 <b>¡SE VENDE!</b><br>Venta mercaderías por ${v1}€ + 21% IVA.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💼 Total a cargar en (430) Clientes:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2000; currentAns=v1*1.21;
+                p.innerHTML=`🛒 <b>¡SE VENDE!</b><br>Venta mercaderías por ${v1}€ + 21% IVA.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💼 Total a cargar en (430) Clientes:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_nomina': 
-                v1 = 1500; currentAns = v1;
-                p.innerHTML = `👷 <b>¡NÓMINAS!</b><br>Salario Base: ${v1}€. SS Obrera: 100€. IRPF: 150€.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📝 Importe al Debe de (640):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1500; currentAns=v1;
+                p.innerHTML=`👷 <b>¡NÓMINAS!</b><br>Salario Base: ${v1}€. SS Obrera: 100€. IRPF: 150€.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📝 Importe al Debe de (640):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_seg_soc': 
-                v1 = 1500; v2 = 450; currentAns = v2;
-                p.innerHTML = `🏢 <b>¡CARGAS SOCIALES!</b><br>SS total a pagar 550€ (SS Obrera 100€, SS Empresa ${v2}€).`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📝 Importe al Debe de (642):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1500; v2=450; currentAns=v2;
+                p.innerHTML=`🏢 <b>¡CARGAS SOCIALES!</b><br>SS total a pagar 550€ (SS Obrera 100€, SS Empresa ${v2}€).`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📝 Importe al Debe de (642):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_letra_cli': 
-                v1 = 2500; currentAns = v1;
-                p.innerHTML = `✒️ <b>¡EFECTO ACEPTADO!</b><br>Cliente firma una letra formalizando su deuda de ${v1}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📄 Alta (431) Efectos comerciales:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2500; currentAns=v1;
+                p.innerHTML=`✒️ <b>¡EFECTO ACEPTADO!</b><br>Cliente firma una letra formalizando su deuda de ${v1}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📄 Alta (431) Efectos comerciales:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_arqueo': 
-                v1 = 1000; v2 = 980; currentAns = v1 - v2;
-                p.innerHTML = `🗄️ <b>¡DESCUADRE EN CAJA!</b><br>Contabilidad marca ${v1}€, pero el recuento físico da ${v2}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Gasto en (659) Pérdidas gestión:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=980; currentAns=v1-v2;
+                p.innerHTML=`🗄️ <b>¡DESCUADRE EN CAJA!</b><br>Contabilidad marca ${v1}€, pero el recuento físico da ${v2}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Gasto en (659) Pérdidas gestión:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_suplido': 
-                v1 = 100; v2 = 50; currentAns = v1*1.21 + v2;
-                p.innerHTML = `🚚 <b>¡FACTURA CON SUPLIDOS!</b><br>Base servicios: ${v1}€ (+IVA 21%). Suplidos (Exentos): ${v2}€.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🧾 Total factura al Cliente:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=100; v2=50; currentAns=v1*1.21+v2;
+                p.innerHTML=`🚚 <b>¡FACTURA CON SUPLIDOS!</b><br>Base servicios: ${v1}€ (+IVA 21%). Suplidos (Exentos): ${v2}€.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🧾 Total factura al Cliente:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't1_rappels': 
-                v1 = 200; currentAns = v1 * 1.21;
-                p.innerHTML = `🎁 <b>¡PREMIO POR VOLUMEN!</b><br>Descuento RAPPEL fuera de Fra por ${v1}€ (+IVA 21%).`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">📉 Abono a reducir de (430) Clientes:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=200; currentAns=v1*1.21;
+                p.innerHTML=`🎁 <b>¡PREMIO POR VOLUMEN!</b><br>Descuento RAPPEL fuera de Fra por ${v1}€ (+IVA 21%).`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">📉 Abono a reducir de (430) Clientes:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === CONTABILIDAD T2 === */
             case 't2_adq_inmov': 
-                v1 = 20000; v2 = 1000; currentAns = v1 + v2;
-                p.innerHTML = `🏗️ <b>¡ALTA MÁQUINA!</b><br>Precio: ${v1}€. Gastos de instalación (activables): ${v2}€. (Sin IVA).`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📈 Activación en (213):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=20000; v2=1000; currentAns=v1+v2;
+                p.innerHTML=`🏗️ <b>¡ALTA MÁQUINA!</b><br>Precio: ${v1}€. Gastos de instalación (activables): ${v2}€. (Sin IVA).`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📈 Activación en (213):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_amort': 
-                v1 = 12000; v2 = 2000; v3 = 5; currentAns = (v1 - v2) / v3;
-                p.innerHTML = `⏳ <b>¡AMORTIZACIÓN LINEAL!</b><br>Vehículo: ${v1}€. V.Residual: ${v2}€. Vida útil: ${v3} años.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🚗 Dotación anual (681):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=12000; v2=2000; v3=5; currentAns=(v1-v2)/v3;
+                p.innerHTML=`⏳ <b>¡AMORTIZACIÓN LINEAL!</b><br>Vehículo: ${v1}€. V.Residual: ${v2}€. Vida útil: ${v3} años.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🚗 Dotación anual (681):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_vta_inmov': 
-                v1 = 5000; v2 = 10000; v3 = 6000; currentAns = v1 - (v2 - v3);
-                p.innerHTML = `🏷️ <b>¡VENTA DE ACTIVO!</b><br>Precio vta: ${v1}€. Coste Histórico: ${v2}€. Amort. Acum: ${v3}€.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Beneficio neto (771):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5000; v2=10000; v3=6000; currentAns=v1-(v2-v3);
+                p.innerHTML=`🏷️ <b>¡VENTA DE ACTIVO!</b><br>Precio vta: ${v1}€. Coste Histórico: ${v2}€. Amort. Acum: ${v3}€.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Beneficio neto (771):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_permuta': 
-                v1 = 15000; v2 = 5000; currentAns = v1 + v2;
-                p.innerHTML = `🔄 <b>¡PERMUTA COMERCIAL!</b><br>Entregamos vehículo (VR: ${v1}€) + Pagamos por banco ${v2}€.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">🚚 Alta valor NUEVO vehículo:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=15000; v2=5000; currentAns=v1+v2;
+                p.innerHTML=`🔄 <b>¡PERMUTA COMERCIAL!</b><br>Entregamos vehículo (VR: ${v1}€) + Pagamos por banco ${v2}€.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">🚚 Alta valor NUEVO vehículo:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_deterioro': 
-                v1 = 5000; v2 = 4000; currentAns = v1 - v2;
-                p.innerHTML = `📉 <b>¡CAE EL VALOR!</b><br>Valor contable stock: ${v1}€. Valor Realizable Mercado: ${v2}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Deterioro a registrar (690):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=5000; v2=4000; currentAns=v1-v2;
+                p.innerHTML=`📉 <b>¡CAE EL VALOR!</b><br>Valor contable stock: ${v1}€. Valor Realizable Mercado: ${v2}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Deterioro a registrar (690):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_var_ex': 
-                v1 = 3000; v2 = 5000; currentAns = v2 - v1;
-                p.innerHTML = `📦 <b>¡VARIACIÓN EXISTENCIAS!</b><br>Ex. Iniciales: ${v1}€. Ex. Finales: ${v2}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Saldo en (610) (Positivo=Ingreso):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=3000; v2=5000; currentAns=v2-v1;
+                p.innerHTML=`📦 <b>¡VARIACIÓN EXISTENCIAS!</b><br>Ex. Iniciales: ${v1}€. Ex. Finales: ${v2}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⚖️ Saldo en (610) (Positivo=Ingreso):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_trab_prop': 
-                v1 = 2000; v2 = 3000; currentAns = v1 + v2;
-                p.innerHTML = `🛠️ <b>¡AUTOCONSTRUCCIÓN!</b><br>Gastos en nave propia: ${v1}€ (nóminas) y ${v2}€ (materiales).`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🏗️ Ingreso para capitalizar (732):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2000; v2=3000; currentAns=v1+v2;
+                p.innerHTML=`🛠️ <b>¡AUTOCONSTRUCCIÓN!</b><br>Gastos en nave propia: ${v1}€ (nóminas) y ${v2}€ (materiales).`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🏗️ Ingreso para capitalizar (732):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_me_compra': 
-                v1 = 10000; v2 = 0.90; currentAns = v1 * v2;
-                p.innerHTML = `💱 <b>¡PROVEEDOR EN DÓLARES!</b><br>Factura por ${v1} $. Tipo de Cambio: 1$ = ${v2}€.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">🌎 Deuda en euros (4004):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=0.90; currentAns=v1*v2;
+                p.innerHTML=`💱 <b>¡PROVEEDOR EN DÓLARES!</b><br>Factura por ${v1} $. Tipo de Cambio: 1$ = ${v2}€.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">🌎 Deuda en euros (4004):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_me_cierre': 
-                v1 = 10000; v2 = 0.90; v3 = 0.95; currentAns = Math.round(v1 * (v3 - v2));
-                p.innerHTML = `🌎 <b>¡DOLAR AL ALZA!</b><br>Debemos ${v1} $ (a 1$=${v2}€). Hoy 31/12 está a 1$=${v3}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Pérdida tipo de cambio (668):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=0.90; v3=0.95; currentAns=Math.round(v1*(v3-v2));
+                p.innerHTML=`🌎 <b>¡DOLAR AL ALZA!</b><br>Debemos ${v1} $ (a 1$=${v2}€). Hoy 31/12 está a 1$=${v3}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">🔥 Pérdida tipo de cambio (668):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't2_acciones': 
-                v1 = 100; v2 = 10; v3 = 20; currentAns = (v1 * v2) + v3;
-                p.innerHTML = `📊 <b>¡ACCIONES A CORTO!</b><br>Compras ${v1} acciones a ${v2}€. Bróker cobra ${v3}€ de comisiones. (Se capitalizan).`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📈 Valor de activación:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=100; v2=10; v3=20; currentAns=(v1*v2)+v3;
+                p.innerHTML=`📊 <b>¡ACCIONES A CORTO!</b><br>Compras ${v1} acciones a ${v2}€. Bróker cobra ${v3}€ de comisiones.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📈 Valor de activación:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === CONTABILIDAD T3 === */
             case 't3_prestamo': 
-                v1 = 10000; v2 = 150; currentAns = v1 - v2;
-                p.innerHTML = `🏦 <b>¡ALTA PRÉSTAMO!</b><br>Conceden ${v1}€. Descuentan de golpe ${v2}€ de comisiones apertura.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Liquido al Debe del Banco (572):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=150; currentAns=v1-v2;
+                p.innerHTML=`🏦 <b>¡ALTA PRÉSTAMO!</b><br>Conceden ${v1}€. Descuentan de golpe ${v2}€ de comisiones apertura.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Liquido al Debe del Banco (572):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_int_prest': 
-                v1 = 10000; v2 = 6; v3 = 3; currentAns = v1 * (v2/100) * (v3/12);
-                p.innerHTML = `📈 <b>¡DEVENGO INTERESES!</b><br>Préstamo ${v1}€ el 1 de Octubre al 6% Anual. Llega 31/12.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📉 Gasto por intereses devengados (Oct-Dic):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=6; v3=3; currentAns=v1*(v2/100)*(v3/12);
+                p.innerHTML=`📈 <b>¡DEVENGO INTERESES!</b><br>Préstamo ${v1}€ el 1 de Octubre al 6% Anual. Llega 31/12.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📉 Gasto por intereses devengados (Oct-Dic):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_reclasif': 
-                v1 = 50000; v2 = 5; currentAns = v1 / v2;
-                p.innerHTML = `📅 <b>¡RECLASIFICACIÓN!</b><br>Deuda L/P de ${v1}€ en ${v2} cuotas anuales idénticas. Cierre de año.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Parte a traspasar al C.P (520):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=50000; v2=5; currentAns=v1/v2;
+                p.innerHTML=`📅 <b>¡RECLASIFICACIÓN!</b><br>Deuda L/P de ${v1}€ en ${v2} cuotas anuales idénticas. Cierre de año.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Parte a traspasar al C.P (520):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_leasing': 
-                v1 = 500; v2 = 450; currentAns = v1 - v2;
-                p.innerHTML = `🚗 <b>¡RECIBO LEASING!</b><br>Neto factura: ${v1}€. Recuperación del coste (principal): ${v2}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📊 Gasto Financiero a contabilizar (662):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=500; v2=450; currentAns=v1-v2;
+                p.innerHTML=`🚗 <b>¡RECIBO LEASING!</b><br>Neto factura: ${v1}€. Recuperación del coste (principal): ${v2}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📊 Gasto Financiero a contabilizar (662):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_subvencion': 
-                v1 = 10000; v2 = 5; currentAns = v1 / v2;
-                p.innerHTML = `🏛️ <b>¡SUBVENCIÓN CAPITAL!</b><br>Ayuda de ${v1}€ para máquina que se amortiza linealmente en ${v2} años.`;
-                a.innerHTML = `<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📈 Ingreso anual a (746):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=5; currentAns=v1/v2;
+                p.innerHTML=`🏛️ <b>¡SUBVENCIÓN CAPITAL!</b><br>Ayuda de ${v1}€ para máquina que se amortiza linealmente en ${v2} años.`;
+                a.innerHTML=`<div style="${tExito}"><p style="color:#2e7d32; margin-top:0;">📈 Ingreso anual a (746):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_provision': 
-                v1 = 10000; currentAns = v1;
-                p.innerHTML = `🛡️ <b>¡PROVISIÓN RIESGOS!</b><br>Demanda legal probable por ${v1}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">⚖️ Dotación a Provisión (142):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; currentAns=v1;
+                p.innerHTML=`🛡️ <b>¡PROVISIÓN RIESGOS!</b><br>Demanda legal probable por ${v1}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">⚖️ Dotación a Provisión (142):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_fianza': 
-                v1 = 2; v2 = 1000; currentAns = v1 * v2;
-                p.innerHTML = `🔑 <b>¡FIANZA RECIBIDA!</b><br>Alquilamos local por ${v2}€/mes. Exigimos ${v1} meses de fianza legal.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🔒 Importe a (260/560):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2; v2=1000; currentAns=v1*v2;
+                p.innerHTML=`🔑 <b>¡FIANZA RECIBIDA!</b><br>Alquilamos local por ${v2}€/mes. Exigimos ${v1} meses de fianza legal.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🔒 Importe a (260/560):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_dividendos': 
-                v1 = 1000; v2 = 19; currentAns = v1 - (v1 * (v2/100));
-                p.innerHTML = `💰 <b>¡COBRO DIVIDENDOS!</b><br>Nos pagan ${v1}€ brutos. Hacienda retiene un ${v2}%.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Líquido al banco (572):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1000; v2=19; currentAns=v1-(v1*(v2/100));
+                p.innerHTML=`💰 <b>¡COBRO DIVIDENDOS!</b><br>Nos pagan ${v1}€ brutos. Hacienda retiene un ${v2}%.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">💶 Líquido al banco (572):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_efecto_imp': 
-                v1 = 2000; v2 = 75; currentAns = v1 + v2;
-                p.innerHTML = `❌ <b>¡MOROSO!</b><br>Vence letra ${v1}€ impagada. Banco carga protesto de ${v2}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">😡 Deuda a Efectos Impagados (4315):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=2000; v2=75; currentAns=v1+v2;
+                p.innerHTML=`❌ <b>¡MOROSO!</b><br>Vence letra ${v1}€ impagada. Banco carga protesto de ${v2}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">😡 Deuda a Efectos Impagados (4315):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't3_prorrata': 
-                v1 = 10; v2 = 15; v3 = 10000; currentAns = Math.round((v2 - v1)/100 * v3);
-                p.innerHTML = `⚖️ <b>¡REGULARIZACIÓN PRORRATA!</b><br>Prorrata Prov 10%. Definitiva 15%. (IVA Base: ${v3}€).`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📊 IVA a deducir de MÁS (472):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10; v2=15; v3=10000; currentAns=Math.round((v2-v1)/100*v3);
+                p.innerHTML=`⚖️ <b>¡REGULARIZACIÓN PRORRATA!</b><br>Prorrata Prov 10%. Definitiva 15%. (IVA Base: ${v3}€).`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">📊 IVA a deducir de MÁS (472):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
 
             /* === CONTABILIDAD T4 === */
             case 't4_devengo_seg': 
-                v1 = 1200; v2 = 3; currentAns = (v1 / 12) * 9; 
-                p.innerHTML = `📆 <b>¡PERIODIFICACIÓN SEGURO!</b><br>Póliza pagada el 1 Octubre por ${v1}€. Cierre 31/12 (Sobran 9 meses).`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Gastos Anticipados (480):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=1200; v2=3; currentAns=(v1/12)*9; 
+                p.innerHTML=`📆 <b>¡PERIODIFICACIÓN SEGURO!</b><br>Póliza pagada el 1 Octubre por ${v1}€. Cierre 31/12 (Sobran 9 meses).`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Gastos Anticipados (480):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_ing_antic': 
-                v1 = 6000; currentAns = (v1 / 12) * 11;
-                p.innerHTML = `📥 <b>¡COBRO ANTICIPADO!</b><br>Cobro alquiler anual el 1 Diciembre por ${v1}€. Sobran 11 meses.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Ingresos Anticipados (485):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=6000; currentAns=(v1/12)*11;
+                p.innerHTML=`📥 <b>¡COBRO ANTICIPADO!</b><br>Cobro alquiler anual el 1 Diciembre por ${v1}€. Sobran 11 meses.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">⏳ Ingresos Anticipados (485):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_isoc_ajuste': 
-                v1 = 50000; v2 = 1000; currentAns = v1 + v2;
-                p.innerHTML = `⚙️ <b>¡AJUSTE EXTRACONTABLE!</b><br>RCA: ${v1}€. Hay multas (No deducibles) por ${v2}€.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📊 Base Imponible Previa:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=50000; v2=1000; currentAns=v1+v2;
+                p.innerHTML=`⚙️ <b>¡AJUSTE EXTRACONTABLE!</b><br>RCA: ${v1}€. Hay multas (No deducibles) por ${v2}€.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">📊 Base Imponible Previa:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_isoc_cuota': 
-                v1 = 20000; v2 = 1500; currentAns = (v1 * 0.25) - v2;
-                p.innerHTML = `🏢 <b>¡CUOTA LÍQUIDA ISOC!</b><br>B.I: ${v1}€ (25%). Retenciones soportadas: ${v2}€.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Cuota Diferencial (4752):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=20000; v2=1500; currentAns=(v1*0.25)-v2;
+                p.innerHTML=`🏢 <b>¡CUOTA LÍQUIDA ISOC!</b><br>B.I: ${v1}€ (25%). Retenciones soportadas: ${v2}€.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Cuota Diferencial (4752):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_pago_frac': 
-                v1 = 10000; v2 = 18; currentAns = v1 * (v2/100);
-                p.innerHTML = `🧾 <b>¡PAGO FRACCIONADO!</b><br>Cuota íntegra anterior: ${v1}€. Pago fraccionado obligatorio: ${v2}%.`;
-                a.innerHTML = `<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Anticipo H.P (473):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=10000; v2=18; currentAns=v1*(v2/100);
+                p.innerHTML=`🧾 <b>¡PAGO FRACCIONADO!</b><br>Cuota íntegra anterior: ${v1}€. Pago fraccionado obligatorio: ${v2}%.`;
+                a.innerHTML=`<div style="${tAlerta}"><p style="color:#c62828; margin-top:0;">💸 Anticipo H.P (473):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_rtdo_ejer': 
-                v1 = 100000; v2 = 80000; currentAns = v1 - v2;
-                p.innerHTML = `⚖️ <b>¡SALDOS PREVIOS!</b><br>Ingresos totales: ${v1}€. Gastos totales: ${v2}€.`;
-                a.innerHTML = `<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">🏆 Beneficio en la (129) antes Impuestos:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=100000; v2=80000; currentAns=v1-v2;
+                p.innerHTML=`⚖️ <b>¡SALDOS PREVIOS!</b><br>Ingresos totales: ${v1}€. Gastos totales: ${v2}€.`;
+                a.innerHTML=`<div style="${tDinero}"><p style="color:#f57f17; margin-top:0;">🏆 Beneficio en la (129) antes Impuestos:</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_cierre_g': 
-                v1 = 4000; v2 = 1000; currentAns = v1 + v2;
-                p.innerHTML = `📉 <b>¡CIERRE GASTOS!</b><br>Cuenta (600) Debe: ${v1}€. Cuenta (628) Debe: ${v2}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🧹 Cargo Total al Debe de la (129):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=4000; v2=1000; currentAns=v1+v2;
+                p.innerHTML=`📉 <b>¡CIERRE GASTOS!</b><br>Cuenta (600) Debe: ${v1}€. Cuenta (628) Debe: ${v2}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🧹 Cargo Total al Debe de la (129):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_cierre_i': 
-                v1 = 8000; v2 = 2000; currentAns = v1 + v2;
-                p.innerHTML = `📈 <b>¡CIERRE INGRESOS!</b><br>Cuenta (700) Haber: ${v1}€. Cuenta (760) Haber: ${v2}€.`;
-                a.innerHTML = `<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🧹 Abono Total al Haber de la (129):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=8000; v2=2000; currentAns=v1+v2;
+                p.innerHTML=`📈 <b>¡CIERRE INGRESOS!</b><br>Cuenta (700) Haber: ${v1}€. Cuenta (760) Haber: ${v2}€.`;
+                a.innerHTML=`<div style="${tInfo}"><p style="color:#1565c0; margin-top:0;">🧹 Abono Total al Haber de la (129):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
             case 't4_rva_legal': 
-                v1 = 20000; v2 = 10; currentAns = v1 * (v2/100);
-                p.innerHTML = `🧱 <b>¡RESERVA LEGAL!</b><br>Beneficio: ${v1}€. Dotación obligatoria: ${v2}%.`;
-                a.innerHTML = `<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🔒 Dotación a (112):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
+                v1=20000; v2=10; currentAns=v1*(v2/100);
+                p.innerHTML=`🧱 <b>¡RESERVA LEGAL!</b><br>Beneficio: ${v1}€. Dotación obligatoria: ${v2}%.`;
+                a.innerHTML=`<div style="${tOscuro}"><p style="color:#6a1b9a; margin-top:0;">🔒 Dotación a (112):</p><input type="number" id="ans" autofocus ${styleInp}></div>`;
                 break;
         }
     }
