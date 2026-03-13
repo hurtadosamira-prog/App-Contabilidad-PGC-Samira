@@ -122,12 +122,12 @@
         return p;
     }
 
-    // NUEVOS 10 MINIJUEGOS: Clasificados por módulos de Grado Superior de Admin. y Finanzas
+    // Juegos clasificados por Asignaturas del Grado Superior (todas las etiquetas restauradas)
     const MODOS = {
-        1: [{id:"finiquito", i:"🤝", t:"RRHH: Finiquitos"}, {id:"pmp", i:"📦", t:"Logística: PMP"}, {id:"remesa", i:"🏦", t:"Finanzas: Remesas"}],
-        2: [{id:"prorrata", i:"⚖️", t:"Fiscal: Prorrata"}, {id:"embargo", i:"💼", t:"RRHH: Embargos"}, {id:"deterioro", i:"📉", t:"Conta: Deterioros"}],
-        3: [{id:"subvencion", i:"🏛️", t:"Conta: Subvenciones"}, {id:"interes", i:"📈", t:"Finanzas: Interés"}],
-        4: [{id:"isoc_avanzado", i:"🏢", t:"Fiscal: ISOC"}, {id:"examen", i:"🏆", t:"Conta: Diario"}]
+        1: [{id:"finiquito", i:"🤝", t:"G. RRHH: Finiquitos"}, {id:"pmp", i:"📦", t:"G. Logística: PMP"}, {id:"remesa", i:"🏦", t:"G. Financiera: Remesas"}],
+        2: [{id:"prorrata", i:"⚖️", t:"Conta. y Fisc.: Prorrata"}, {id:"embargo", i:"💼", t:"G. RRHH: Embargos"}, {id:"deterioro", i:"📉", t:"Conta. y Fisc.: Deterioros"}],
+        3: [{id:"subvencion", i:"🏛️", t:"Conta. y Fisc.: Subv."}, {id:"interes", i:"📈", t:"G. Financiera: Interés"}],
+        4: [{id:"isoc_avanzado", i:"🏢", t:"Conta. y Fisc.: ISOC"}, {id:"examen", i:"🏆", t:"Conta. y Fisc.: Diario"}]
     };
 
     function abrirTrimestre(n) {
@@ -143,7 +143,10 @@
     function lanzar(id) {
         lastId = id;
         if(id === 'examen') return generarExamen();
-        document.getElementById('m-titulo').innerText = "CASO: " + id.toUpperCase();
+        
+        let esConta = ['prorrata', 'deterioro', 'subvencion', 'isoc_avanzado'].includes(id);
+        document.getElementById('m-titulo').innerText = (esConta ? "T" + triActual + " - " : "") + "CASO: " + id.toUpperCase();
+        
         document.getElementById('game-overlay').style.display = 'flex';
         document.getElementById('m-btn-validar').onclick = () => validarMini(document.getElementById('ans').value);
         generarPregunta();
@@ -154,14 +157,13 @@
         const a = document.getElementById('m-input-area');
         let styleInp = 'style="width:100%; padding:20px; border-radius:15px; border:2px solid #ddd; font-size:1.5em; text-align:center;"';
 
-        // NUEVAS LÓGICAS ADAPTADAS A LOS MÓDULOS DE GRADO SUPERIOR
         switch(lastId) {
             case 'finiquito': 
                 let salDia = Math.floor(Math.random()*40) + 40;
                 let anos = Math.floor(Math.random()*5) + 1;
-                let diasPorAno = 20; // Indemnización por despido objetivo
+                let diasPorAno = 20; 
                 currentAns = salDia * diasPorAno * anos;
-                p.innerText = `RRHH: Calculas un despido por causas objetivas (${diasPorAno} días/año). Antigüedad: ${anos} años exactos. Salario regulador diario: ${salDia}€.`;
+                p.innerText = `Gestión de Recursos Humanos: Calculas un despido por causas objetivas (${diasPorAno} días/año). Antigüedad: ${anos} años exactos. Salario regulador diario: ${salDia}€.`;
                 a.innerHTML = `<p>¿A cuánto asciende el importe de la indemnización a abonar?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -169,7 +171,7 @@
                 let q1 = 100, p1 = 10;
                 let q2 = 100, p2 = 15;
                 currentAns = ((q1 * p1) + (q2 * p2)) / (q1 + q2);
-                p.innerText = `Gestión Logística: Tienes un stock inicial de ${q1} uds a ${p1}€. Entra una nueva partida de ${q2} uds a ${p2}€.`;
+                p.innerText = `Gestión Logística y Comercial: Tienes un stock inicial de ${q1} uds a ${p1}€. Entra una nueva partida de ${q2} uds a ${p2}€.`;
                 a.innerHTML = `<p>Calcula el Precio Medio Ponderado (PMP) de tu almacén:</p><input type="number" step="0.01" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -187,15 +189,15 @@
                 let opSinDed = opConDed / 2;
                 let totalOp = opConDed + opSinDed;
                 currentAns = Math.round((opConDed / totalOp) * 100);
-                p.innerText = `Fiscalidad: Realizas operaciones con derecho a deducción por ${opConDed}€ y operaciones sin derecho (ej. sanidad/educación) por ${opSinDed}€.`;
+                p.innerText = `Contabilidad y Fiscalidad (T${triActual}): Realizas operaciones con derecho a deducción por ${opConDed}€ y operaciones sin derecho (ej. exentas) por ${opSinDed}€.`;
                 a.innerHTML = `<p>¿Cuál es el porcentaje de tu Prorrata General de IVA (Redondeado al entero superior)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
             case 'embargo': 
-                let smi = 1134; // SMI base referencia
+                let smi = 1134; 
                 let exceso = Math.floor(Math.random()*400) + 100;
                 currentAns = Math.round(exceso * 0.30);
-                p.innerText = `RRHH: Llega una notificación judicial. El trabajador cobra ${smi + exceso}€ netos. El SMI (${smi}€) es inembargable. Sobre el primer tramo que excede el SMI se embarga el 30%.`;
+                p.innerText = `Gestión de Recursos Humanos: Llega una notificación judicial. El trabajador cobra ${smi + exceso}€ netos. El SMI (${smi}€) es inembargable. Sobre el primer tramo que excede el SMI se embarga el 30%.`;
                 a.innerHTML = `<p>¿Qué cantidad en euros debes retenerle de la nómina por el embargo?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -203,7 +205,7 @@
                 let coste = Math.floor(Math.random()*5000) + 3000;
                 let vnr = coste - (Math.floor(Math.random()*1000) + 500);
                 currentAns = coste - vnr;
-                p.innerText = `Contabilidad: Al cierre, tienes mercaderías valoradas contablemente en ${coste}€. Su Valor Neto Realizable (VNR) en el mercado ha caído a ${vnr}€.`;
+                p.innerText = `Contabilidad y Fiscalidad (T${triActual}): Al cierre, tienes mercaderías valoradas contablemente en ${coste}€. Su Valor Neto Realizable (VNR) en el mercado ha caído a ${vnr}€.`;
                 a.innerHTML = `<p>Calcula el importe que debes dotar a la cuenta (690) Pérdidas por deterioro:</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -211,7 +213,7 @@
                 let subTotal = (Math.floor(Math.random()*5)+5) * 1000;
                 let vidaU = Math.floor(Math.random()*4) + 4;
                 currentAns = subTotal / vidaU;
-                p.innerText = `Contabilidad: Concesión de una subvención oficial de capital de ${subTotal}€ para comprar una máquina. La máquina se amortiza en ${vidaU} años.`;
+                p.innerText = `Contabilidad y Fiscalidad (T${triActual}): Concesión de una subvención oficial de capital de ${subTotal}€ para comprar una máquina. La máquina se amortiza en ${vidaU} años.`;
                 a.innerHTML = `<p>¿Qué importe exacto de la subvención debes traspasar a beneficios este año (cuenta 746)?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -219,7 +221,7 @@
                 let cap = (Math.floor(Math.random()*10)+5) * 1000;
                 let tae = Math.floor(Math.random()*5) + 2;
                 currentAns = Math.round(cap * (tae/100));
-                p.innerText = `Finanzas: Inviertes un excedente de tesorería de ${cap}€ a un interés simple anual del ${tae}%.`;
+                p.innerText = `Gestión Financiera: Inviertes un excedente de tesorería de ${cap}€ a un interés simple anual del ${tae}%.`;
                 a.innerHTML = `<p>¿Cuántos euros de Ingresos Financieros (cuenta 762) registrarás al cabo de un año exacto?</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
                 
@@ -228,7 +230,7 @@
                 let retenciones = Math.floor(Math.random()*2000) + 500;
                 let cuotaIntegra = Math.round(bi * 0.25);
                 currentAns = cuotaIntegra - retenciones;
-                p.innerText = `Fiscalidad: Tienes una Base Imponible de Sociedades de ${bi}€ (Tipo impositivo 25%). Durante el año, los bancos te han retenido ${retenciones}€.`;
+                p.innerText = `Contabilidad y Fiscalidad (T${triActual}): Tienes una Base Imponible de Sociedades de ${bi}€ (Tipo impositivo 25%). Durante el año, te han practicado retenciones por ${retenciones}€.`;
                 a.innerHTML = `<p>Calcula la Cuota Diferencial del Impuesto (Lo que tienes que ingresar finalmente a la AEAT):</p><input type="number" id="ans" autofocus ${styleInp}>`;
                 break;
         }
@@ -273,7 +275,7 @@
         
         document.getElementById('menu').style.display = 'none';
         document.getElementById('pantalla-juego').style.display = 'block';
-        document.getElementById('quest').innerText = `Diario T${triActual}: ${s.q} por ${targetAsiento.v}€`;
+        document.getElementById('quest').innerText = `Diario T${triActual} - Contabilidad y Fiscalidad:\n${s.q} por ${targetAsiento.v}€`;
         clearInp();
     }
 
