@@ -46,17 +46,26 @@
 <div class="container">
     <div id="menu">
         <h1 style="color: var(--fucsia); font-size: 3.5em;">✨ ContaMaster ✨</h1>
-        <div id="selector-trimestres" class="tri-selector">
+        
+        <div id="selector-asignaturas" class="tri-selector">
+            <button class="btn-trimestre" onclick="abrirAsignatura('rrhh')" style="font-size: 1.8em;">GESTIÓN DE RRHH</button>
+            <button class="btn-trimestre" onclick="abrirAsignatura('logistica')" style="font-size: 1.8em;">GESTIÓN LOGÍSTICA</button>
+            <button class="btn-trimestre" onclick="abrirAsignatura('financiera')" style="font-size: 1.8em;">GESTIÓN FINANCIERA</button>
+            <button class="btn-trimestre" onclick="abrirContabilidad()" style="font-size: 1.8em;">CONTABILIDAD Y FISC.</button>
+        </div>
+
+        <div id="selector-trimestres" class="tri-selector" style="display: none;">
             <button class="btn-trimestre" onclick="abrirTrimestre(1)">1º TRIMESTRE</button>
             <button class="btn-trimestre" onclick="abrirTrimestre(2)">2º TRIMESTRE</button>
             <button class="btn-trimestre" onclick="abrirTrimestre(3)">3º TRIMESTRE</button>
             <button class="btn-trimestre" onclick="abrirTrimestre(4)">4º TRIMESTRE</button>
         </div>
+
         <div id="vista-juegos">
             <div class="card">
                 <div class="titulo-seccion">
-                    <span id="txt-trimestre">TRIMESTRE</span>
-                    <button onclick="volverAInicio()" style="background:#999; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:0.5em;">ATRÁS</button>
+                    <span id="txt-trimestre">SECCIÓN</span>
+                    <button onclick="volverAInicio()" style="background:#999; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-size:0.5em;">VOLVER AL INICIO</button>
                 </div>
                 <div class="grid-btns" id="render-botones"></div>
             </div>
@@ -114,7 +123,7 @@
         4: {281:"Amort. acumulada del inmovilizado material", 681:"Amortización del inmovilizado material", 4700:"H.P., deudora por IVA", 4750:"H.P., acreedora por IVA", 490:"Deterioro de valor de créditos comerciales", 794:"Reversión del deterioro de créditos comerciales"}
     };
 
-    let triActual = 1, lastId = "", currentAns = "", targetAsiento = null;
+    let triActual = 4, lastId = "", currentAns = "", targetAsiento = null;
 
     function getPGCActual() {
         let p = {};
@@ -122,22 +131,53 @@
         return p;
     }
 
-    // Juegos clasificados por Asignaturas del Grado Superior (todas las etiquetas restauradas)
-    const MODOS = {
-        1: [{id:"finiquito", i:"🤝", t:"G. RRHH: Finiquitos"}, {id:"pmp", i:"📦", t:"G. Logística: PMP"}, {id:"remesa", i:"🏦", t:"G. Financiera: Remesas"}],
-        2: [{id:"prorrata", i:"⚖️", t:"Conta. y Fisc.: Prorrata"}, {id:"embargo", i:"💼", t:"G. RRHH: Embargos"}, {id:"deterioro", i:"📉", t:"Conta. y Fisc.: Deterioros"}],
-        3: [{id:"subvencion", i:"🏛️", t:"Conta. y Fisc.: Subv."}, {id:"interes", i:"📈", t:"G. Financiera: Interés"}],
-        4: [{id:"isoc_avanzado", i:"🏢", t:"Conta. y Fisc.: ISOC"}, {id:"examen", i:"🏆", t:"Conta. y Fisc.: Diario"}]
+    // Estructura de navegación reorganizada por Asignaturas y Trimestres (sólo para conta)
+    const ASIGNATURAS = {
+        'rrhh': { titulo: "GESTIÓN DE RRHH", juegos: [{id:"finiquito", i:"🤝", t:"Finiquitos"}, {id:"embargo", i:"💼", t:"Embargos"}] },
+        'logistica': { titulo: "GESTIÓN LOGÍSTICA", juegos: [{id:"pmp", i:"📦", t:"PMP"}] },
+        'financiera': { titulo: "GESTIÓN FINANCIERA", juegos: [{id:"remesa", i:"🏦", t:"Remesas"}, {id:"interes", i:"📈", t:"Interés"}] }
     };
+
+    const CONTA_TRIMESTRES = {
+        1: [],
+        2: [{id:"prorrata", i:"⚖️", t:"Prorrata"}, {id:"deterioro", i:"📉", t:"Deterioros"}],
+        3: [{id:"subvencion", i:"🏛️", t:"Subvenciones"}],
+        4: [{id:"isoc_avanzado", i:"🏢", t:"ISOC"}, {id:"examen", i:"🏆", t:"Diario"}]
+    };
+
+    function abrirAsignatura(asig) {
+        triActual = 4; // Para que en otras asignaturas el PGC esté completamente disponible si hiciese falta
+        document.getElementById('selector-asignaturas').style.display = 'none';
+        document.getElementById('selector-trimestres').style.display = 'none';
+        document.getElementById('vista-juegos').style.display = 'block';
+        document.getElementById('txt-trimestre').innerText = ASIGNATURAS[asig].titulo;
+        
+        const grid = document.getElementById('render-botones');
+        grid.innerHTML = "";
+        ASIGNATURAS[asig].juegos.forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+    }
+
+    function abrirContabilidad() {
+        document.getElementById('selector-asignaturas').style.display = 'none';
+        document.getElementById('selector-trimestres').style.display = 'grid';
+        document.getElementById('vista-juegos').style.display = 'none';
+    }
 
     function abrirTrimestre(n) {
         triActual = n;
         document.getElementById('selector-trimestres').style.display = 'none';
         document.getElementById('vista-juegos').style.display = 'block';
-        document.getElementById('txt-trimestre').innerText = n + "º TRIMESTRE";
+        document.getElementById('txt-trimestre').innerText = "CONTABILIDAD - " + n + "º TRIMESTRE";
+        
         const grid = document.getElementById('render-botones');
         grid.innerHTML = "";
-        MODOS[n].forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+        (CONTA_TRIMESTRES[n] || []).forEach(m => grid.innerHTML += `<button class="btn-j" onclick="lanzar('${m.id}')"><span>${m.i}</span><small>${m.t}</small></button>`);
+    }
+
+    function volverAInicio() {
+        document.getElementById('selector-asignaturas').style.display = 'grid';
+        document.getElementById('selector-trimestres').style.display = 'none';
+        document.getElementById('vista-juegos').style.display = 'none';
     }
 
     function lanzar(id) {
@@ -286,7 +326,6 @@
     }
 
     function updateName(el, targetId) { document.getElementById(targetId).value = getPGCActual()[el.value] || ""; }
-    function volverAInicio() { document.getElementById('selector-trimestres').style.display = 'grid'; document.getElementById('vista-juegos').style.display = 'none'; }
     function cerrarJuego() { document.getElementById('menu').style.display = 'block'; document.getElementById('pantalla-juego').style.display = 'none'; }
     function clearInp() { document.querySelectorAll('#pantalla-juego input').forEach(i => i.value = ""); }
 </script>
