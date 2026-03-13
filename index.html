@@ -660,11 +660,26 @@
         }
     }
 
-    function validarMini(v) {
-        if(v.toString().toUpperCase() == currentAns.toString().toUpperCase()) { alert("¡Correcto! Enhorabuena 🎉"); generarPregunta(); }
-        else { alert("Incorrecto. Vuelve a revisar la teoría 🧐");document.getElementById('ans').value = "";generarPregunta(); }
+    function validarMini(valor) {
+    if(valor === "") {
+        alert("¡Escribe un número primero!");
+        return;
     }
-
+    
+    let num = parseFloat(valor);
+    
+    if(num === currentAns) {
+        alert("¡CORRECTO! 🎉 Eres un crack de las finanzas.");
+        // Vaciamos la casilla
+        document.getElementById('ans').value = "";
+        // Generamos un nuevo ejercicio del mismo tipo
+        generarPregunta();
+        // Ponemos el cursor automáticamente en la casilla para ir más rápido
+        document.getElementById('ans').focus(); 
+    } else {
+        alert("Uhm... revisa los cálculos. La respuesta no es " + num + " 🧐");
+    }
+}
     function generarExamen() {
         const operaciones = [
             {q:"Autorrepercusión de IVA por Adquisición Intracomunitaria", cd:4720, ch:4770},
