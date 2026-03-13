@@ -662,7 +662,7 @@
 
     function validarMini(v) {
         if(v.toString().toUpperCase() == currentAns.toString().toUpperCase()) { alert("¡Correcto! Enhorabuena 🎉"); generarPregunta(); }
-        else { alert("Incorrecto. Vuelve a revisar la teoría 🧐"); }
+        else { alert("Incorrecto. Vuelve a revisar la teoría 🧐");document.getElementById('ans').value = "";generarPregunta(); }
     }
 
     function generarExamen() {
